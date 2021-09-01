@@ -40,7 +40,7 @@ public class RobotFragment extends Fragment {
         msgRecyclerView = root.findViewById(R.id.robotDialog);
         inputText = root.findViewById(R.id.search_robot);
         send = root.findViewById(R.id.button_robotSend);
-        layoutManager = new LinearLayoutManager(this.getContext());
+        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         adapter = new RobotMessage((msg_list = getData()));
 
         msgRecyclerView.setLayoutManager(layoutManager);

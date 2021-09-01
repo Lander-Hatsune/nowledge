@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
@@ -44,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    private String id;
+    private String id = "b9dd9dcb-af80-4285-9571-34c39ecf4df5";
 
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
@@ -90,6 +91,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         updateId();
+
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
@@ -162,8 +164,6 @@ public class HomeFragment extends Fragment {
                     }
                 };
                 reqQue.add(req);
-
-
             }
 
             @Override
@@ -177,9 +177,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        tabLayout.selectTab(tabLayout.getTabAt(2));
+        tabLayout.selectTab(tabLayout.getTabAt(0));
         return root;
     }
-
 
     @Override
     public void onDestroyView() {

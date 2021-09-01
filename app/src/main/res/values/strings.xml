@@ -3,4 +3,7 @@
     <string name="title_home">学科列表</string>
     <string name="title_link">知识链接</string>
     <string name="title_robot">机器问答</string>
+    <string name="button_send">发送</string>
+    <string name="search_hint">请输入查询内容</string>
+    <string name="clear">清除</string>
 </resources>

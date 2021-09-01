@@ -50,8 +50,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intentLogin);
                 return true;
+            case R.id.actionSearch:
+                Intent intentSearch = new Intent(MainActivity.this, SearchTransferActivity.class);
+                startActivity(intentSearch);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

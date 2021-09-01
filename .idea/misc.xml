@@ -21,9 +21,12 @@
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.14583333333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_search.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_search_transfer.xml" value="0.33" />
         <entry key="app/src/main/res/layout/entity_short_item.xml" value="0.240625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/robot_message_item.xml" value="0.240625" />
+        <entry key="app/src/main/res/layout/spinner_item.xml" value="0.2911458333333333" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/main_menu.xml" value="0.228125" />
       </map>

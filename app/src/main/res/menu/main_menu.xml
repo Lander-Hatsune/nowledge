@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:title="Search"
+        android:id="@+id/actionSearch"
+        android:icon="@drawable/magnify"
+        app:showAsAction="ifRoom">
+
+    </item>
     <item android:title="Login"
         android:id="@+id/actionLogin"
         android:icon="@drawable/login"
         app:showAsAction="ifRoom"/>
+
 </menu>

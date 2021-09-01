@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    private String id = "b9dd9dcb-af80-4285-9571-34c39ecf4df5";
+    private String id = Uris.id;
 
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance

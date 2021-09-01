@@ -1,7 +1,7 @@
 package com.example.nowledge.data;
 
 public class Uris {
-    private static final String host = "47.93.5.8:8080";
+    private static final String host = "http://47.93.5.8:8080";
     private static final String login = host + "/user/login";
     private static final String register = host + "/user/register";
     private static final String star = host + "/star";

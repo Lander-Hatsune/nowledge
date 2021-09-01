@@ -2,6 +2,8 @@ package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
+import com.example.nowledge.data.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,8 +58,23 @@ public class LoginActivity extends AppCompatActivity {
                                 obj, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i("Login success.", "");
-                                Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                                Log.i("Login request success.", "");
+                                String msg = "Unknown Error";
+                                String code = "";
+                                try {
+                                    msg = response.getString("msg");
+                                    code = response.getString("id");
+                                } catch (JSONException e) {
+                                    Log.e("Login request msg/id error", e.toString());
+                                }
+                                Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                if (!(code.equals("-1") || code.equals("-2"))) {
+                                    Log.i("Login success", code);
+                                    User.setUsername(username.getText().toString());
+                                    User.setLoggedin(true);
+                                    Intent intentMain = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intentMain);
+                                }
                             }
                         }, new Response.ErrorListener() {
                             @Override

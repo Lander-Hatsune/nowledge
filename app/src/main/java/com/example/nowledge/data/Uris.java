@@ -7,6 +7,8 @@ public class Uris {
     private static final String star = host + "/star";
     private static final String unstar = host + "/unstar";
     private static final String starlist = host + "/starlist";
+    private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
+    private static final String search = edukg + "/instanceList";
 
     public static String getLogin() {
         return login;
@@ -27,4 +29,6 @@ public class Uris {
     public static String getStarlist() {
         return starlist;
     }
+
+    public static String getSearch() { return search; }
 }

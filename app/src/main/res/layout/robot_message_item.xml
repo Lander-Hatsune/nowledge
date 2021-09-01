@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:orientation="vertical"
-        android:layout_marginRight="40dp"
+        android:layout_marginRight="100dp"
 
         android:background="@drawable/left_msg">
         <TextView

@@ -36,6 +36,7 @@ public class RobotMessage extends RecyclerView.Adapter<RobotMessage.ViewHolder> 
 
         public ViewHolder(View view) {
             super(view);
+
             robotLayout = view.findViewById(R.id.robot_layout);
             robot_msg = view.findViewById(R.id.robot_msg);
             humanLayout = view.findViewById(R.id.human_layout);

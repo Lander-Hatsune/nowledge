@@ -1,5 +1,6 @@
 package com.example.nowledge.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.style.TabStopSpan;
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -26,6 +29,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.MainActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
@@ -150,6 +155,16 @@ public class HomeFragment extends Fragment {
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>
                                     (getActivity().getApplicationContext(), R.layout.entity_short_item, entityNameList);
                             listView.setAdapter(adapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Log.d("click", "number " + i);
+                                    Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                                    intentDetail.putExtra("name", entityNameList.get(i));
+                                    intentDetail.putExtra("course", tab.getText().toString());
+                                    startActivity(intentDetail);
+                                }
+                            });
                         } catch (JSONException e) {}
                     }
                 }, new Response.ErrorListener() {

@@ -1,11 +1,13 @@
 package com.example.nowledge.ui.link;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -117,10 +119,18 @@ public class LinkFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ett_list.clear();
+                if (ett_list.size() > 0) {
+                    ettRecyclerView.removeAllViews();
+                    ett_list.clear();
+                    adapter.notifyDataSetChanged();
+                }
                 String content = searchText.getText().toString();
                 if (!content.equals("")) {
                     searchText.setText("");
+                    InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+                    if (manager != null)
+                        manager.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+
 
                     JSONObject params = new JSONObject();
                     try{
@@ -150,11 +160,11 @@ public class LinkFragment extends Fragment {
                                                     String type = res.getString("entity_type");
                                                     String entity = res.getString("entity");
                                                     ett_list.add(new EntityShort(entity, type));
-                                                    adapter.notifyItemInserted((ett_list.size()-1));
-                                                    ettRecyclerView.scrollToPosition(ett_list.size()-1);
+                                                    adapter.notifyItemInserted((ett_list.size() - 1));
+                                                    ettRecyclerView.scrollToPosition(ett_list.size() - 1);
                                                 }
-                                            }
 
+                                            }
                                         } else {
                                             addError(code);
                                         }

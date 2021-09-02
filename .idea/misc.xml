@@ -24,6 +24,8 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_search_transfer.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_starlist.xml" value="0.25364583333333335" />
+        <entry key="app/src/main/res/layout/activity_user.xml" value="0.25364583333333335" />
         <entry key="app/src/main/res/layout/attr_item.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/entity_short_item.xml" value="0.240625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />

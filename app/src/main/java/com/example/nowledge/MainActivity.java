@@ -2,6 +2,7 @@ package com.example.nowledge;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,8 +48,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionLogin:
-                Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intentLogin);
+                if (!User.isLoggedin()) {
+                    Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intentLogin);
+                } else {
+                    Log.d("Main activity", "goto user page");
+                    Intent intentUser = new Intent(MainActivity.this, UserActivity.class);
+                    startActivity(intentUser);
+                }
                 return true;
             case R.id.actionSearch:
                 Intent intentSearch = new Intent(MainActivity.this, SearchTransferActivity.class);

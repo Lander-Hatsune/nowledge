@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Nowledge"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".StarlistActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UserActivity"
+            android:exported="true" />
+        <activity
             android:name=".EntityDetailActivity"
             android:exported="true" />
         <activity

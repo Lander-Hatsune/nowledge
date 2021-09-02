@@ -88,8 +88,8 @@ public class EntityDetailActivity extends AppCompatActivity {
 
         this.setTitle(name);
 
-        ListView listView = findViewById(R.id.listAtDetail);
-
+        ListView listViewProp = findViewById(R.id.listAtDetail);
+        ListView listViewCont = findViewById(R.id.listContentAtDetail);
 
         String url = Uris.getDetail() + "?";
         url += "name=" + name;
@@ -105,6 +105,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         List<String> propertiesStr = new ArrayList<>();
+                        List<String> contentsStr = new ArrayList<>();
                         try {
                             JSONObject dataobj = response.getJSONObject("data");
                             Log.d("dataobj", dataobj.toString());
@@ -120,7 +121,25 @@ public class EntityDetailActivity extends AppCompatActivity {
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>
                                     (getApplicationContext(), R.layout.attr_item, propertiesStr);
-                            listView.setAdapter(adapter);
+                            listViewProp.setAdapter(adapter);
+
+                            JSONArray contents = (JSONArray) dataobj.get("content");
+                            for (int i = 0; i < contents.length(); i++) {
+                                if (i > 10) {
+                                    break;
+                                }
+                                JSONObject obj = contents.getJSONObject(i);
+                                String str = obj.getString("predicate_label");
+                                if (obj.has("subject_label")) {
+                                    str += obj.getString("subject_label") + "(子关系)";
+                                } else {
+                                    str += obj.getString("object_label") + "(父关系)";
+                                }
+                                contentsStr.add(str);
+                            }
+                            ArrayAdapter<String> adapterC = new ArrayAdapter<String>
+                                    (getApplicationContext(), R.layout.attr_item, contentsStr);
+                            listViewCont.setAdapter(adapterC);
                         } catch (JSONException e) {
                             Log.e("Error parsing detail obj", e.toString());
                         }

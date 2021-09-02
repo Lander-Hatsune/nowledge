@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"></Space>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:inputType="text"
-                android:hint="Search..." />
+                android:hint="搜索..." />
 
             <Button
                 android:id="@+id/searchButton"
@@ -43,6 +46,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:text="历史记录"
             style="@style/TextAppearance.AppCompat.Medium"
             ></TextView>

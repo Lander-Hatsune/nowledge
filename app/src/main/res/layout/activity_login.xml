@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Welcome"
+            android:text="欢迎"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
 
         <Space
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:hint="Username"
+            android:hint="用户名"
             android:inputType="textPersonName|text" />
 
         <EditText
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:hint="Password"
+            android:hint="密码"
             android:inputType="textPassword" />
 
         <Space
@@ -54,6 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Login" />
+            android:text="登录" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

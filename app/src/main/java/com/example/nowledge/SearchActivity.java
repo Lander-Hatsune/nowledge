@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -155,5 +156,15 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
         reqQue.add(req);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("click", "number " + i);
+                Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
+                intentDetail.putExtra("name", entityNameList.get(i));
+                intentDetail.putExtra("course", courses[pos]);
+                startActivity(intentDetail);
+            }
+        });
     }
 }

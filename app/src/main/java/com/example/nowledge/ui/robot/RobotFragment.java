@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
@@ -30,6 +31,7 @@ import com.example.nowledge.data.Uris;
 import com.example.nowledge.databinding.FragmentRobotBinding;
 import com.example.nowledge.volley.MyJsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,7 +119,14 @@ public class RobotFragment extends Fragment {
                                     try{
                                         String code = response.getString("code");
                                         if (code.equals("0")) {
-                                            String answer = response.toString();
+                                            Log.i("Response robot", response.toString());
+                                            JSONArray dataArray = response.getJSONArray("data");
+                                            String answer = new String();
+                                            try{
+                                                answer = dataArray.getJSONObject(0).getString("value");
+                                            } catch (Exception e) {
+                                                answer = "此问题没有找到答案！";
+                                            }
                                             msg_list.add(new Message(answer, false));
                                             adapter.notifyItemInserted((msg_list.size()-1));
                                             msgRecyclerView.scrollToPosition(msg_list.size()-1);

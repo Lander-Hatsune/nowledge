@@ -1,7 +1,14 @@
 package com.example.nowledge;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.example.nowledge.data.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +38,32 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionLogin:
+                if (!User.isLoggedin()) {
+                    Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intentLogin);
+                } else {
+                    Log.d("Main activity", "goto user page");
+                    Intent intentUser = new Intent(MainActivity.this, UserActivity.class);
+                    startActivity(intentUser);
+                }
+                return true;
+            case R.id.actionSearch:
+                Intent intentSearch = new Intent(MainActivity.this, SearchTransferActivity.class);
+                startActivity(intentSearch);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

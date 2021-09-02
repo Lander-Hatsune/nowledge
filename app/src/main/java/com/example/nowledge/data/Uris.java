@@ -9,6 +9,11 @@ public class Uris {
     private static final String starlist = host + "/starlist";
     private static final String robotSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion";
     private static final String linkSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance";
+    private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
+    private static final String search = edukg + "/instanceList";
+    private static final String detail = edukg + "/infoByInstanceName";
+    public static final String id = "b9dd9dcb-af80-4285-9571-34c39ecf4df5";
+
 
     public static String getLogin() {
         return login;
@@ -34,4 +39,7 @@ public class Uris {
 
     public static String getLinkSearch() { return linkSearch; }
 
+    public static String getSearch() { return search; }
+
+    public static String getDetail() { return detail; }
 }

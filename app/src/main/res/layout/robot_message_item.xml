@@ -1,46 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="10dp">
 
-    <LinearLayout
-        android:id="@+id/robot_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:orientation="vertical"
-        android:layout_marginRight="100dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:layout_margin="10dp" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <LinearLayout android:id="@+id/robot_layout" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="left"
+        android:orientation="vertical" android:layout_marginRight="100dp"
 
         android:background="@drawable/left_msg">
-        <TextView
-            android:id="@+id/robot_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:textColor="@color/black"/>
+        <TextView android:id="@+id/robot_msg" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_margin="10dp" android:textColor="@color/black" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/human_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:orientation="vertical"
-        android:layout_marginLeft="100dp"
+    <LinearLayout android:id="@+id/human_layout" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="right"
+        android:orientation="vertical" android:layout_marginLeft="100dp"
         android:background="@drawable/right_msg">
-        <TextView
-            android:id="@+id/human_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:textColor="@color/black"/>
+        <TextView android:id="@+id/human_msg" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_margin="10dp" android:textColor="@color/black" />
 
     </LinearLayout>
-
-
 </LinearLayout>

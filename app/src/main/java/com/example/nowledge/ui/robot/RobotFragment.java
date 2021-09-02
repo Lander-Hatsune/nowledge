@@ -2,6 +2,7 @@ package com.example.nowledge.ui.robot;
 
 import java.util.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.nowledge.R;
+import com.example.nowledge.data.Singleton;
+import com.example.nowledge.data.Uris;
 import com.example.nowledge.databinding.FragmentRobotBinding;
+import com.example.nowledge.volley.MyJsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RobotFragment extends Fragment {
 
@@ -28,6 +43,35 @@ public class RobotFragment extends Fragment {
     private Button send;
     private LinearLayoutManager layoutManager;
     private RobotMessage adapter;
+    private RequestQueue queue;
+    private String LOGIN_ID;
+    private String COURSE = "chinese";
+
+    private void updateID() {
+        String LOGIN_URL = Uris.getLogin();
+        JSONObject params = new JSONObject();
+        try {
+            params.put("username", "0");
+            params.put("password", "0");
+        }catch (JSONException e) {}
+        JsonObjectRequest id_request = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            LOGIN_ID = response.getString("id");
+                        } catch (JSONException e) { e.printStackTrace();}                        }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                msg_list.add(new Message("[Error] " + "后端登录错误" , false));
+                adapter.notifyItemInserted((msg_list.size()-1));
+                msgRecyclerView.scrollToPosition(msg_list.size()-1);
+            }
+        });
+
+        queue.add(id_request);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +90,9 @@ public class RobotFragment extends Fragment {
         msgRecyclerView.setLayoutManager(layoutManager);
         msgRecyclerView.setAdapter(adapter);
 
+        queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+
+        updateID();
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,14 +104,51 @@ public class RobotFragment extends Fragment {
                     msgRecyclerView.scrollToPosition((msg_list.size()-1));
                     inputText.setText("");
 
-                    msg_list.add(new Message("re: " + content, false));
-                    adapter.notifyItemInserted((msg_list.size()-1));
-                    msgRecyclerView.scrollToPosition(msg_list.size()-1);
+                    JSONObject params = new JSONObject();
+                    try{
+                        params.put("id", LOGIN_ID);
+                        params.put("inputQuestion", content);
+                        params.put("course", COURSE);
+                    } catch (JSONException e) {}
+                    JsonObjectRequest askRequest = new JsonObjectRequest(Request.Method.POST, Uris.getRobotSearch(), params,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try{
+                                        String code = response.getString("code");
+                                        if (code.equals("0")) {
+                                            String answer = response.toString();
+                                            msg_list.add(new Message(answer, false));
+                                            adapter.notifyItemInserted((msg_list.size()-1));
+                                            msgRecyclerView.scrollToPosition(msg_list.size()-1);
+                                        } else {
+                                            addError();
+                                        }
+                                    } catch (JSONException e) {
+                                        addError();
+                                    }
+
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            addError();
+                        }
+                    });
+
+                    queue.add(askRequest);
                 }
             }
         });
 
         return root;
+    }
+
+    private void addError() {
+        msg_list.add(new Message("接口请求有误，请重新尝试", false));
+        adapter.notifyItemInserted((msg_list.size()-1));
+        msgRecyclerView.scrollToPosition(msg_list.size()-1);
+        updateID();
     }
 
     private List<Message> getData() {

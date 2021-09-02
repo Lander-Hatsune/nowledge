@@ -1,5 +1,7 @@
 package com.example.nowledge.utils;
 
+import android.annotation.SuppressLint;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +37,16 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         EntityShort entityShort = list.get(position);
         holder.entity_name.setText(entityShort.getLabel());
+        holder.entity_name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        holder.entity_name.setTextColor(R.color.purple_700);
+        holder.entity_name.getPaint().setFakeBoldText(true);
         holder.entity_category.setText(entityShort.getCategory());
+        holder.entity_category.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
     }
     public int getItemCount() { return list.size(); }
 }

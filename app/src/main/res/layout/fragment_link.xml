@@ -17,10 +17,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="270dp"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="52dp"
-            >
+            tools:layout_editor_absoluteX="52dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -104,9 +103,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/link_entity_circle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="1dp" />
+                tools:layout_editor_absoluteX="-8dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

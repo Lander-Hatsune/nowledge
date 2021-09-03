@@ -29,6 +29,7 @@ public class SearchTransferActivity extends AppCompatActivity {
 
         Button searchButton = findViewById(R.id.searchButton);
         EditText searchkey = findViewById(R.id.editTextSearchKey);
+
         Spinner spinner = findViewById(R.id.spinner);
 
         List<String> courseNames = new ArrayList(Arrays.asList("语文", "数学", "英语",
@@ -65,13 +66,17 @@ public class SearchTransferActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String key = searchkey.getText().toString();
                 String course = spinner.getSelectedItem().toString();
                 User.addHistory(course, key);
                 Log.d("selected course", course);
                 Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
+                intentSearch.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intentSearch.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intentSearch.putExtra("key", key);
                 intentSearch.putExtra("course", course);
+                searchkey.setText("");
                 startActivity(intentSearch);
             }
         });

@@ -1,17 +1,18 @@
 package com.example.nowledge.ui.robot;
 
 import java.util.*;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,17 +21,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentRobotBinding;
-import com.example.nowledge.volley.MyJsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,6 +75,7 @@ public class RobotFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        id = User.getID();
         robotViewModel =
                 new ViewModelProvider(this).get(RobotViewModel.class);
 
@@ -154,6 +151,22 @@ public class RobotFragment extends Fragment {
             }
         });
 
+        root.findViewById(R.id.robot_base).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.d("click robot fragment", String.valueOf(view.getId()));
+                switch (view.getId()) {
+                    case R.id.robot_edit:
+                        InputMethodManager imm = (InputMethodManager)
+                                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        break;
+                }
+            }
+        });
+
+
         return root;
     }
 
@@ -175,4 +188,7 @@ public class RobotFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }

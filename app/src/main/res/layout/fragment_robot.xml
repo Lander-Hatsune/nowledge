@@ -2,12 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/robot_base"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.robot.RobotFragment">
+    tools:context=".ui.robot.RobotFragment"
+    android:clickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/robot_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#EDE7F6"
@@ -51,12 +53,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintBottom_toTopOf="@+id/robot_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        android:id="@+id/robot_send_area"
+        android:clickable="true">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/robotDialog"
@@ -68,7 +72,8 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

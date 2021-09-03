@@ -94,6 +94,8 @@ public class SearchActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intentBackSearch = new Intent
                         (SearchActivity.this, SearchTransferActivity.class);
+                intentBackSearch.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intentBackSearch.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intentBackSearch);
             }
         };
@@ -170,4 +172,14 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("click", "key back");
+//        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
+//        intentHome.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(intentHome);
+//
+//    }
 }

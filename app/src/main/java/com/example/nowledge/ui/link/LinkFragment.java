@@ -89,6 +89,7 @@ public class LinkFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        id = User.getID();
         linkViewModel =
                 new ViewModelProvider(this).get(LinkViewModel.class);
 

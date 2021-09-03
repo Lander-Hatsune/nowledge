@@ -58,12 +58,16 @@
                                 android:layout_weight="1"
                                 android:backgroundTint="#E8B470"
                                 android:text="@string/button_send" />
+                            <Spinner
+                                android:layout_width="70dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"/>
 
                             <Button
                                 android:id="@+id/link_button_clear"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/link_search_margin_horiz"
+                                android:layout_marginLeft="5dp"
                                 android:layout_marginRight="@dimen/link_search_margin_horiz"
                                 android:layout_weight="1"
                                 android:backgroundTint="#7A7B81"

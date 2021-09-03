@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
+import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentRobotBinding;
 import com.example.nowledge.volley.MyJsonObjectRequest;
 
@@ -46,7 +47,7 @@ public class RobotFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private RobotMessage adapter;
     private RequestQueue queue;
-    private String LOGIN_ID;
+    private String id;
     private String COURSE = "chinese";
 
     private void updateID() {
@@ -61,7 +62,8 @@ public class RobotFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            LOGIN_ID = response.getString("id");
+                            id = response.getString("id");
+                            User.setID(id);
                         } catch (JSONException e) { e.printStackTrace();}                        }
                 }, new Response.ErrorListener() {
             @Override
@@ -108,7 +110,7 @@ public class RobotFragment extends Fragment {
 
                     JSONObject params = new JSONObject();
                     try{
-                        params.put("id", LOGIN_ID);
+                        params.put("id", id);
                         params.put("inputQuestion", content);
                         params.put("course", COURSE);
                     } catch (JSONException e) {}
@@ -127,6 +129,8 @@ public class RobotFragment extends Fragment {
                                             } catch (Exception e) {
                                                 answer = "此问题没有找到答案！";
                                             }
+                                            if (answer.equals(""))
+                                                answer = "此问题没有找到答案！";
                                             msg_list.add(new Message(answer, false));
                                             adapter.notifyItemInserted((msg_list.size()-1));
                                             msgRecyclerView.scrollToPosition(msg_list.size()-1);

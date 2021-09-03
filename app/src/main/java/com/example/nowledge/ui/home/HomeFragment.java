@@ -34,7 +34,9 @@ import com.example.nowledge.MainActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
+import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentHomeBinding;
+import com.example.nowledge.volley.MyJsonObjectRequest;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -45,15 +47,58 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    private String id = Uris.id;
+    private String id = User.getID();
+    private RequestQueue requestQueue;
+    private boolean initial = true;
+
+//    private void updateIdSync() {
+//        Log.i("info", "update ID sync start");
+//        Thread updateId = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                RequestFuture<JSONObject> future = RequestFuture.newFuture();
+//                JSONObject obj = new JSONObject();
+//                try {
+//                    obj.put("username", "0");
+//                    obj.put("password", "0");
+//                } catch (JSONException e) {
+//                    Log.e("UpdateId error:", e.toString());
+//                }
+//                Log.d("UpdateId obj Sync", obj.toString());
+//                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Uris.getLogin(), obj, future, future);
+//                requestQueue.add(request);
+//                Log.i("login sync request", request.toString());
+//                try {
+//                    JSONObject response = future.get();
+//                    Log.e("Sync Login Response", response.toString());
+//                    String msg = response.getString("msg");
+//                    id = response.getString("id");
+//
+//                } catch (Exception e) {
+//                    Log.d("Sync Request Error", e.toString());
+//                }
+//            }
+//        });
+//        updateId.start();
+//        Log.i("new thread", String.valueOf(updateId.getId()));
+////        try {
+////            updateId.join();
+////        } catch (InterruptedException e) {
+////            Log.e("Interruption in UpdateIdSync", e.toString());
+////        }
+//
+//
+//    }
 
     protected void updateId() {
-        RequestQueue reqQue = Singleton.getInstance
+        requestQueue = Singleton.getInstance
                 (getActivity().getApplicationContext()).getRequestQueue();
         JSONObject obj = null;
         try {
@@ -69,18 +114,17 @@ public class HomeFragment extends Fragment {
                         obj, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("Login request success.", "");
-                        String msg = "Unknown Error";
-                        String code = "";
+                        Log.d("Login request success.", "login initially!" + String.valueOf(initial));
                         try {
-                            msg = response.getString("msg");
-                            code = response.getString("id");
+                            id = response.getString("id");
+                            User.setID(id);
+                            Log.d("ID", id);
+                            if (initial == true) {
+                                sendCourseRequest("chinese", "文", binding.tabLayout.getTabAt(0));
+                                initial = false;
+                            }
                         } catch (JSONException e) {
-                            Log.e("Login request msg/id error", e.toString());
-                        }
-                        if (!(code.equals("-1") || code.equals("-2"))) {
-                            Log.d("logged in, id", code);
-                            id = code;
+                            Log.e("Login request msg error", e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -90,21 +134,83 @@ public class HomeFragment extends Fragment {
                     }
                 });
         Log.d("Request:", req.toString());
+        requestQueue.add(req);
+    }
+
+    private void sendCourseRequest(String course, String searchkey, TabLayout.Tab tab) {
+        ListView listView = binding.listView;
+        RequestQueue reqQue = Singleton.getInstance
+                (getActivity().getApplicationContext()).getRequestQueue();
+
+        String params = "?";
+        params += "course=" + course;
+        params += "&searchKey=" + searchkey;
+        params += "&id=" + id;
+
+        List<String> entityNameList = new ArrayList<>();
+
+        String url = Uris.getSearch() + params;
+
+        Log.d("url", "*" + url + "*");
+        MyJsonObjectRequest req = new MyJsonObjectRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray list = null;
+                try {
+                    Log.d("resp:", response.toString());
+                    Log.d("data", response.get("data").toString());
+                    Log.d("code", response.getString("code"));
+                    String code = response.getString("code");
+                    if (!code.equals("0")) {
+                        updateId();
+                    } else {
+                        list = (JSONArray) response.get("data");
+                        for (int i = 0; i < list.length(); i++) {
+                            JSONObject obj = list.getJSONObject(i);
+                            String label = obj.get("label").toString();
+                            String category = obj.get("category").toString();
+                            String uri = obj.get("uri").toString();
+                            entityNameList.add(label);
+                        }
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                            (getActivity().getApplicationContext(), R.layout.entity_short_item, entityNameList);
+                    listView.setAdapter(adapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Log.d("click", "number " + i);
+                            Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                            intentDetail.putExtra("name", entityNameList.get(i));
+                            intentDetail.putExtra("course", tab.getText().toString());
+                            startActivity(intentDetail);
+                        }
+                    });
+                } catch (JSONException e) {}
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Error", error.toString());
+            }
+        });
         reqQue.add(req);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        updateId();
-
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        requestQueue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
 
+        initial = true;
+        updateId();
         TabLayout tabLayout = binding.tabLayout;
-        ListView listView = binding.listView;
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -114,7 +220,7 @@ public class HomeFragment extends Fragment {
                 String[] courses = {"chinese", "math", "english",
                         "geo", "history", "politics",
                         "physics", "chemistry", "biology"};
-                String[] searchKeys = {"文", "1", "时",
+                String[] searchKeys = {"文", "实", "时",
                         "流", "代", "发",
                         "学", "反", "物"};
                 List<String> courseNames = new ArrayList<String>(Arrays.asList("语文", "数学", "英语",
@@ -123,62 +229,7 @@ public class HomeFragment extends Fragment {
 
                 Integer pos = courseNames.indexOf(tab.getText().toString());
                 Log.d("pos", pos.toString());
-                RequestQueue reqQue = Singleton.getInstance
-                        (getActivity().getApplicationContext()).getRequestQueue();
-
-                String params = "?";
-                params += "course=" + courses[pos];
-                params += "&searchKey=" + searchKeys[pos];
-                params += "&id=" + id;
-
-                List<String> entityNameList = new ArrayList<>();
-
-                String url = Uris.getSearch() + params;
-
-                Log.d("url", params);
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url,
-                        null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        JSONArray list = null;
-                        try {
-                            Log.d("resp:", response.toString());
-                            Log.d("data", response.get("data").toString());
-                            list = (JSONArray) response.get("data");
-                            for (int i = 0; i < list.length(); i++) {
-                                JSONObject obj = list.getJSONObject(i);
-                                String label = obj.get("label").toString();
-                                String category = obj.get("category").toString();
-                                String uri = obj.get("uri").toString();
-                                entityNameList.add(label);
-                            }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                    (getActivity().getApplicationContext(), R.layout.entity_short_item, entityNameList);
-                            listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    Log.d("click", "number " + i);
-                                    Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
-                                    intentDetail.putExtra("name", entityNameList.get(i));
-                                    intentDetail.putExtra("course", tab.getText().toString());
-                                    startActivity(intentDetail);
-                                }
-                            });
-                        } catch (JSONException e) {}
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }) {
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/x-www-form-urlencoded; charset=UTF-8";
-                    }
-                };
-                reqQue.add(req);
+                sendCourseRequest(courses[pos], searchKeys[pos], tab);
             }
 
             @Override
@@ -192,8 +243,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        tabLayout.selectTab(tabLayout.getTabAt(2));
-        tabLayout.selectTab(tabLayout.getTabAt(0));
+
+//        Log.i("TabLayout", "select Tab 0");
+//        tabLayout.selectTab(tabLayout.getTabAt(0));
+
         return root;
     }
 

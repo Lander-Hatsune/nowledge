@@ -12,7 +12,6 @@ public class Uris {
     private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
     private static final String search = edukg + "/instanceList";
     private static final String detail = edukg + "/infoByInstanceName";
-    public static final String id = "b9dd9dcb-af80-4285-9571-34c39ecf4df5";
 
 
     public static String getLogin() {

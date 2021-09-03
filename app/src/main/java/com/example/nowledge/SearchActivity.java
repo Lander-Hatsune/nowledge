@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
+import com.example.nowledge.data.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
-    private String id = Uris.id;
+    private String id = User.getID();
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
                 (getApplicationContext()).getRequestQueue();
@@ -59,6 +60,7 @@ public class SearchActivity extends AppCompatActivity {
                         if (!(code.equals("-1") || code.equals("-2"))) {
                             Log.d("logged in, id", code);
                             id = code;
+                            User.setID(id);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -73,6 +75,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        id = User.getID();
         updateId();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);

@@ -8,7 +8,12 @@ import java.util.List;
 public class User {
     private static String username = "0";
     private static List<Pair<String, String>> history = null;
+    private static String ID = "";
     private static boolean loggedin = false;
+
+    public static String getID() { return ID;  }
+
+    public static void setID(String id) { ID = id; }
 
     public static String getUsername() {
         return username;

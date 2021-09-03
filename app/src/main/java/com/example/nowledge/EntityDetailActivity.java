@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityDetailActivity extends AppCompatActivity {
-    private String id = Uris.id;
+    private String id = User.getID();
     private Boolean starred = false;
     private String name;
     private String course;
@@ -65,6 +65,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                         if (!(code.equals("-1") || code.equals("-2"))) {
                             Log.d("logged in, id", code);
                             id = code;
+                            User.setID(id);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -79,6 +80,7 @@ public class EntityDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        id = User.getID();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entity_detail);
 

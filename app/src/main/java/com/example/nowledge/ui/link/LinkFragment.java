@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
+import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentLinkBinding;
 import com.example.nowledge.utils.EntityAdapter;
 import com.example.nowledge.utils.EntityShort;
@@ -49,7 +50,7 @@ public class LinkFragment extends Fragment {
     private LinkViewModel linkViewModel;
     private FragmentLinkBinding binding;
     private List<EntityShort> ett_list = new ArrayList<>();
-    private String LOGIN_ID;
+    private String id = User.getID();
     private RequestQueue queue;
     private EditText searchText;
     private String COURSE = "chinese";
@@ -70,8 +71,9 @@ public class LinkFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            LOGIN_ID = response.getString("id");
-                            Log.i("info", LOGIN_ID);
+                            id = response.getString("id");
+                            Log.i("info", id);
+                            User.setID(id);
                         } catch (JSONException e) { e.printStackTrace();}                        }
                 }, new Response.ErrorListener() {
             @Override
@@ -134,7 +136,7 @@ public class LinkFragment extends Fragment {
 
                     JSONObject params = new JSONObject();
                     try{
-                        params.put("id", LOGIN_ID);
+                        params.put("id", id);
                         params.put("context", content);
                         params.put("course", COURSE);
                     } catch (JSONException e) {}
@@ -154,7 +156,7 @@ public class LinkFragment extends Fragment {
                                                 searchText.setHint("搜索无结果，请重新搜索");
                                             } else {
 
-
+                                                searchText.setHint(R.string.search_hint);
                                                 for (int i = 0; i < link_results.length(); ++i) {
                                                     JSONObject res = link_results.getJSONObject(i);
                                                     String type = res.getString("entity_type");

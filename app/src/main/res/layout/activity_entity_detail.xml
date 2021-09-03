@@ -16,25 +16,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:text="属性"></TextView>
+                android:text="属性"
+                android:textSize="25sp"/>
 
             <ListView
                 android:id="@+id/listAtDetail"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"></ListView>
+                android:layout_height="250sp"></ListView>
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Display1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:text="关联"></TextView>
+                android:text="关联"
+                android:textSize="25sp"/>
 
-            <ListView
-                android:id="@+id/listContentAtDetail"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="300sp"
+                android:orientation="vertical">
 
-            </ListView>
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Display1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30sp"
+                    android:text="父关系"
+                    android:textSize="20sp"/>
+
+                <ListView
+                    android:id="@+id/listSuperContentAtDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="120sp"
+                    android:layout_marginStart="20sp">
+                </ListView>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Display1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:layout_marginStart="30sp"
+                    android:text="子关系"
+                    android:textSize="20sp"/>
+
+                <ListView
+                    android:id="@+id/listChildContentAtDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="120sp"
+                    android:layout_marginStart="20sp">
+                </ListView>
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

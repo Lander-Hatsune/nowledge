@@ -4,7 +4,7 @@
     android:layout_height="50sp"
     android:orientation="horizontal">
     <TextView
-        android:id="@+id/child_relation_type"
+        android:id="@+id/super_relation_type"
         android:layout_width="100sp"
         android:layout_height="match_parent"
         android:layout_marginStart="10sp"
@@ -12,7 +12,7 @@
         android:ellipsize="end"
         android:textSize="25sp"/>
     <TextView
-        android:id="@+id/child_relation_detail"
+        android:id="@+id/super_relation_detail"
         android:layout_width="200sp"
         android:layout_height="match_parent"
         android:layout_marginStart="10sp"
@@ -21,7 +21,7 @@
         android:contextClickable="true"
         android:textSize="25sp"/>
     <Button
-        android:id="@+id/child_relation_search"
+        android:id="@+id/super_relation_search"
         android:layout_width="70sp"
         android:layout_height="match_parent"
         android:layout_marginStart="10sp"

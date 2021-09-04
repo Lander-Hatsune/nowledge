@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -91,7 +93,8 @@ public class EntityDetailActivity extends AppCompatActivity {
         this.setTitle(name);
 
         ListView listViewProp = findViewById(R.id.listAtDetail);
-        ListView listViewCont = findViewById(R.id.listContentAtDetail);
+        ListView listViewSuperCont = findViewById(R.id.listSuperContentAtDetail);
+        ListView listViewChildCont = findViewById(R.id.listChildContentAtDetail);
 
         String url = Uris.getDetail() + "?";
         url += "name=" + name;
@@ -107,7 +110,8 @@ public class EntityDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         List<String> propertiesStr = new ArrayList<>();
-                        List<String> contentsStr = new ArrayList<>();
+                        List<super_relation>  super_relation_list = new ArrayList<>();
+                        List<child_relation>  child_relation_list = new ArrayList<>();
                         try {
                             JSONObject dataobj = response.getJSONObject("data");
                             Log.d("dataobj", dataobj.toString());
@@ -126,22 +130,37 @@ public class EntityDetailActivity extends AppCompatActivity {
                             listViewProp.setAdapter(adapter);
 
                             JSONArray contents = (JSONArray) dataobj.get("content");
-                            for (int i = 0; i < contents.length(); i++) {
-                                if (i > 10) {
+                            for (int i = 0,j = 0; i < contents.length(); i++) {
+                                if (j > 10) {
                                     break;
                                 }
                                 JSONObject obj = contents.getJSONObject(i);
-                                String str = obj.getString("predicate_label");
+                                String type = obj.getString("predicate_label");
                                 if (obj.has("subject_label")) {
-                                    str += obj.getString("subject_label") + "(子关系)";
-                                } else {
-                                    str += obj.getString("object_label") + "(父关系)";
+                                    String detail = obj.getString("subject_label");
+                                    j++;
+                                    super_relation_list.add(new super_relation(type,detail,course));
                                 }
-                                contentsStr.add(str);
                             }
-                            ArrayAdapter<String> adapterC = new ArrayAdapter<String>
-                                    (getApplicationContext(), R.layout.attr_item, contentsStr);
-                            listViewCont.setAdapter(adapterC);
+                            super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list);
+                            listViewSuperCont.setAdapter(adapterSC);
+
+                            JSONArray contentc = (JSONArray) dataobj.get("content");
+                            for (int i = 0,j = 0; i < contents.length(); i++) {
+                                if (j > 10) {
+                                    break;
+                                }
+                                JSONObject obj = contents.getJSONObject(i);
+                                String type = obj.getString("predicate_label");
+                                if (obj.has("object_label")) {
+                                    String detail = obj.getString("object_label");
+                                    j++;
+                                    child_relation_list.add(new child_relation(type,detail,course));
+                                }
+                            }
+                            child_relation_adapter adapterCC = new child_relation_adapter(EntityDetailActivity.this,R.layout.child_relation_item,child_relation_list);
+                            listViewChildCont.setAdapter(adapterCC);
+
                         } catch (JSONException e) {
                             Log.e("Error parsing detail obj", e.toString());
                         }

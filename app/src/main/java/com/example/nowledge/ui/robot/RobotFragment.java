@@ -1,17 +1,20 @@
 package com.example.nowledge.ui.robot;
 
+import java.sql.Array;
 import java.util.*;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,17 +23,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.nowledge.R;
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentRobotBinding;
-import com.example.nowledge.volley.MyJsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,12 +42,14 @@ public class RobotFragment extends Fragment {
     private List<Message> msg_list = new ArrayList<> ();
     private RecyclerView msgRecyclerView;
     private EditText inputText;
+    private Spinner spinner;
     private Button send;
     private LinearLayoutManager layoutManager;
     private RobotMessage adapter;
     private RequestQueue queue;
     private String id;
-    private String COURSE = "chinese";
+    private String[] courses;
+    private List<String> courseNames;
 
     private void updateID() {
         String LOGIN_URL = Uris.getLogin();
@@ -79,6 +80,9 @@ public class RobotFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        id = User.getID();
+        courses = Course.getCourses();
+        courseNames = Course.getCourseNames();
         robotViewModel =
                 new ViewModelProvider(this).get(RobotViewModel.class);
 
@@ -87,12 +91,15 @@ public class RobotFragment extends Fragment {
 
         msgRecyclerView = root.findViewById(R.id.robotDialog);
         inputText = root.findViewById(R.id.search_robot);
+        spinner = root.findViewById(R.id.robot_spinner);
         send = root.findViewById(R.id.button_robotSend);
         layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         adapter = new RobotMessage((msg_list = getData()));
 
         msgRecyclerView.setLayoutManager(layoutManager);
         msgRecyclerView.setAdapter(adapter);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, courseNames);
+        spinner.setAdapter(spinnerAdapter);
 
         queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
 
@@ -107,17 +114,21 @@ public class RobotFragment extends Fragment {
                     adapter.notifyItemInserted((msg_list.size()-1));
                     msgRecyclerView.scrollToPosition((msg_list.size()-1));
                     inputText.setText("");
+                    String courseName = spinner.getSelectedItem().toString();
+                    int pos = courseNames.indexOf(courseName);
+                    String course = courses[pos];
 
                     JSONObject params = new JSONObject();
                     try{
                         params.put("id", id);
                         params.put("inputQuestion", content);
-                        params.put("course", COURSE);
+                        params.put("course", course);
                     } catch (JSONException e) {}
                     JsonObjectRequest askRequest = new JsonObjectRequest(Request.Method.POST, Uris.getRobotSearch(), params,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
+                                    Log.d("robot response", response.toString());
                                     try{
                                         String code = response.getString("code");
                                         if (code.equals("0")) {
@@ -154,6 +165,7 @@ public class RobotFragment extends Fragment {
             }
         });
 
+
         return root;
     }
 
@@ -175,4 +187,9 @@ public class RobotFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
+
+
 }

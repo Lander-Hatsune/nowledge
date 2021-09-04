@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#CC0000</color>
+    <color name="indigo">#30518D</color>
+    <color name="pink">#B609BC</color>
+    <color name="dark_gray">#2E2E2E</color>
+    <color name="purple_100">#F3E5F5</color>
+
 </resources>

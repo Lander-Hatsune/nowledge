@@ -106,7 +106,8 @@ public class LinkFragment extends Fragment {
 
         ettRecyclerView = root.findViewById(R.id.link_entity_circle);
         layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        adapter = new EntityAdapter(ett_list, "link");
+//        adapter = new EntityAdapter(ett_list, "link");
+        adapter = new EntityAdapter(ett_list, "list");
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
             @Override
             public void onItemCLick(String course, String name) {
@@ -150,7 +151,7 @@ public class LinkFragment extends Fragment {
                 String content = searchText.getText().toString();
                 Log.d("link search", "[" + content + "]");
                 if (!content.equals("")) {
-                    searchText.setText("");
+//                    searchText.setText("");
                     InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
                     if (manager != null)
                         manager.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
@@ -179,6 +180,7 @@ public class LinkFragment extends Fragment {
                                             Log.i("Response", "results");
                                             if (link_results.length() == 0) {
                                                 searchText.setHint("搜索无结果，请重新搜索");
+                                                searchText.setText("");
                                             } else {
 
                                                 searchText.setHint(R.string.search_hint);
@@ -188,7 +190,7 @@ public class LinkFragment extends Fragment {
                                                     String entity = res.getString("entity");
                                                     ett_list.add(new EntityShort(entity, type, course));
                                                     adapter.notifyItemInserted((ett_list.size() - 1));
-                                                    ettRecyclerView.scrollToPosition(ett_list.size() - 1);
+//                                                    ettRecyclerView.scrollToPosition(ett_list.size() - 1);
                                                 }
 
                                             }

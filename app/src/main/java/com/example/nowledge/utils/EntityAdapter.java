@@ -60,7 +60,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         String name = entityShort.getLabel();
         if (!mode.equals("link")){
             holder.entity_name.setText(normalize(name, 14));
-            holder.itemView.findViewById(R.id.entity_iteml_gotoIcon).setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.e("click list position" + String.valueOf(position), entityShort.getCourse() + " " + name + " " + entityShort.getCategory());
@@ -69,7 +69,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
             });
         } else {
             holder.entity_name.setText(normalize(name, 12));
-            holder.itemView.findViewById(R.id.entity_item_gotoIcon).setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.e("click link position" + String.valueOf(position), entityShort.getCourse() + " " + name + " " + entityShort.getCategory());
@@ -79,7 +79,6 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         }
 
         holder.entity_name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        holder.entity_name.setTextColor(R.color.purple_700);
         holder.entity_name.getPaint().setFakeBoldText(true);
         holder.entity_category.setText(entityShort.getCategory());
         holder.entity_category.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);

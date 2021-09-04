@@ -12,19 +12,22 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="52dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="208dp"
-                android:layout_margin="30dp"
+                android:layout_margin="20dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="#F3E9FF"
                 app:cardCornerRadius="10dp"
@@ -48,9 +51,10 @@
                             android:layout_height="match_parent"
 
                             android:orientation="horizontal">
+
                             <Button
                                 android:id="@+id/link_button_clear"
-                                android:layout_width="wrap_content"
+                                android:layout_width="72dp"
                                 android:layout_height="match_parent"
 
                                 android:layout_marginLeft="@dimen/link_search_margin_horiz"
@@ -59,26 +63,25 @@
                                 android:text="@string/clear" />
 
                             <Spinner
-                                android:layout_width="wrap_content"
-                                android:layout_weight="1"
+                                android:id="@+id/spinner_link"
+                                android:layout_width="70dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
+                                android:layout_gravity="right"
                                 android:layout_marginLeft="25dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_weight="1"
                                 android:spinnerMode="dialog"
-                                android:id="@+id/spinner_link"/>
+                                android:textAlignment="gravity" />
 
                             <Button
                                 android:id="@+id/link_button_send"
-                                android:layout_width="wrap_content"
+                                android:layout_width="72dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginRight="@dimen/link_search_margin_horiz"
 
 
                                 android:backgroundTint="#E8B470"
                                 android:text="@string/button_send" />
-
-
 
 
                         </LinearLayout>
@@ -108,21 +111,26 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/link_topLine"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/pink"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/link_entity_circle"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="-8dp" />
+                android:layout_height="match_parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="0dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

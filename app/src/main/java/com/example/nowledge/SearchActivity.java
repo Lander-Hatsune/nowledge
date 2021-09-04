@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
@@ -35,6 +36,8 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     private String id = User.getID();
+    private String[] courses;
+    private List<String> courseNames;
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
                 (getApplicationContext()).getRequestQueue();
@@ -81,17 +84,23 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         id = User.getID();
         updateId();
+        courses = Course.getCourses();
+        courseNames = Course.getCourseNames();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
         Bundle bundle = this.getIntent().getExtras();
         String key = bundle.getString("key");
         String course = bundle.getString("course");
+        Integer pos = Course.getCourseID(course);
+        Log.d("pos", pos.toString());
+        String courseName = courseNames.get(pos);
+
         Button searchBackButton = findViewById(R.id.searchBackButton);
         TextView textView = findViewById(R.id.textViewKey);
         textView.setText(key);
         TextView textViewC = findViewById(R.id.textViewCourse);
-        textViewC.setText(course);
+        textViewC.setText(courseName);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -112,21 +121,15 @@ public class SearchActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSearchResult);
 
-        String[] courses = {"chinese", "math", "english",
-                "geo", "history", "politics",
-                "physics", "chemistry", "biology"};
+        String[] courses = Course.getCourses();
+        List<String> courseNames = Course.getCourseNames();
 
-        List<String> courseNames = new ArrayList(Arrays.asList("语文", "数学", "英语",
-                "地理", "历史", "政治",
-                "物理", "化学", "生物"));
 
-        Integer pos = courseNames.indexOf(course);
-        Log.d("pos", pos.toString());
         RequestQueue reqQue = Singleton.getInstance
                 (getApplicationContext()).getRequestQueue();
 
         String params = "?";
-        params += "course=" + courses[pos];
+        params += "course=" + course;
         params += "&searchKey=" + key;
         params += "&id=" + id;
 
@@ -176,16 +179,6 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
         reqQue.add(req);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Log.d("click", "number " + i);
-//                Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
-//                intentDetail.putExtra("name", entityNameList.get(i));
-//                intentDetail.putExtra("course", courses[pos]);
-//                startActivity(intentDetail);
-//            }
-//        });
     }
 
 //    @Override

@@ -48,31 +48,39 @@
                             android:layout_height="match_parent"
 
                             android:orientation="horizontal">
+                            <Button
+                                android:id="@+id/link_button_clear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+
+                                android:layout_marginLeft="@dimen/link_search_margin_horiz"
+
+                                android:backgroundTint="#7A7B81"
+                                android:text="@string/clear" />
+
+                            <Spinner
+                                android:layout_width="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="25dp"
+                                android:spinnerMode="dialog"
+                                android:id="@+id/spinner_link"/>
 
                             <Button
                                 android:id="@+id/link_button_send"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="@dimen/link_search_margin_horiz"
                                 android:layout_marginRight="@dimen/link_search_margin_horiz"
-                                android:layout_weight="1"
+
+
                                 android:backgroundTint="#E8B470"
                                 android:text="@string/button_send" />
 
-                            <Spinner
-                                android:layout_width="70dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="5dp" />
 
-                            <Button
-                                android:id="@+id/link_button_clear"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="@dimen/link_search_margin_horiz"
-                                android:layout_weight="1"
-                                android:backgroundTint="#7A7B81"
-                                android:text="@string/clear" />
+
+
                         </LinearLayout>
                     </LinearLayout>
 

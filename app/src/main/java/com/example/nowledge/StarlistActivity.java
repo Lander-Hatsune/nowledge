@@ -55,7 +55,7 @@ public class StarlistActivity extends AppCompatActivity {
                                 starCourseStr.add(star.getString("course"));
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>
-                                    (getApplicationContext(), R.layout.entity_item_list, starlistStr);
+                                    (getApplicationContext(), R.layout.entity_short_item, starlistStr);
                             lv.setAdapter(adapter);
 
                         } catch (JSONException e) {

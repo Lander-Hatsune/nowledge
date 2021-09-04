@@ -35,6 +35,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.MainActivity;
 import com.example.nowledge.R;
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
@@ -64,15 +65,11 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<EntityShort> ett_list = new ArrayList<>();
 
-    private String[] courses = {"chinese", "math", "english",
-            "geo", "history", "politics",
-            "physics", "chemistry", "biology"};
+    private String[] courses = Course.getCourses();
     private String[] searchKeys = {"文", "实", "时",
             "流", "代", "发",
             "学", "反", "物"};
-    private List<String> courseNames = new ArrayList<String>(Arrays.asList("语文", "数学", "英语",
-            "地理", "历史", "政治",
-            "物理", "化学", "生物"));
+    private List<String> courseNames = Course.getCourseNames();
 
 
     protected void updateId(int courseID) {

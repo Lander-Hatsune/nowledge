@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.User;
 
 import java.util.ArrayList;
@@ -32,9 +33,8 @@ public class SearchTransferActivity extends AppCompatActivity {
 
         Spinner spinner = findViewById(R.id.spinner);
 
-        List<String> courseNames = new ArrayList(Arrays.asList("语文", "数学", "英语",
-                "地理", "历史", "政治",
-                "物理", "化学", "生物"));
+        List<String> courseNames = Course.getCourseNames();
+        String[] courses = Course.getCourses();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, R.layout.support_simple_spinner_dropdown_item, courseNames);
@@ -47,7 +47,7 @@ public class SearchTransferActivity extends AppCompatActivity {
                 historyStr.add(his.second);
             }
             ArrayAdapter<String> hisAdaptor = new ArrayAdapter<>
-                    (this, R.layout.entity_item_list, historyStr);
+                    (this, R.layout.entity_short_item, historyStr);
             hisListView.setAdapter(hisAdaptor);
             hisListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -66,18 +66,21 @@ public class SearchTransferActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String key = searchkey.getText().toString();
-                String course = spinner.getSelectedItem().toString();
-                User.addHistory(course, key);
-                Log.d("selected course", course);
-                Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
-                intentSearch.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intentSearch.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intentSearch.putExtra("key", key);
-                intentSearch.putExtra("course", course);
-                searchkey.setText("");
-                startActivity(intentSearch);
+                if (!key.equals("")) {
+                    String courseName = spinner.getSelectedItem().toString();
+                    int pos = courseNames.indexOf(courseName);
+                    String course = courses[pos];
+                    User.addHistory(course, key);
+                    Log.d("selected course", course);
+                    Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
+                    intentSearch.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intentSearch.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intentSearch.putExtra("key", key);
+                    intentSearch.putExtra("course", course);
+                    searchkey.setText("");
+                    startActivity(intentSearch);
+                }
             }
         });
     }

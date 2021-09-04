@@ -28,6 +28,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.R;
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
@@ -42,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.widget.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,11 +57,13 @@ public class LinkFragment extends Fragment {
     private String id = User.getID();
     private RequestQueue queue;
     private EditText searchText;
-    private String COURSE = "chinese";
     private Button send, clear;
     private RecyclerView ettRecyclerView;
     private LinearLayoutManager layoutManager;
     private EntityAdapter adapter;
+    private String[] courses;
+    private List<String> courseNames;
+    private Spinner spinner;
 
     private void updateID() {
         String LOGIN_URL = Uris.getLogin();
@@ -92,6 +96,8 @@ public class LinkFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         id = User.getID();
+        courses = Course.getCourses();
+        courseNames = Course.getCourseNames();
         linkViewModel =
                 new ViewModelProvider(this).get(LinkViewModel.class);
 
@@ -124,6 +130,10 @@ public class LinkFragment extends Fragment {
         });
 
         searchText = root.findViewById(R.id.editTextTextMultiLine2);
+        spinner = root.findViewById(R.id.spinner_link);
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, courseNames);
+        spinner.setAdapter(spinnerAdapter);
         queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
 
         updateID();
@@ -145,12 +155,15 @@ public class LinkFragment extends Fragment {
                     if (manager != null)
                         manager.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
 
+                    String courseName = spinner.getSelectedItem().toString();
+                    int pos = courseNames.indexOf(courseName);
+                    String course = courses[pos];
 
                     JSONObject params = new JSONObject();
                     try{
                         params.put("id", id);
                         params.put("context", content);
-                        params.put("course", COURSE);
+                        params.put("course", course);
                     } catch (JSONException e) {}
                     JsonObjectRequest askRequest = new JsonObjectRequest(Request.Method.POST, Uris.getLinkSearch(), params,
                             new Response.Listener<JSONObject>() {
@@ -173,7 +186,7 @@ public class LinkFragment extends Fragment {
                                                     JSONObject res = link_results.getJSONObject(i);
                                                     String type = res.getString("entity_type");
                                                     String entity = res.getString("entity");
-                                                    ett_list.add(new EntityShort(entity, type, COURSE));
+                                                    ett_list.add(new EntityShort(entity, type, course));
                                                     adapter.notifyItemInserted((ett_list.size() - 1));
                                                     ettRecyclerView.scrollToPosition(ett_list.size() - 1);
                                                 }

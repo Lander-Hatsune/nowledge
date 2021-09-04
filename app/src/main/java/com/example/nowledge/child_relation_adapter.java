@@ -1,6 +1,9 @@
 package com.example.nowledge;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +43,23 @@ public class child_relation_adapter extends ArrayAdapter<child_relation> {
 
         viewHolder.child_type.setText(cr.getType());
         viewHolder.child_detail.setText(cr.getDetail());
+        viewHolder.child_search.setTag(position);
+        viewHolder.child_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("click",cr.getDetail());
+                Intent intent_next_item=new Intent(getContext(),EntityDetailActivity.class);
+                intent_next_item.putExtra("name",cr.getDetail());
+                intent_next_item.putExtra("course",cr.getCourse());
+                view.getContext().startActivity(intent_next_item);
+            }
+        });
         return view;
     }
 
     class ViewHolder{
-        TextView child_type;
-        TextView child_detail;
-        Button child_search;
+        public TextView child_type;
+        public TextView child_detail;
+        public Button child_search;
     }
 }

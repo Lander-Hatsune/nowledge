@@ -143,8 +143,24 @@ public class EntityDetailActivity extends AppCompatActivity {
                                 }
                             }
                             super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list);
-                            ListView listViewSC=findViewById(R.id.listSuperContentAtDetail);
-                            listViewSC.setAdapter(adapterSC);
+                            listViewSuperCont.setAdapter(adapterSC);
+
+                            JSONArray contentc = (JSONArray) dataobj.get("content");
+                            for (int i = 0,j = 0; i < contents.length(); i++) {
+                                if (j > 10) {
+                                    break;
+                                }
+                                JSONObject obj = contents.getJSONObject(i);
+                                String type = obj.getString("predicate_label");
+                                if (obj.has("object_label")) {
+                                    String detail = obj.getString("object_label");
+                                    j++;
+                                    child_relation_list.add(new child_relation(type,detail,course));
+                                }
+                            }
+                            child_relation_adapter adapterCC = new child_relation_adapter(EntityDetailActivity.this,R.layout.child_relation_item,child_relation_list);
+                            listViewChildCont.setAdapter(adapterCC);
+
                         } catch (JSONException e) {
                             Log.e("Error parsing detail obj", e.toString());
                         }

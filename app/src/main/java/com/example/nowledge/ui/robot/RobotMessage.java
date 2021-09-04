@@ -48,6 +48,8 @@ public class RobotMessage extends RecyclerView.Adapter<RobotMessage.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.robot_message_item, parent, false);
+        view.setFocusable(false);
+
         return new ViewHolder(view);
     }
 

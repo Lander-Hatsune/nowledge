@@ -2,6 +2,7 @@ package com.example.nowledge.ui.link;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.R;
+import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
@@ -40,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.widget.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,11 +57,13 @@ public class LinkFragment extends Fragment {
     private String id = User.getID();
     private RequestQueue queue;
     private EditText searchText;
-    private String COURSE = "chinese";
     private Button send, clear;
     private RecyclerView ettRecyclerView;
     private LinearLayoutManager layoutManager;
     private EntityAdapter adapter;
+    private String[] courses;
+    private List<String> courseNames;
+    private Spinner spinner;
 
     private void updateID() {
         String LOGIN_URL = Uris.getLogin();
@@ -89,6 +95,9 @@ public class LinkFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        id = User.getID();
+        courses = Course.getCourses();
+        courseNames = Course.getCourseNames();
         linkViewModel =
                 new ViewModelProvider(this).get(LinkViewModel.class);
 
@@ -97,8 +106,16 @@ public class LinkFragment extends Fragment {
 
         ettRecyclerView = root.findViewById(R.id.link_entity_circle);
         layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        adapter = new EntityAdapter(ett_list);
-
+        adapter = new EntityAdapter(ett_list, "link");
+        adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemCLick(String course, String name) {
+                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                intentDetail.putExtra("course", course);
+                intentDetail.putExtra("name", name);
+                startActivity(intentDetail);
+            }
+        });
         ettRecyclerView.setLayoutManager(layoutManager);
         ettRecyclerView.setAdapter(adapter);
 
@@ -113,6 +130,10 @@ public class LinkFragment extends Fragment {
         });
 
         searchText = root.findViewById(R.id.editTextTextMultiLine2);
+        spinner = root.findViewById(R.id.spinner_link);
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, courseNames);
+        spinner.setAdapter(spinnerAdapter);
         queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
 
         updateID();
@@ -127,18 +148,22 @@ public class LinkFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
                 String content = searchText.getText().toString();
+                Log.d("link search", "[" + content + "]");
                 if (!content.equals("")) {
                     searchText.setText("");
                     InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
                     if (manager != null)
                         manager.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
 
+                    String courseName = spinner.getSelectedItem().toString();
+                    int pos = courseNames.indexOf(courseName);
+                    String course = courses[pos];
 
                     JSONObject params = new JSONObject();
                     try{
                         params.put("id", id);
                         params.put("context", content);
-                        params.put("course", COURSE);
+                        params.put("course", course);
                     } catch (JSONException e) {}
                     JsonObjectRequest askRequest = new JsonObjectRequest(Request.Method.POST, Uris.getLinkSearch(), params,
                             new Response.Listener<JSONObject>() {
@@ -161,7 +186,7 @@ public class LinkFragment extends Fragment {
                                                     JSONObject res = link_results.getJSONObject(i);
                                                     String type = res.getString("entity_type");
                                                     String entity = res.getString("entity");
-                                                    ett_list.add(new EntityShort(entity, type));
+                                                    ett_list.add(new EntityShort(entity, type, course));
                                                     adapter.notifyItemInserted((ett_list.size() - 1));
                                                     ettRecyclerView.scrollToPosition(ett_list.size() - 1);
                                                 }
@@ -188,13 +213,6 @@ public class LinkFragment extends Fragment {
         });
 
 
-//        final TextView textView = binding.textLink;
-//        linkViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         return root;
     }
 

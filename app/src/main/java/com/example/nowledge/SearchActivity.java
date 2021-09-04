@@ -1,6 +1,8 @@
 package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
+import com.example.nowledge.utils.EntityAdapter;
+import com.example.nowledge.utils.EntityShort;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,7 +110,7 @@ public class SearchActivity extends AppCompatActivity {
 
         TextView infoText = findViewById(R.id.textViewResultInfo);
 
-        ListView listView = findViewById(R.id.listViewSearchResult);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewSearchResult);
 
         String[] courses = {"chinese", "math", "english",
                 "geo", "history", "politics",
@@ -126,7 +130,7 @@ public class SearchActivity extends AppCompatActivity {
         params += "&searchKey=" + key;
         params += "&id=" + id;
 
-        List<String> entityNameList = new ArrayList<>();
+        List<EntityShort> ett_list = new ArrayList<>();
 
         String url = Uris.getSearch() + params;
 
@@ -146,12 +150,23 @@ public class SearchActivity extends AppCompatActivity {
                                 String label = obj.get("label").toString();
                                 String category = obj.get("category").toString();
                                 String uri = obj.get("uri").toString();
-                                entityNameList.add(label);
+                                ett_list.add(new EntityShort(label, category, course));
                             }
                             infoText.setText(infoText.getText().toString() + list.length() + "条结果");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                    (getApplicationContext(), R.layout.entity_short_item, entityNameList);
-                            listView.setAdapter(adapter);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                            recyclerView.setLayoutManager(layoutManager);
+                            EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+                            adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemCLick(String course, String name) {
+                                    Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
+                                    intentDetail.putExtra("course", course);
+                                    intentDetail.putExtra("name", name);
+                                    startActivity(intentDetail);
+                                }
+                            });
+                            recyclerView.setAdapter(adapter);
+
                         } catch (JSONException e) {}
                     }
                 }, new Response.ErrorListener() {
@@ -161,16 +176,16 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
         reqQue.add(req);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("click", "number " + i);
-                Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
-                intentDetail.putExtra("name", entityNameList.get(i));
-                intentDetail.putExtra("course", courses[pos]);
-                startActivity(intentDetail);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Log.d("click", "number " + i);
+//                Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
+//                intentDetail.putExtra("name", entityNameList.get(i));
+//                intentDetail.putExtra("course", courses[pos]);
+//                startActivity(intentDetail);
+//            }
+//        });
     }
 
 //    @Override

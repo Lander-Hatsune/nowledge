@@ -10,10 +10,13 @@
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/ic_robot_black_24dp.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_main.xml" value="0.136" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_search.xml" value="0.1265625" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_search_transfer.xml" value="0.10260416666666666" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_user.xml" value="0.10260416666666666" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/course_list.xml" value="0.1" />
-        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/entity_item.xml" value="0.2804878048780488" />
-        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/entity_short_item.xml" value="0.2513586956521739" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/entity_item.xml" value="0.2" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/entity_item_list.xml" value="0.13125" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/entity_short_item.xml" value="0.1" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/fragment_dashboard.xml" value="0.264" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/fragment_home.xml" value="0.176" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/fragment_link.xml" value="0.1" />

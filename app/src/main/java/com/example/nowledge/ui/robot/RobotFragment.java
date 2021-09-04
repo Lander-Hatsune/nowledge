@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -151,21 +152,6 @@ public class RobotFragment extends Fragment {
             }
         });
 
-        root.findViewById(R.id.robot_base).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Log.d("click robot fragment", String.valueOf(view.getId()));
-                switch (view.getId()) {
-                    case R.id.robot_edit:
-                        InputMethodManager imm = (InputMethodManager)
-                                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        break;
-                }
-            }
-        });
-
 
         return root;
     }
@@ -188,6 +174,8 @@ public class RobotFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
 
 
 

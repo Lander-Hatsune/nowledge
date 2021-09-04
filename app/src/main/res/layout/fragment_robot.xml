@@ -5,8 +5,7 @@
     android:id="@+id/robot_base"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.robot.RobotFragment"
-    android:clickable="true">
+    tools:context=".ui.robot.RobotFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/robot_edit"

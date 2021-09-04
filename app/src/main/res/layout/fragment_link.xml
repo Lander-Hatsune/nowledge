@@ -23,8 +23,8 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="238dp"
-                android:layout_margin="20dp"
+                android:layout_height="208dp"
+                android:layout_margin="30dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="#F3E9FF"
                 app:cardCornerRadius="10dp"
@@ -46,7 +46,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="3px"
+
                             android:orientation="horizontal">
 
                             <Button
@@ -58,10 +58,11 @@
                                 android:layout_weight="1"
                                 android:backgroundTint="#E8B470"
                                 android:text="@string/button_send" />
+
                             <Spinner
                                 android:layout_width="70dp"
                                 android:layout_height="match_parent"
-                                android:layout_margin="5dp"/>
+                                android:layout_margin="5dp" />
 
                             <Button
                                 android:id="@+id/link_button_clear"
@@ -102,12 +103,15 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="20dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/link_entity_circle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="-8dp" />

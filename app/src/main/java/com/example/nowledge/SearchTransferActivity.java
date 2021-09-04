@@ -47,7 +47,7 @@ public class SearchTransferActivity extends AppCompatActivity {
                 historyStr.add(his.second);
             }
             ArrayAdapter<String> hisAdaptor = new ArrayAdapter<>
-                    (this, R.layout.entity_short_item, historyStr);
+                    (this, R.layout.entity_item_list, historyStr);
             hisListView.setAdapter(hisAdaptor);
             hisListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.volley.Request;
@@ -36,6 +39,8 @@ import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentHomeBinding;
+import com.example.nowledge.utils.EntityAdapter;
+import com.example.nowledge.utils.EntityShort;
 import com.example.nowledge.volley.MyJsonObjectRequest;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -55,49 +60,22 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private String id = User.getID();
     private RequestQueue requestQueue;
-    private boolean initial = true;
 
-//    private void updateIdSync() {
-//        Log.i("info", "update ID sync start");
-//        Thread updateId = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                RequestFuture<JSONObject> future = RequestFuture.newFuture();
-//                JSONObject obj = new JSONObject();
-//                try {
-//                    obj.put("username", "0");
-//                    obj.put("password", "0");
-//                } catch (JSONException e) {
-//                    Log.e("UpdateId error:", e.toString());
-//                }
-//                Log.d("UpdateId obj Sync", obj.toString());
-//                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Uris.getLogin(), obj, future, future);
-//                requestQueue.add(request);
-//                Log.i("login sync request", request.toString());
-//                try {
-//                    JSONObject response = future.get();
-//                    Log.e("Sync Login Response", response.toString());
-//                    String msg = response.getString("msg");
-//                    id = response.getString("id");
-//
-//                } catch (Exception e) {
-//                    Log.d("Sync Request Error", e.toString());
-//                }
-//            }
-//        });
-//        updateId.start();
-//        Log.i("new thread", String.valueOf(updateId.getId()));
-////        try {
-////            updateId.join();
-////        } catch (InterruptedException e) {
-////            Log.e("Interruption in UpdateIdSync", e.toString());
-////        }
-//
-//
-//    }
+    private RecyclerView recyclerView;
+    private List<EntityShort> ett_list = new ArrayList<>();
 
-    protected void updateId() {
+    private String[] courses = {"chinese", "math", "english",
+            "geo", "history", "politics",
+            "physics", "chemistry", "biology"};
+    private String[] searchKeys = {"文", "实", "时",
+            "流", "代", "发",
+            "学", "反", "物"};
+    private List<String> courseNames = new ArrayList<String>(Arrays.asList("语文", "数学", "英语",
+            "地理", "历史", "政治",
+            "物理", "化学", "生物"));
+
+
+    protected void updateId(int courseID) {
         requestQueue = Singleton.getInstance
                 (getActivity().getApplicationContext()).getRequestQueue();
         JSONObject obj = null;
@@ -114,15 +92,12 @@ public class HomeFragment extends Fragment {
                         obj, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Login request success.", "login initially!" + String.valueOf(initial));
+                        Log.d("Login request success.", "courseID:" + String.valueOf(courseID));
                         try {
                             id = response.getString("id");
                             User.setID(id);
                             Log.d("ID", id);
-                            if (initial == true) {
-                                sendCourseRequest("chinese", "文", binding.tabLayout.getTabAt(0));
-                                initial = false;
-                            }
+                            sendCourseRequest(courseID, binding.tabLayout.getTabAt(0), false);
                         } catch (JSONException e) {
                             Log.e("Login request msg error", e.toString());
                         }
@@ -137,11 +112,11 @@ public class HomeFragment extends Fragment {
         requestQueue.add(req);
     }
 
-    private void sendCourseRequest(String course, String searchkey, TabLayout.Tab tab) {
-        ListView listView = binding.listView;
+    private void sendCourseRequest(int courseID, TabLayout.Tab tab, boolean first) {
         RequestQueue reqQue = Singleton.getInstance
                 (getActivity().getApplicationContext()).getRequestQueue();
 
+        String course = courses[courseID], searchkey = searchKeys[courseID];
         String params = "?";
         params += "course=" + course;
         params += "&searchKey=" + searchkey;
@@ -162,8 +137,10 @@ public class HomeFragment extends Fragment {
                     Log.d("data", response.get("data").toString());
                     Log.d("code", response.getString("code"));
                     String code = response.getString("code");
+                    ett_list.clear();
                     if (!code.equals("0")) {
-                        updateId();
+                        if (first)
+                            updateId(courseID);
                     } else {
                         list = (JSONArray) response.get("data");
                         for (int i = 0; i < list.length(); i++) {
@@ -171,23 +148,27 @@ public class HomeFragment extends Fragment {
                             String label = obj.get("label").toString();
                             String category = obj.get("category").toString();
                             String uri = obj.get("uri").toString();
-                            entityNameList.add(label);
+                            ett_list.add(new EntityShort(label, category, course));
+
                         }
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                            (getActivity().getApplicationContext(), R.layout.entity_short_item, entityNameList);
-                    listView.setAdapter(adapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                    recyclerView.setLayoutManager(layoutManager);
+                    EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+                    adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Log.d("click", "number " + i);
+                        public void onItemCLick(String course, String name) {
                             Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
-                            intentDetail.putExtra("name", entityNameList.get(i));
-                            intentDetail.putExtra("course", tab.getText().toString());
+                            intentDetail.putExtra("course", course);
+                            intentDetail.putExtra("name", name);
                             startActivity(intentDetail);
                         }
                     });
-                } catch (JSONException e) {}
+                    recyclerView.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    Log.e("JsonError", e.toString());
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -206,9 +187,9 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         requestQueue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+        recyclerView = root.findViewById(R.id.recycleViewHome);
 
-        initial = true;
-        updateId();
+        updateId(0);
         TabLayout tabLayout = binding.tabLayout;
 
 
@@ -217,19 +198,11 @@ public class HomeFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
 
                 Log.d("Tab selected", tab.getText().toString());
-                String[] courses = {"chinese", "math", "english",
-                        "geo", "history", "politics",
-                        "physics", "chemistry", "biology"};
-                String[] searchKeys = {"文", "实", "时",
-                        "流", "代", "发",
-                        "学", "反", "物"};
-                List<String> courseNames = new ArrayList<String>(Arrays.asList("语文", "数学", "英语",
-                        "地理", "历史", "政治",
-                        "物理", "化学", "生物"));
+
 
                 Integer pos = courseNames.indexOf(tab.getText().toString());
                 Log.d("pos", pos.toString());
-                sendCourseRequest(courses[pos], searchKeys[pos], tab);
+                sendCourseRequest(pos, tab, true);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.example.nowledge.ui.link;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
@@ -98,8 +100,16 @@ public class LinkFragment extends Fragment {
 
         ettRecyclerView = root.findViewById(R.id.link_entity_circle);
         layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        adapter = new EntityAdapter(ett_list);
-
+        adapter = new EntityAdapter(ett_list, "link");
+        adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemCLick(String course, String name) {
+                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                intentDetail.putExtra("course", course);
+                intentDetail.putExtra("name", name);
+                startActivity(intentDetail);
+            }
+        });
         ettRecyclerView.setLayoutManager(layoutManager);
         ettRecyclerView.setAdapter(adapter);
 
@@ -128,6 +138,7 @@ public class LinkFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
                 String content = searchText.getText().toString();
+                Log.d("link search", "[" + content + "]");
                 if (!content.equals("")) {
                     searchText.setText("");
                     InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -162,7 +173,7 @@ public class LinkFragment extends Fragment {
                                                     JSONObject res = link_results.getJSONObject(i);
                                                     String type = res.getString("entity_type");
                                                     String entity = res.getString("entity");
-                                                    ett_list.add(new EntityShort(entity, type));
+                                                    ett_list.add(new EntityShort(entity, type, COURSE));
                                                     adapter.notifyItemInserted((ett_list.size() - 1));
                                                     ettRecyclerView.scrollToPosition(ett_list.size() - 1);
                                                 }
@@ -189,13 +200,6 @@ public class LinkFragment extends Fragment {
         });
 
 
-//        final TextView textView = binding.textLink;
-//        linkViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         return root;
     }
 

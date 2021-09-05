@@ -1,0 +1,8 @@
+<!-- drawable/lightbulb_variant_outline.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:width="24dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path android:fillColor="#FFFFFF" android:pathData="M24 14C20.13 14 17 17.13 17 21C17 23.38 18.19 25.47 20 26.74V29C20 29.55 20.45 30 21 30H27C27.55 30 28 29.55 28 29V26.74C29.81 25.47 31 23.38 31\ 21C31 17.13 27.87 14 24 14M26 25.58V28H25V23.41L26.71 21.71C27.1 21.32 27.1 20.68 26.71 20.29C26.32 19.9 25.68 19.9 25.29 20.29L24 21.59L22.71 20.29C22.32 19.9 21.68 19.9 21.29 20.29C20.9 20.68 20.9 21.32 21.29 21.71L23 23.41V28H22V25.58C20.23 24.81 19 23.05 19 21C19 18.24 21.24 16 24 16S29 18.24 29 21C29 23.05 27.77 24.81 26 25.58M12 32H27V33C27 33.55 26.55 34 26 34H22C21.45 34 21 33.55 21 33V32Z" />
+</vector>

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Nowledge"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".HistoryActivity"
+            android:exported="true" />
+        <activity
             android:name=".NewEntityActivity"
             android:exported="true"
             android:label="@string/title_activity_new_entity"

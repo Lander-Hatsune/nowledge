@@ -22,6 +22,7 @@ public class UserActivity extends AppCompatActivity {
         showUsername.setText(User.getUsername());
 
         Button starlistButton = findViewById(R.id.starlistButton);
+        Button historyButton = findViewById(R.id.historyButton);
         Button logoutButton = findViewById(R.id.logoutButton);
 
         starlistButton.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +40,15 @@ public class UserActivity extends AppCompatActivity {
                 User.setLoggedin(false);
                 User.setUsername("0");
                 onBackPressed();
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentHistory = new Intent
+                        (UserActivity.this, HistoryActivity.class);
+                startActivity(intentHistory);
             }
         });
     }

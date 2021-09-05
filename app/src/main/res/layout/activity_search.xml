@@ -57,7 +57,7 @@
                     style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
+                    android:layout_margin="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:text="搜索到"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/chip_reverse"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
-                android:layout_marginRight="25dp"
+                android:layout_marginRight="10dp"
                 android:text="倒序" />
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView

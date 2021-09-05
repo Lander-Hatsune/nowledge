@@ -34,6 +34,12 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         setTitle("我的历史");
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         ListView lv = findViewById(R.id.historyListView);
         List<String> historyStr = new ArrayList<>();
         List<String> historyCourseStr = new ArrayList<>();

@@ -18,19 +18,14 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.example.nowledge.ui.main.SectionsPagerAdapter;
+import com.example.nowledge.entitydetail.main.SectionsPagerAdapter;
 import com.example.nowledge.databinding.ActivityNewEntityBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NewEntityActivity extends AppCompatActivity {
 
@@ -39,6 +34,9 @@ public class NewEntityActivity extends AppCompatActivity {
     private Boolean starred = false;
     private String name;
     private String course;
+    JSONArray properties = null;
+    JSONArray contents = null;
+    JSONArray questions = null;
 
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
@@ -107,9 +105,7 @@ public class NewEntityActivity extends AppCompatActivity {
 
         Log.d("detailurl:", urld);
         Log.d("questionurl",urlq);
-        JSONArray properties = null;
-        JSONArray contents = null;
-        JSONArray questions = null;
+
 
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
 

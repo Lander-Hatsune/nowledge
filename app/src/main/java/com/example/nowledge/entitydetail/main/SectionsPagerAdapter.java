@@ -1,4 +1,4 @@
-package com.example.nowledge.ui.main;
+package com.example.nowledge.entitydetail.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.nowledge.EntityCharacter;
-import com.example.nowledge.EntityQuestion;
-import com.example.nowledge.EntityRelation;
+import com.example.nowledge.entitydetail.EntityCharacter;
+import com.example.nowledge.entitydetail.EntityQuestion;
+import com.example.nowledge.entitydetail.EntityRelation;
 import com.example.nowledge.R;
 
 import org.json.JSONArray;

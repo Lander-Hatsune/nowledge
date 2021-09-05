@@ -12,6 +12,7 @@ public class Uris {
     private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
     private static final String search = edukg + "/instanceList";
     private static final String detail = edukg + "/infoByInstanceName";
+    private static final String question = edukg + "/questionListByUriName";
 
 
     public static String getLogin() {
@@ -41,4 +42,6 @@ public class Uris {
     public static String getSearch() { return search; }
 
     public static String getDetail() { return detail; }
+
+    public static String getQuestion() {return question; }
 }

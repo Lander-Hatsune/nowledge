@@ -30,7 +30,6 @@ public class child_relation_adapter extends ArrayAdapter<child_relation> {
         ViewHolder viewHolder;
         if(convertView==null){
             view=LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-
             viewHolder=new ViewHolder();
             viewHolder.child_type=view.findViewById(R.id.child_relation_type);
             viewHolder.child_detail=view.findViewById(R.id.child_relation_detail);

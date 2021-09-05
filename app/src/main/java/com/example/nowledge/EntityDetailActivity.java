@@ -109,24 +109,24 @@ public class EntityDetailActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        List<String> propertiesStr = new ArrayList<>();
+                        List<character> character_list = new ArrayList<>();
                         List<super_relation>  super_relation_list = new ArrayList<>();
                         List<child_relation>  child_relation_list = new ArrayList<>();
                         try {
                             JSONObject dataobj = response.getJSONObject("data");
                             Log.d("dataobj", dataobj.toString());
+
                             JSONArray properties = (JSONArray) dataobj.get("property");
                             for (int i = 0; i < properties.length(); i++) {
                                 if (i > 10) {
                                     break;
                                 }
                                 JSONObject obj = properties.getJSONObject(i);
-                                String predicate = obj.get("predicateLabel").toString();
-                                String object = obj.get("object").toString();
-                                propertiesStr.add(predicate + ": " + object);
+                                String predicate = obj.getString("predicateLabel");
+                                String object = obj.getString("object");
+                                character_list.add(new character(predicate+":","  "+object));
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                    (getApplicationContext(), R.layout.attr_item, propertiesStr);
+                            character_adapter adapter = new character_adapter(EntityDetailActivity.this,R.layout.character_item,character_list);
                             listViewProp.setAdapter(adapter);
 
                             JSONArray contents = (JSONArray) dataobj.get("content");
@@ -145,7 +145,6 @@ public class EntityDetailActivity extends AppCompatActivity {
                             super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list);
                             listViewSuperCont.setAdapter(adapterSC);
 
-                            JSONArray contentc = (JSONArray) dataobj.get("content");
                             for (int i = 0,j = 0; i < contents.length(); i++) {
                                 if (j > 10) {
                                     break;
@@ -188,7 +187,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                             for (int i = 0; i < starlist.length(); i++) {
                                 JSONObject star = starlist.getJSONObject(i);
                                 if (star.getString("course").equals(course) &&
-                                star.getString("name").equals(name)) {
+                                        star.getString("name").equals(name)) {
                                     starred = true;
                                     ActionMenuItemView starmark = findViewById(R.id.actionStar);
                                     MenuItem item = starmark.getItemData();

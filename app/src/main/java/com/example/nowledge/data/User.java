@@ -1,5 +1,6 @@
 package com.example.nowledge.data;
 
+import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 
 public class User {
     private static String username = "0";
-    private static List<Pair<String, String>> history = null;
+    private static List<Pair<String, String>> history = new ArrayList<>();
     private static String ID = "";
     private static boolean loggedin = false;
 
@@ -24,6 +25,7 @@ public class User {
     }
 
     public static List<Pair<String, String>> getHistory() {
+        Log.d("history", history.toString());
         return history;
     }
 
@@ -32,6 +34,7 @@ public class User {
             history = new ArrayList<Pair<String, String>>();
         }
         history.add(new Pair<String, String>(course, name));
+        Log.d("User add history", course + "/" + name);
     }
 
     public static boolean isLoggedin() {

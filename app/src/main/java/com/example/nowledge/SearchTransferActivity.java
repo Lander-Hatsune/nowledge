@@ -23,45 +23,31 @@ import java.util.List;
 
 public class SearchTransferActivity extends AppCompatActivity {
 
+    private List<String> historyStr;
+    private Button searchButton;
+    private EditText searchkey;
+    private ListView hisListView;
+    private String[] courses;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_transfer);
 
-        Button searchButton = findViewById(R.id.searchButton);
-        EditText searchkey = findViewById(R.id.editTextSearchKey);
+        searchButton = findViewById(R.id.searchButton);
+        searchkey = findViewById(R.id.editTextSearchKey);
 
         Spinner spinner = findViewById(R.id.spinner);
 
         List<String> courseNames = Course.getCourseNames();
-        String[] courses = Course.getCourses();
+        courses = Course.getCourses();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, R.layout.support_simple_spinner_dropdown_item, courseNames);
         spinner.setAdapter(adapter);
 
-        ListView hisListView = findViewById(R.id.historyListView);
-        List<String> historyStr = new ArrayList<>();
-        if (User.getHistory() != null) {
-            for (Pair<String, String> his : User.getHistory()) {
-                historyStr.add(his.second);
-            }
-            ArrayAdapter<String> hisAdaptor = new ArrayAdapter<>
-                    (this, R.layout.entity_short_item, historyStr);
-            hisListView.setAdapter(hisAdaptor);
-            hisListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String course = User.getHistory().get(i).first;
-                    String name = User.getHistory().get(i).second;
-                    Log.d("selected course", course);
-                    Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
-                    intentSearch.putExtra("key", name);
-                    intentSearch.putExtra("course", course);
-                    startActivity(intentSearch);
-                }
-            });
-        }
+        hisListView = findViewById(R.id.historyListView);
+
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,5 +69,38 @@ public class SearchTransferActivity extends AppCompatActivity {
                 }
             }
         });
+
+        updateHistory();
     }
+
+    private void updateHistory() {
+        historyStr = new ArrayList<>();
+        if (User.getHistory() != null) {
+            for (Pair<String, String> his : User.getHistory()) {
+                historyStr.add(his.second);
+            }
+            ArrayAdapter<String> hisAdaptor = new ArrayAdapter<>
+                    (this, R.layout.entity_short_item, historyStr);
+            hisListView.setAdapter(hisAdaptor);
+            hisListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    String course = User.getHistory().get(i).first;
+                    String name = User.getHistory().get(i).second;
+                    Log.d("selected course", course);
+                    Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
+                    intentSearch.putExtra("key", name);
+                    intentSearch.putExtra("course", course);
+                    startActivity(intentSearch);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateHistory();
+    }
+
 }

@@ -18,7 +18,6 @@ import com.example.nowledge.data.Course;
 import com.example.nowledge.data.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchTransferActivity extends AppCompatActivity {
@@ -57,7 +56,7 @@ public class SearchTransferActivity extends AppCompatActivity {
                     String courseName = spinner.getSelectedItem().toString();
                     int pos = courseNames.indexOf(courseName);
                     String course = courses[pos];
-                    User.addHistory(course, key);
+                    User.addSearchHistory(course, key);
                     Log.d("selected course", course);
                     Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
                     intentSearch.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -75,8 +74,8 @@ public class SearchTransferActivity extends AppCompatActivity {
 
     private void updateHistory() {
         historyStr = new ArrayList<>();
-        if (User.getHistory() != null) {
-            for (Pair<String, String> his : User.getHistory()) {
+        if (User.getSearchHistory() != null) {
+            for (Pair<String, String> his : User.getSearchHistory()) {
                 historyStr.add(his.second);
             }
             ArrayAdapter<String> hisAdaptor = new ArrayAdapter<>
@@ -85,8 +84,8 @@ public class SearchTransferActivity extends AppCompatActivity {
             hisListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String course = User.getHistory().get(i).first;
-                    String name = User.getHistory().get(i).second;
+                    String course = User.getSearchHistory().get(i).first;
+                    String name = User.getSearchHistory().get(i).second;
                     Log.d("selected course", course);
                     Intent intentSearch = new Intent(SearchTransferActivity.this, SearchActivity.class);
                     intentSearch.putExtra("key", name);

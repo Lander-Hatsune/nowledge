@@ -40,6 +40,15 @@
             android:textSize="15dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"></Button>
         <Button
+            android:id="@+id/historyButton"
+            android:layout_marginHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="浏览历史"
+            android:textSize="15dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"></Button>
+        <Button
             android:id="@+id/logoutButton"
             android:layout_marginHorizontal="10dp"
             android:paddingVertical="10dp"

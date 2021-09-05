@@ -25,6 +25,7 @@ import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
 import com.example.nowledge.utils.EntityAdapter;
 import com.example.nowledge.utils.EntityShort;
+import com.google.android.material.chip.Chip;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +33,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     private String id = User.getID();
     private String[] courses;
     private List<String> courseNames;
+    private List<EntityShort> ett_list;
+    private EntityAdapter adapter;
+    private Chip chip_category, chip_reverse;
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
                 (getApplicationContext()).getRequestQueue();
@@ -88,6 +93,8 @@ public class SearchActivity extends AppCompatActivity {
         courseNames = Course.getCourseNames();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        chip_category = findViewById(R.id.chip_category);
+        chip_reverse = findViewById(R.id.chip_reverse);
 
         Bundle bundle = this.getIntent().getExtras();
         String key = bundle.getString("key");
@@ -133,7 +140,7 @@ public class SearchActivity extends AppCompatActivity {
         params += "&searchKey=" + key;
         params += "&id=" + id;
 
-        List<EntityShort> ett_list = new ArrayList<>();
+        ett_list = new ArrayList<>();
 
         String url = Uris.getSearch() + params;
 
@@ -155,10 +162,11 @@ public class SearchActivity extends AppCompatActivity {
                                 String uri = obj.get("uri").toString();
                                 ett_list.add(new EntityShort(label, category, course));
                             }
+                            ett_list.sort(EntityShort.getComparator(false, false));
                             infoText.setText(infoText.getText().toString() + list.length() + "条结果");
                             LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                             recyclerView.setLayoutManager(layoutManager);
-                            EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+                            adapter = new EntityAdapter(ett_list, "list");
                             adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemCLick(String course, String name) {
@@ -179,6 +187,26 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
         reqQue.add(req);
+
+        chip_category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Comparator<EntityShort> comparator =
+                        EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
+                ett_list.sort(comparator);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        chip_reverse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Comparator<EntityShort> comparator =
+                        EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
+                ett_list.sort(comparator);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
 //    @Override

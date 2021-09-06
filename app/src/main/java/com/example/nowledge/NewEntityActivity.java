@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.nowledge.entitydetail.main.SectionsPagerAdapter;
 import com.example.nowledge.databinding.ActivityNewEntityBinding;
@@ -34,9 +35,9 @@ public class NewEntityActivity extends AppCompatActivity {
     private Boolean starred = false;
     private String name;
     private String course;
-    JSONArray properties = null;
-    JSONArray contents = null;
-    JSONArray questions = null;
+    JSONArray properties = new JSONArray();
+    JSONArray contents = new JSONArray();
+    JSONArray questions = new JSONArray();
 
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
@@ -92,7 +93,8 @@ public class NewEntityActivity extends AppCompatActivity {
         name = bundle.getString("name");
         course = bundle.getString("course");
 
-        this.setTitle(name);
+        TextView title=(TextView) findViewById(R.id.entity_title);
+        title.setText(name);
 
         String urld = Uris.getDetail() + "?";
         urld += "name=" + name;
@@ -113,6 +115,7 @@ public class NewEntityActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.e("response",response.toString());
                         try {
                             JSONObject dataobj = response.getJSONObject("data");
                             Log.d("dataobj", dataobj.toString());
@@ -150,19 +153,10 @@ public class NewEntityActivity extends AppCompatActivity {
         reqQue.add(reqd);
 
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),properties,contents,questions);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),properties,contents,questions,course);
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = binding.fab;
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 }

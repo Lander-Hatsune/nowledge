@@ -7,44 +7,36 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
+import com.example.nowledge.character;
+import com.example.nowledge.character_adapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EntityCharacter#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class EntityCharacter extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM = "character";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private com.alibaba.fastjson.JSONArray mcharacter=new com.alibaba.fastjson.JSONArray();
 
     public EntityCharacter() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EntityCharacter.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EntityCharacter newInstance(String param1, String param2) {
+    public static EntityCharacter newInstance(JSONArray character) {
         EntityCharacter fragment = new EntityCharacter();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM, character.toString());
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,15 +45,30 @@ public class EntityCharacter extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mcharacter = JSON.parseArray(getArguments().getString(ARG_PARAM));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_entity_character, container, false);
+
+        View view= inflater.inflate(R.layout.fragment_entity_character, container, false);
+        ListView listViewProp = (ListView) view.findViewById(R.id.listAtDetail);
+        List<character> character_list = new ArrayList<>();
+        if(mcharacter!=null){
+            for (int i = 0; i < mcharacter.size(); i++) {
+                if (i > 10) {
+                    break;
+                }
+                JSONObject obj = mcharacter.getJSONObject(i);
+                String predicate = obj.getString("predicateLabel");
+                String object = obj.getString("object");
+                character_list.add(new character(predicate+":","  "+object));
+            }
+        }
+        character_adapter adapter = new character_adapter(getContext(),R.layout.character_item,character_list);
+        listViewProp.setAdapter(adapter);
+        return view;
     }
 }

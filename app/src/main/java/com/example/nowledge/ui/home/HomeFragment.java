@@ -34,6 +34,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.MainActivity;
+import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;

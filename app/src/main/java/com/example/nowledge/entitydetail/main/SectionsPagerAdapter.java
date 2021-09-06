@@ -25,16 +25,24 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
-    JSONArray mProperties = null;
-    JSONArray mContents = null;
-    JSONArray mQuestions = null;
+    String mProperties = "";
+    String mContents = "";
+    String mQuestions = "";
+    String mcourse= "";
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, JSONArray properties, JSONArray contents, JSONArray questions) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, JSONArray properties, JSONArray contents, JSONArray questions,String course) {
         super(fm);
         mContext = context;
-        mProperties=properties;
-        mContents=contents;
-        mQuestions=questions;
+        try{
+            mProperties=properties.toString();
+        }catch (NullPointerException e){}
+        try{
+            mContents=contents.toString();
+        }catch (NullPointerException e){}
+        try{
+            mQuestions=questions.toString();
+        }catch (NullPointerException e){}
+        mcourse=course;
     }
 
     @Override
@@ -44,12 +52,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 fregment=new EntityCharacter();
                 Bundle bundle0=new Bundle();
+                bundle0.putString("character",mProperties);
+                fregment.setArguments(bundle0);
                 break;
             case 1:
                 fregment=new EntityRelation();
+                Bundle bundle1=new Bundle();
+                bundle1.putString("content",mContents);
+                bundle1.putString("course",mcourse);
+                fregment.setArguments(bundle1);
                 break;
             case 2:
                 fregment=new EntityQuestion();
+                Bundle bundle2=new Bundle();
+                bundle2.putString("character",mQuestions);
+                fregment.setArguments(bundle2);
                 break;
         }
         return fregment;
@@ -63,7 +80,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
+        // Show 3 total pages.
+        return 3;
     }
 }

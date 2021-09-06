@@ -1,4 +1,4 @@
-package com.example.nowledge;
+package com.example.nowledge.utils;
 
 public class character {
     private String type;

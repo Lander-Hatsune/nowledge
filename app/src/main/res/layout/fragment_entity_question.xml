@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".entitydetail.EntityQuestion">
 
-
-    <TextView
+    <ListView
+        android:id="@+id/QuestionList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </ListView>
 
 </FrameLayout>

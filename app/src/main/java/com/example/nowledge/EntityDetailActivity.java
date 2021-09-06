@@ -2,17 +2,11 @@ package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.core.content.res.ResourcesCompat;
 
-import android.content.ClipData;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,6 +18,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
+import com.example.nowledge.utils.character;
+import com.example.nowledge.utils.character_adapter;
+import com.example.nowledge.utils.child_relation;
+import com.example.nowledge.utils.child_relation_adapter;
+import com.example.nowledge.utils.super_relation;
+import com.example.nowledge.utils.super_relation_adapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;

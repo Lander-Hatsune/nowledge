@@ -1,47 +1,36 @@
 package com.example.nowledge.entitydetail;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.nowledge.EntityDetailActivity;
-import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
-import com.example.nowledge.character;
-import com.example.nowledge.character_adapter;
-import com.example.nowledge.child_relation;
-import com.example.nowledge.child_relation_adapter;
+import com.example.nowledge.utils.character;
+import com.example.nowledge.utils.character_adapter;
+import com.example.nowledge.utils.child_relation;
+import com.example.nowledge.utils.child_relation_adapter;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
-import com.example.nowledge.super_relation;
-import com.example.nowledge.super_relation_adapter;
+import com.example.nowledge.utils.super_relation;
+import com.example.nowledge.utils.super_relation_adapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class EntityCharacter extends Fragment {
 

@@ -1,6 +1,5 @@
-package com.example.nowledge;
+package com.example.nowledge.utils;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.R;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class child_relation_adapter extends ArrayAdapter<child_relation> {
             @Override
             public void onClick(View view) {
                 Log.d("click",cr.getDetail());
-                Intent intent_next_item=new Intent(getContext(),EntityDetailActivity.class);
+                Intent intent_next_item=new Intent(getContext(), EntityDetailActivity.class);
                 intent_next_item.putExtra("name",cr.getDetail());
                 intent_next_item.putExtra("course",cr.getCourse());
                 view.getContext().startActivity(intent_next_item);

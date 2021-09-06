@@ -38,48 +38,6 @@ public class EntityDetailActivity extends AppCompatActivity {
     private String name;
     private String course;
 
-    protected void updateId() {
-        RequestQueue reqQue = Singleton.getInstance
-                (getApplicationContext()).getRequestQueue();
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject();
-            obj.put("username", "0");
-            obj.put("password", "0");
-        } catch (JSONException e) {
-            Log.e("UpdateId error:", e.toString());
-        }
-        Log.d("UpdateId obj", obj.toString());
-        JsonObjectRequest req = new JsonObjectRequest
-                (Request.Method.POST, Uris.getLogin(),
-                        obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Login request success.", "");
-                        String msg = "Unknown Error";
-                        String code = "";
-                        try {
-                            msg = response.getString("msg");
-                            code = response.getString("id");
-                        } catch (JSONException e) {
-                            Log.e("Login request msg/id error", e.toString());
-                        }
-                        if (!(code.equals("-1") || code.equals("-2"))) {
-                            Log.d("logged in, id", code);
-                            id = code;
-                            User.setID(id);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Login error:", error.toString());
-                    }
-                });
-        Log.d("Request:", req.toString());
-        reqQue.add(req);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         id = User.getID();
@@ -206,6 +164,32 @@ public class EntityDetailActivity extends AppCompatActivity {
         });
         reqQue.add(req);
 
+        // add to history
+        if (User.isLoggedin()) {
+            String addHisUrl = Uris.getAddHistory();
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("username", User.getUsername());
+                obj.put("course", course);
+                obj.put("name", name);
+            } catch (JSONException e) {
+                Log.e("add history error", e.toString());
+            }
+            Log.d("add history obj", obj.toString());
+            JsonObjectRequest addHisReq = new JsonObjectRequest(Request.Method.POST, addHisUrl, obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("add history", response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("add history", error.toString());
+                }
+            });
+            reqQue.add(addHisReq);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

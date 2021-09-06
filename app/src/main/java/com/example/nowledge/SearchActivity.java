@@ -162,7 +162,8 @@ public class SearchActivity extends AppCompatActivity {
                                 String uri = obj.get("uri").toString();
                                 ett_list.add(new EntityShort(label, category, course));
                             }
-                            ett_list.sort(EntityShort.getComparator(false, false));
+                            if (ett_list.size() > 0)
+                                ett_list.sort(EntityShort.getComparator(false, false));
                             infoText.setText(infoText.getText().toString() + list.length() + "条结果");
                             LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                             recyclerView.setLayoutManager(layoutManager);
@@ -191,20 +192,24 @@ public class SearchActivity extends AppCompatActivity {
         chip_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Comparator<EntityShort> comparator =
-                        EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
-                ett_list.sort(comparator);
-                adapter.notifyDataSetChanged();
+                if (ett_list.size() > 0) {
+                    Comparator<EntityShort> comparator =
+                            EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
+                    ett_list.sort(comparator);
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
         chip_reverse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Comparator<EntityShort> comparator =
-                        EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
-                ett_list.sort(comparator);
-                adapter.notifyDataSetChanged();
+                if (ett_list.size() > 0) {
+                    Comparator<EntityShort> comparator =
+                            EntityShort.getComparator(chip_category.isChecked(), chip_reverse.isChecked());
+                    ett_list.sort(comparator);
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }

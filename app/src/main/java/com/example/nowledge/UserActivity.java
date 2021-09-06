@@ -24,6 +24,7 @@ public class UserActivity extends AppCompatActivity {
         showUsername.setText(User.getUsername());
 
         Button starlistButton = findViewById(R.id.starlistButton);
+        Button historyButton = findViewById(R.id.historyButton);
         Button logoutButton = findViewById(R.id.logoutButton);
         Button clearButton = findViewById(R.id.clearCache);
 
@@ -52,5 +53,13 @@ public class UserActivity extends AppCompatActivity {
                  Log.d("click!", "clear cache");
              }
          });
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentHistory = new Intent
+                        (UserActivity.this, HistoryActivity.class);
+                startActivity(intentHistory);
+            }
+        });
     }
 }

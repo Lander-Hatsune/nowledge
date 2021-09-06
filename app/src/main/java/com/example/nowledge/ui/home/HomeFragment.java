@@ -1,6 +1,8 @@
 package com.example.nowledge.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.style.TabStopSpan;
@@ -52,7 +54,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
@@ -110,10 +115,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void sendCourseRequest(int courseID, TabLayout.Tab tab, boolean first) {
+        String course = courses[courseID], searchkey = searchKeys[courseID];
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
+        Log.e("shared preferences", sharedPreferences.toString());
+        Set<String> cache_content = sharedPreferences.getStringSet(courses[courseID], new HashSet<String>());
+
+        if (cache_content.size() > 0) {
+            getContentFromCache(cache_content, course);
+            return;
+        }
+
         RequestQueue reqQue = Singleton.getInstance
                 (getActivity().getApplicationContext()).getRequestQueue();
 
-        String course = courses[courseID], searchkey = searchKeys[courseID];
+
         String params = "?";
         params += "course=" + course;
         params += "&searchKey=" + searchkey;
@@ -128,7 +144,7 @@ public class HomeFragment extends Fragment {
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JSONArray list = null;
+                JSONArray list = new JSONArray();
                 try {
                     Log.d("resp:", response.toString());
                     Log.d("data", response.get("data").toString());
@@ -140,14 +156,25 @@ public class HomeFragment extends Fragment {
                             updateId(courseID);
                     } else {
                         list = (JSONArray) response.get("data");
+                        HashSet<String> strSet = new HashSet<>();
+
                         for (int i = 0; i < list.length(); i++) {
                             JSONObject obj = list.getJSONObject(i);
                             String label = obj.get("label").toString();
                             String category = obj.get("category").toString();
                             String uri = obj.get("uri").toString();
                             ett_list.add(new EntityShort(label, category, course));
+                            strSet.add(obj.toString());
 
                         }
+
+
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putStringSet(course, strSet);
+                        editor.apply();
+
+
                     }
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
                     recyclerView.setLayoutManager(layoutManager);
@@ -199,6 +226,8 @@ public class HomeFragment extends Fragment {
 
                 Integer pos = courseNames.indexOf(tab.getText().toString());
                 Log.d("pos", pos.toString());
+                String course = courses[pos];
+
                 sendCourseRequest(pos, tab, true);
             }
 
@@ -224,5 +253,57 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void getContentFromCache(Set<String> str_response, String course) {
+        Log.d("Cache!", course + ":" + str_response.toString());
+
+
+        JSONArray list = new JSONArray();
+        Iterator<String> iter = str_response.iterator();
+        while (iter.hasNext()) {
+            String tmp = iter.next();
+            JSONObject tmp_obj = new JSONObject();
+            com.alibaba.fastjson.JSONObject ali_json = com.alibaba.fastjson.JSONObject.parseObject(tmp);
+            for (String key : ali_json.keySet()) {
+                Object value = ali_json.get(key);
+                try{
+                    tmp_obj.put(key, value);
+                } catch (JSONException e){
+                    Log.e("create cache for home error", key + " " + value.toString());
+                }
+            }
+            list.put(tmp_obj);
+        }
+        try{
+            ett_list.clear();
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject obj = list.getJSONObject(i);
+                String label = obj.get("label").toString();
+                String category = obj.get("category").toString();
+                String uri = obj.get("uri").toString();
+                ett_list.add(new EntityShort(label, category, course));
+
+            }
+        } catch (JSONException e) {
+
+        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+        adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemCLick(String course, String name) {
+                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                intentDetail.putExtra("course", course);
+                intentDetail.putExtra("name", name);
+                startActivity(intentDetail);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+
+
+
     }
 }

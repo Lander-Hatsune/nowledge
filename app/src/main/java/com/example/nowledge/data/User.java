@@ -33,8 +33,11 @@ public class User {
         if (searchHistory == null) {
             searchHistory = new ArrayList<Pair<String, String>>();
         }
-        searchHistory.add(new Pair<String, String>(course, name));
-        Log.d("User add history", course + "/" + name);
+        if (searchHistory.indexOf(new Pair<String, String> (course, name)) == -1){
+            searchHistory.add(new Pair<String, String>(course, name));
+            Log.d("User add history", course + "/" + name);
+        }
+
     }
 
     public static boolean isLoggedin() {

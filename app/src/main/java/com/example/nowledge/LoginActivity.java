@@ -74,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                                     User.setUsername(username.getText().toString());
                                     User.setLoggedin(true);
                                     Intent intentMain = new Intent(LoginActivity.this, MainActivity.class);
+                                    intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intentMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intentMain);
                                 }
                             }

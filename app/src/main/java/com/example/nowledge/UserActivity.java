@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nowledge.data.User;
 
@@ -23,6 +25,7 @@ public class UserActivity extends AppCompatActivity {
 
         Button starlistButton = findViewById(R.id.starlistButton);
         Button logoutButton = findViewById(R.id.logoutButton);
+        Button clearButton = findViewById(R.id.clearCache);
 
         starlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,5 +44,13 @@ public class UserActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+         clearButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Toast.makeText(UserActivity.this, "清空缓存成功", Toast.LENGTH_LONG).show();
+                 Log.d("click!", "clear cache");
+             }
+         });
     }
 }

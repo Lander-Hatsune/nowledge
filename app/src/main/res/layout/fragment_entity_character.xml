@@ -21,7 +21,7 @@
             android:textSize="25sp"/>
 
         <ListView
-            android:id="@+id/listAtDetail"
+            android:id="@+id/FlistAtDetail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -54,7 +54,7 @@
                 android:textSize="20sp"/>
 
             <ListView
-                android:id="@+id/listSuperContentAtDetail"
+                android:id="@+id/FlistSuperContentAtDetail"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10sp"
                 android:layout_height="0dp"
@@ -73,7 +73,7 @@
                 android:textSize="20sp"/>
 
             <ListView
-                android:id="@+id/listChildContentAtDetail"
+                android:id="@+id/FlistChildContentAtDetail"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10sp"
                 android:layout_height="0dp"

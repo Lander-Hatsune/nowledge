@@ -8,7 +8,7 @@ import java.util.List;
 
 public class User {
     private static String username = "0";
-    private static List<Pair<String, String>> history = new ArrayList<>();
+    private static List<Pair<String, String>> searchHistory = new ArrayList<>();
     private static String ID = "";
     private static boolean loggedin = false;
 
@@ -24,17 +24,20 @@ public class User {
         User.username = username;
     }
 
-    public static List<Pair<String, String>> getHistory() {
-        Log.d("history", history.toString());
-        return history;
+    public static List<Pair<String, String>> getSearchHistory() {
+        Log.d("history", searchHistory.toString());
+        return searchHistory;
     }
 
-    public static void addHistory(String course, String name) {
-        if (history == null) {
-            history = new ArrayList<Pair<String, String>>();
+    public static void addSearchHistory(String course, String name) {
+        if (searchHistory == null) {
+            searchHistory = new ArrayList<Pair<String, String>>();
         }
-        history.add(new Pair<String, String>(course, name));
-        Log.d("User add history", course + "/" + name);
+        if (searchHistory.indexOf(new Pair<String, String> (course, name)) == -1){
+            searchHistory.add(new Pair<String, String>(course, name));
+            Log.d("User add history", course + "/" + name);
+        }
+
     }
 
     public static boolean isLoggedin() {

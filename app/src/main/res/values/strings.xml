@@ -7,4 +7,7 @@
     <string name="search_hint">请输入查询内容</string>
     <string name="clear">清除</string>
     <string name="relation_detail">详情</string>
+    <string name="title_activity_new_entity">NewEntityActivity</string>
+    <string name="tab_text_1">详情</string>
+    <string name="tab_text_2">相关习题</string>
 </resources>

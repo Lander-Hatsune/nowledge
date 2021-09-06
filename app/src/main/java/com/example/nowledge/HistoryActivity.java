@@ -26,19 +26,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StarlistActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_starlist);
-        setTitle("我的收藏");
+        setContentView(R.layout.activity_history);
+        setTitle("我的历史");
 
-        ListView lv = findViewById(R.id.starListView);
-        List<String> starlistStr = new ArrayList<>();
-        List<String> starCourseStr = new ArrayList<>();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ListView lv = findViewById(R.id.historyListView);
+        List<String> historyStr = new ArrayList<>();
+        List<String> historyCourseStr = new ArrayList<>();
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
-        String url = Uris.getStarlist() + "?username=" + User.getUsername();
+        String url = Uris.getHistorylist() + "?username=" + User.getUsername();
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -48,18 +54,18 @@ public class StarlistActivity extends AppCompatActivity {
                             if (!code.equals("0")) {
                                 return;
                             }
-                            JSONArray starlist = response.getJSONArray("payload");
-                            for (int i = 0; i < starlist.length(); i++) {
-                                JSONObject star = starlist.getJSONObject(i);
-                                starlistStr.add(star.getString("name"));
-                                starCourseStr.add(star.getString("course"));
+                            JSONArray historylist = response.getJSONArray("payload");
+                            for (int i = 0; i < historylist.length(); i++) {
+                                JSONObject star = historylist.getJSONObject(i);
+                                historyStr.add(star.getString("name"));
+                                historyCourseStr.add(star.getString("course"));
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>
-                                    (getApplicationContext(), R.layout.entity_short_item, starlistStr);
+                                    (getApplicationContext(), R.layout.entity_short_item, historyStr);
                             lv.setAdapter(adapter);
 
                         } catch (JSONException e) {
-                            Log.e("Starlist error", e.toString());
+                            Log.e("Hislist error", e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -74,9 +80,9 @@ public class StarlistActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("click", "number " + i);
-                Intent intentDetail = new Intent(StarlistActivity.this, NewEntityActivity.class);
-                intentDetail.putExtra("name", starlistStr.get(i));
-                intentDetail.putExtra("course", starCourseStr.get(i));
+                Intent intentDetail = new Intent(HistoryActivity.this, EntityDetailActivity.class);
+                intentDetail.putExtra("name", historyStr.get(i));
+                intentDetail.putExtra("course", historyCourseStr.get(i));
                 startActivity(intentDetail);
             }
         });

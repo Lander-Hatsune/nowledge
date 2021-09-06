@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                                 obj, new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i("Login request success.", "");
+                                Log.i("Login request success.", response.toString());
                                 String msg = "Unknown Error";
                                 String code = "";
                                 try {
@@ -72,8 +72,11 @@ public class LoginActivity extends AppCompatActivity {
                                 if (!(code.equals("-1") || code.equals("-2"))) {
                                     Log.i("Login success", code);
                                     User.setUsername(username.getText().toString());
+                                    User.setID(code);
                                     User.setLoggedin(true);
                                     Intent intentMain = new Intent(LoginActivity.this, MainActivity.class);
+                                    intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intentMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intentMain);
                                 }
                             }

@@ -2,17 +2,11 @@ package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.core.content.res.ResourcesCompat;
 
-import android.content.ClipData;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,6 +18,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
+import com.example.nowledge.utils.character;
+import com.example.nowledge.utils.character_adapter;
+import com.example.nowledge.utils.child_relation;
+import com.example.nowledge.utils.child_relation_adapter;
+import com.example.nowledge.utils.super_relation;
+import com.example.nowledge.utils.super_relation_adapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,48 +37,6 @@ public class EntityDetailActivity extends AppCompatActivity {
     private Boolean starred = false;
     private String name;
     private String course;
-
-    protected void updateId() {
-        RequestQueue reqQue = Singleton.getInstance
-                (getApplicationContext()).getRequestQueue();
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject();
-            obj.put("username", "0");
-            obj.put("password", "0");
-        } catch (JSONException e) {
-            Log.e("UpdateId error:", e.toString());
-        }
-        Log.d("UpdateId obj", obj.toString());
-        JsonObjectRequest req = new JsonObjectRequest
-                (Request.Method.POST, Uris.getLogin(),
-                        obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Login request success.", "");
-                        String msg = "Unknown Error";
-                        String code = "";
-                        try {
-                            msg = response.getString("msg");
-                            code = response.getString("id");
-                        } catch (JSONException e) {
-                            Log.e("Login request msg/id error", e.toString());
-                        }
-                        if (!(code.equals("-1") || code.equals("-2"))) {
-                            Log.d("logged in, id", code);
-                            id = code;
-                            User.setID(id);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Login error:", error.toString());
-                    }
-                });
-        Log.d("Request:", req.toString());
-        reqQue.add(req);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,24 +67,24 @@ public class EntityDetailActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        List<String> propertiesStr = new ArrayList<>();
+                        List<character> character_list = new ArrayList<>();
                         List<super_relation>  super_relation_list = new ArrayList<>();
                         List<child_relation>  child_relation_list = new ArrayList<>();
                         try {
                             JSONObject dataobj = response.getJSONObject("data");
                             Log.d("dataobj", dataobj.toString());
+
                             JSONArray properties = (JSONArray) dataobj.get("property");
                             for (int i = 0; i < properties.length(); i++) {
                                 if (i > 10) {
                                     break;
                                 }
                                 JSONObject obj = properties.getJSONObject(i);
-                                String predicate = obj.get("predicateLabel").toString();
-                                String object = obj.get("object").toString();
-                                propertiesStr.add(predicate + ": " + object);
+                                String predicate = obj.getString("predicateLabel");
+                                String object = obj.getString("object");
+                                character_list.add(new character(predicate+":","  "+object));
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                    (getApplicationContext(), R.layout.attr_item, propertiesStr);
+                            character_adapter adapter = new character_adapter(EntityDetailActivity.this,R.layout.character_item,character_list);
                             listViewProp.setAdapter(adapter);
 
                             JSONArray contents = (JSONArray) dataobj.get("content");
@@ -145,7 +103,6 @@ public class EntityDetailActivity extends AppCompatActivity {
                             super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list);
                             listViewSuperCont.setAdapter(adapterSC);
 
-                            JSONArray contentc = (JSONArray) dataobj.get("content");
                             for (int i = 0,j = 0; i < contents.length(); i++) {
                                 if (j > 10) {
                                     break;
@@ -188,7 +145,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                             for (int i = 0; i < starlist.length(); i++) {
                                 JSONObject star = starlist.getJSONObject(i);
                                 if (star.getString("course").equals(course) &&
-                                star.getString("name").equals(name)) {
+                                        star.getString("name").equals(name)) {
                                     starred = true;
                                     ActionMenuItemView starmark = findViewById(R.id.actionStar);
                                     MenuItem item = starmark.getItemData();
@@ -207,6 +164,32 @@ public class EntityDetailActivity extends AppCompatActivity {
         });
         reqQue.add(req);
 
+        // add to history
+        if (User.isLoggedin()) {
+            String addHisUrl = Uris.getAddHistory();
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("username", User.getUsername());
+                obj.put("course", course);
+                obj.put("name", name);
+            } catch (JSONException e) {
+                Log.e("add history error", e.toString());
+            }
+            Log.d("add history obj", obj.toString());
+            JsonObjectRequest addHisReq = new JsonObjectRequest(Request.Method.POST, addHisUrl, obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("add history", response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("add history", error.toString());
+                }
+            });
+            reqQue.add(addHisReq);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

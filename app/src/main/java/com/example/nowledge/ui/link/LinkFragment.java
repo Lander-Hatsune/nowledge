@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
@@ -111,7 +112,7 @@ public class LinkFragment extends Fragment {
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
             @Override
             public void onItemCLick(String course, String name) {
-                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
                 intentDetail.putExtra("course", course);
                 intentDetail.putExtra("name", name);
                 startActivity(intentDetail);

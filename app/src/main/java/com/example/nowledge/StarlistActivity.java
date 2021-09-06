@@ -74,7 +74,7 @@ public class StarlistActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("click", "number " + i);
-                Intent intentDetail = new Intent(StarlistActivity.this, EntityDetailActivity.class);
+                Intent intentDetail = new Intent(StarlistActivity.this, NewEntityActivity.class);
                 intentDetail.putExtra("name", starlistStr.get(i));
                 intentDetail.putExtra("course", starCourseStr.get(i));
                 startActivity(intentDetail);

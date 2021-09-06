@@ -1,5 +1,6 @@
 package com.example.nowledge;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -10,16 +11,24 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nowledge.entitydetail.main.SectionsPagerAdapter;
 import com.example.nowledge.databinding.ActivityNewEntityBinding;
@@ -35,6 +44,7 @@ public class NewEntityActivity extends AppCompatActivity {
     private Boolean starred = false;
     private String name;
     private String course;
+    private ActionMenuView actionMenuView;
     JSONArray properties = new JSONArray();
     JSONArray contents = new JSONArray();
     JSONArray questions = new JSONArray();
@@ -93,8 +103,6 @@ public class NewEntityActivity extends AppCompatActivity {
         name = bundle.getString("name");
         course = bundle.getString("course");
 
-        TextView title=(TextView) findViewById(R.id.entity_title);
-        title.setText(name);
 
         String urld = Uris.getDetail() + "?";
         urld += "name=" + name;
@@ -108,52 +116,113 @@ public class NewEntityActivity extends AppCompatActivity {
         Log.d("detailurl:", urld);
         Log.d("questionurl",urlq);
 
+        TextView titleView = findViewById(R.id.entity_title);
+        titleView.setText(name);
+
+        actionMenuView = findViewById(R.id.entity_actionMenu);
+        getMenuInflater().inflate(R.menu.detail_menu, actionMenuView.getMenu());
+        actionMenuView.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.actionStar:
+                        String url;
+                        if (starred) {
+                            url = Uris.getUnstar();
+                        } else {
+                            url = Uris.getStar();
+                        }
+                        RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
+
+                        org.json.JSONObject obj = new org.json.JSONObject();
+                        try {
+                            obj.put("username", User.getUsername());
+                            obj.put("course", course);
+                            obj.put("name", name);
+                        } catch (JSONException e) {
+                            Log.e("Star/Unstar obj err", e.toString());
+                        }
+
+                        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, obj,
+                                new Response.Listener<org.json.JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            if (response.getString("id").equals("0")) {
+                                                starred = !starred;
+                                                ActionMenuItemView starmark = findViewById(R.id.actionStar);
+                                                @SuppressLint("RestrictedApi") MenuItem item = starmark.getItemData();
+                                                if (starred) {
+                                                    item.setIcon(R.drawable.star);
+                                                } else {
+                                                    item.setIcon(R.drawable.star_outline);
+                                                }
+                                            }
+                                            Toast.makeText(NewEntityActivity.this,
+                                                    response.getString("msg"),
+                                                    Toast.LENGTH_SHORT).show();
+                                        } catch (JSONException e) {
+                                            Log.e("Error parsing star resp obj", e.toString());
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+                        reqQue.add(req);
+
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+
 
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
 
-        JsonObjectRequest reqd = new JsonObjectRequest(Request.Method.GET, urld, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e("response",response.toString());
-                        try {
-                            JSONObject dataobj = response.getJSONObject("data");
-                            Log.d("dataobj", dataobj.toString());
 
-                            properties = (JSONArray) dataobj.get("property");
-                            contents = (JSONArray) dataobj.get("content");
+
+
+        // star
+        String url = Uris.getStarlist() + "?username=" + User.getUsername();
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<org.json.JSONObject>() {
+                    @Override
+                    public void onResponse(org.json.JSONObject response) {
+                        try {
+                            String code = response.getString("id");
+                            if (!code.equals("0")) {
+                                return;
+                            }
+                            JSONArray starlist = response.getJSONArray("payload");
+                            for (int i = 0; i < starlist.length(); i++) {
+                                org.json.JSONObject star = starlist.getJSONObject(i);
+                                if (star.getString("course").equals(course) &&
+                                        star.getString("name").equals(name)) {
+                                    starred = true;
+                                    ActionMenuItemView starmark = findViewById(R.id.actionStar);
+                                    @SuppressLint("RestrictedApi") MenuItem item = starmark.getItemData();
+                                    item.setIcon(R.drawable.star);
+                                }
+                            }
                         } catch (JSONException e) {
-                            Log.e("Error parsing detail obj", e.toString());
+                            Log.e("Starlist error", e.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
             }
         });
-        reqQue.add(reqd);
+        reqQue.add(req);
 
 
-        JsonObjectRequest reqq = new JsonObjectRequest(Request.Method.GET, urlq, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            questions = (JSONArray) response.get("data");
-                            Log.d("questions", response.toString());
-                        } catch (JSONException e) {
-                            Log.e("Error parsing detail obj", e.toString());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        reqQue.add(reqd);
-
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(),properties,contents,questions,course);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), course, name);
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;

@@ -170,7 +170,7 @@ public class SearchActivity extends AppCompatActivity {
                             adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemCLick(String course, String name) {
-                                    Intent intentDetail = new Intent(SearchActivity.this, EntityDetailActivity.class);
+                                    Intent intentDetail = new Intent(SearchActivity.this, NewEntityActivity.class);
                                     intentDetail.putExtra("course", course);
                                     intentDetail.putExtra("name", name);
                                     startActivity(intentDetail);

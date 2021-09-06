@@ -295,7 +295,7 @@ public class HomeFragment extends Fragment {
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
             @Override
             public void onItemCLick(String course, String name) {
-                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
                 intentDetail.putExtra("course", course);
                 intentDetail.putExtra("name", name);
                 startActivity(intentDetail);

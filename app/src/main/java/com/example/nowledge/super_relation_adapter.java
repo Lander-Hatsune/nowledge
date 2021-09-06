@@ -48,7 +48,7 @@ public class super_relation_adapter extends ArrayAdapter<super_relation> {
             @Override
             public void onClick(View view) {
                 Log.d("click",sr.getDetail());
-                Intent intent_next_item=new Intent(getContext(),EntityDetailActivity.class);
+                Intent intent_next_item=new Intent(getContext(),NewEntityActivity.class);
                 intent_next_item.putExtra("name",sr.getDetail());
                 intent_next_item.putExtra("course",sr.getCourse());
                 view.getContext().startActivity(intent_next_item);

@@ -11,45 +11,45 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.nowledge.entitydetail.EntityCharacter;
 import com.example.nowledge.entitydetail.EntityQuestion;
-import com.example.nowledge.entitydetail.EntityRelation;
 import com.example.nowledge.R;
-
-import org.json.JSONArray;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
+
+class NewPagerAdapter extends FragmentManager{
+
+}
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
-    JSONArray mProperties = null;
-    JSONArray mContents = null;
-    JSONArray mQuestions = null;
+    String mCourse, mName;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, JSONArray properties, JSONArray contents, JSONArray questions) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, String name, String course) {
         super(fm);
         mContext = context;
-        mProperties=properties;
-        mContents=contents;
-        mQuestions=questions;
+        mCourse = course;
+        mName = name;
+
     }
 
     @Override
     public Fragment getItem(int position) {
         Fragment fregment=null;
+        Bundle bundle = new Bundle();
+        bundle.putString("course", mCourse);
+        bundle.putString("name", mName);
         switch(position){
             case 0:
-                fregment=new EntityCharacter();
-                Bundle bundle0=new Bundle();
+                fregment = new EntityCharacter();
+                fregment.setArguments(bundle);
                 break;
             case 1:
-                fregment=new EntityRelation();
-                break;
-            case 2:
-                fregment=new EntityQuestion();
+                fregment = new EntityQuestion();
+                fregment.setArguments(bundle);
                 break;
         }
         return fregment;

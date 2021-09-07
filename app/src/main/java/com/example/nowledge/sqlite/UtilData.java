@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class UtilData {
         contentValues.put("subject_content", subject_content);
         contentValues.put("object_content", object_content);
         Log.d("sql add content", contentValues.toString());
+        Looper.prepare();
         if (cursor.moveToNext()) {
             Toast.makeText(context, "更新数据到数据库", Toast.LENGTH_SHORT).show();
             db.update(tableName, contentValues, "name=? and course=?", args);
@@ -57,6 +59,7 @@ public class UtilData {
             Toast.makeText(context, "缓存数据到数据库", Toast.LENGTH_SHORT).show();
             Log.d("sqlite3", "addData to sql");
         }
+        Looper.loop();
 
         contentValues.clear();
 

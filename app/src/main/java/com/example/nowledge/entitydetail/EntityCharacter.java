@@ -223,14 +223,20 @@ public class EntityCharacter extends Fragment {
                             listViewChildCont.setAdapter(adapterCC);
 
 //                          write to sqlite
-                            String propertyStr = db_property.toString(),
-                                    subStr = db_subject_content.toString(),
-                                    objStr = db_object_content.toString();
-                            UtilData uData = new UtilData(getContext());
-                            Log.d("entity properties", propertyStr);
-                            Log.d("entity subject", propertyStr);
-                            Log.d("entity object", propertyStr);
-                            uData.addData(name, course, propertyStr, subStr, objStr);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String propertyStr = db_property.toString(),
+                                            subStr = db_subject_content.toString(),
+                                            objStr = db_object_content.toString();
+                                    UtilData uData = new UtilData(getContext());
+                                    Log.d("entity properties", propertyStr);
+                                    Log.d("entity subject", propertyStr);
+                                    Log.d("entity object", propertyStr);
+                                    uData.addData(name, course, propertyStr, subStr, objStr);
+                                }
+                            }).start();
+
 
                         } catch (JSONException e) {
                             Log.e("Error parsing detail obj from request", e.toString());

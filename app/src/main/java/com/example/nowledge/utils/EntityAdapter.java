@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nowledge.R;
+import com.example.nowledge.sqlite.UtilData;
 
 import java.util.List;
 
@@ -58,30 +59,34 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntityShort entityShort = list.get(position);
         String name = entityShort.getLabel();
-        if (!mode.equals("link")){
-            holder.entity_name.setText(normalize(name, 14));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("click list position" + String.valueOf(position), entityShort.getCourse() + " " + name + " " + entityShort.getCategory());
-                    listener.onItemCLick(entityShort.getCourse(), entityShort.getLabel());
-                }
-            });
-        } else {
-            holder.entity_name.setText(normalize(name, 12));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("click link position" + String.valueOf(position), entityShort.getCourse() + " " + name + " " + entityShort.getCategory());
-                    listener.onItemCLick(entityShort.getCourse(), entityShort.getLabel());
-                }
-            });
-        }
+        holder.entity_name.setText(normalize(name, 14));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("click list position" + String.valueOf(position), entityShort.getCourse() + " " + name + " " + entityShort.getCategory());
+                listener.onItemCLick(entityShort.getCourse(), entityShort.getLabel());
+            }
+        });
+
 
         holder.entity_name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         holder.entity_name.getPaint().setFakeBoldText(true);
         holder.entity_category.setText(entityShort.getCategory());
         holder.entity_category.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+        // solve cache
+
+        UtilData utilData = new UtilData(holder.entity_name.getContext());
+        String[] res = utilData.inquireData(entityShort.getLabel(), entityShort.getCourse());
+        if (res[3].equals("get")) {
+            holder.entity_name.setTextColor(R.color.dark_gray);
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();
     }
 
     public int getItemCount() { return list.size(); }

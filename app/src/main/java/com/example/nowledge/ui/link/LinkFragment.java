@@ -67,31 +67,36 @@ public class LinkFragment extends Fragment {
     private Spinner spinner;
 
     private void updateID() {
-        String LOGIN_URL = Uris.getLogin();
-        JSONObject params = new JSONObject();
-        try {
-            params.put("username", "0");
-            params.put("password", "0");
-        }catch (JSONException e) {}
-        JsonObjectRequest id_request = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            id = response.getString("id");
-                            Log.i("info", id);
-                            User.setID(id);
-                        } catch (JSONException e) { e.printStackTrace();}                        }
-                }, new Response.ErrorListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("ERROR", error.getMessage());
-                searchText.setHint("请求出错，请重新输入");
-                searchText.setText("");
+            public void run() {
+                String LOGIN_URL = Uris.getLogin();
+                JSONObject params = new JSONObject();
+                try {
+                    params.put("username", "0");
+                    params.put("password", "0");
+                }catch (JSONException e) {}
+                JsonObjectRequest id_request = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, params,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    id = response.getString("id");
+                                    Log.i("info", id);
+                                    User.setID(id);
+                                } catch (JSONException e) { e.printStackTrace();}                        }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("ERROR", error.getMessage());
+                        searchText.setHint("请求出错，请重新输入");
+                        searchText.setText("");
+                    }
+                });
+                queue.add(id_request);
             }
-        });
+        }).start();
 
-        queue.add(id_request);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -138,7 +143,6 @@ public class LinkFragment extends Fragment {
         spinner.setAdapter(spinnerAdapter);
         queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
 
-        updateID();
 
         send = root.findViewById(R.id.link_button_send);
         send.setOnClickListener(new View.OnClickListener() {
@@ -223,6 +227,13 @@ public class LinkFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("linkfragment", "onstart!");
+        super.onStart();
+        updateID();
     }
 
     private void addError(String e) {

@@ -279,6 +279,13 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        int id = binding.tabLayout.getSelectedTabPosition();
+        sendCourseRequest(id, binding.tabLayout.getTabAt(id), true);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

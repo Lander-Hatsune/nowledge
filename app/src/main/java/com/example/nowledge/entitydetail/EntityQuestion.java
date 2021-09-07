@@ -114,41 +114,7 @@ public class EntityQuestion extends Fragment {
 
         RequestQueue reqQue = Singleton.getInstance(getContext()).getRequestQueue();
 
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        List<question> question_list = new ArrayList<>();
-                        try {
-                            JSONArray questions = (JSONArray) response.get("data");
-                            for (int i = 0, j = 0; i < questions.length(); i++) {
-                                if (j > 10) {
-                                    break;
-                                }
-                                JSONObject obj = questions.getJSONObject(i);
-                                String qAnswer = obj.getString("qAnswer");
-                                int id= obj.getInt("id");
-                                String object = obj.getString("object");
-                                if(object.contains("A.")&&object.contains("B.")&&object.contains("C.")&&object.contains("D.")){
-                                    String[] getdetail = object.split("A.|B.|C.|D.");
-                                    question_list.add(new question(getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
-                                    j++;
-                                }
-                            }
-                            question_adapter adapter = new question_adapter(getActivity(),R.layout.question_item,question_list);
-                            listViewQuestion.setAdapter(adapter);
-
-                        } catch (JSONException e) {
-                            Log.e("Error parsing detail obj", e.toString());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        reqQue.add(req);
+//       v
 
         return view;
     }

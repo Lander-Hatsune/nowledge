@@ -67,7 +67,7 @@ public class EntityCharacter extends Fragment {
         if (dataSql[3].equals("get")) {
             LoadFromCache(dataSql);
         }
-        LoadFromRequest();
+        LoadFromRequest(true);
 
         return view;
 
@@ -134,7 +134,7 @@ public class EntityCharacter extends Fragment {
         }
     }
 
-    private void LoadFromRequest() {
+    private void LoadFromRequest(boolean first) {
         String url = Uris.getDetail() + "?";
         url += "name=" + name;
         url += "&course=" + course;
@@ -153,6 +153,14 @@ public class EntityCharacter extends Fragment {
                         List<super_relation>  super_relation_list = new ArrayList<>();
                         List<child_relation>  child_relation_list = new ArrayList<>();
                         try {
+                            String code = "";
+                            code = response.getString("code");
+                            if (!code.equals("0")) {
+                                Log.e("response code", code);
+                                if (first)
+                                    updateId();
+                                return;
+                            }
                             org.json.JSONObject dataobj = response.getJSONObject("data");
 
                             Log.d("dataobj " + dataobj.toString().length(), dataobj.toString());
@@ -252,6 +260,52 @@ public class EntityCharacter extends Fragment {
 
     }
 
-
+    protected void updateId() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestQueue reqQue = Singleton.getInstance
+                        (getContext()).getRequestQueue();
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject();
+                    obj.put("username", "0");
+                    obj.put("password", "0");
+                } catch (JSONException e) {
+                    Log.e("UpdateId error:", e.toString());
+                }
+                Log.d("UpdateId obj", obj.toString());
+                JsonObjectRequest req = new JsonObjectRequest
+                        (Request.Method.POST, Uris.getLogin(),
+                                obj, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("Login request success.", "");
+                                String msg = "Unknown Error";
+                                String code = "";
+                                try {
+                                    msg = response.getString("msg");
+                                    code = response.getString("id");
+                                } catch (JSONException e) {
+                                    Log.e("Login request msg/id error", e.toString());
+                                }
+                                if (!(code.equals("-1") || code.equals("-2"))) {
+                                    Log.d("logged in, id", code);
+                                    id = code;
+                                    User.setID(id);
+                                    LoadFromRequest(false);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Login error:", error.toString());
+                            }
+                        });
+                Log.d("Request:", req.toString());
+                reqQue.add(req);
+            }
+        }).start();
+    }
 
 }

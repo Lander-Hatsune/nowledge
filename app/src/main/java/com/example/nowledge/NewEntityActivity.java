@@ -162,9 +162,9 @@ public class NewEntityActivity extends AppCompatActivity {
                                                 }
                                             }
                                             String text = starred ? "收藏成功" : "取消收藏成功";
-                                            Toast.makeText(NewEntityActivity.this,
-                                                    text,
-                                                    Toast.LENGTH_SHORT).show();
+                                            if (User.isLoggedin())
+                                                Toast.makeText(NewEntityActivity.this,
+                                                    text, Toast.LENGTH_SHORT).show();
                                         } catch (JSONException e) {
                                             Log.e("Error parsing star resp obj", e.toString());
                                         }

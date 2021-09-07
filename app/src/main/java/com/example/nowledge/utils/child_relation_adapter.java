@@ -12,16 +12,19 @@ import android.widget.TextView;
 
 
 import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 
 import java.util.List;
 
 public class child_relation_adapter extends ArrayAdapter<child_relation> {
     private int resourceId;
+    private boolean ifConnected = true;
 
-    public child_relation_adapter(Context context,int textViewResourceId,List<child_relation> objects){
+    public child_relation_adapter(Context context,int textViewResourceId,List<child_relation> objects, boolean _ifConnected){
         super(context,textViewResourceId,objects);
         resourceId=textViewResourceId;
+        ifConnected = _ifConnected;
     }
 
     @Override
@@ -45,16 +48,20 @@ public class child_relation_adapter extends ArrayAdapter<child_relation> {
         viewHolder.child_type.setText(cr.getType());
         viewHolder.child_detail.setText(cr.getDetail());
         viewHolder.child_search.setTag(position);
-        viewHolder.child_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("click",cr.getDetail());
-                Intent intent_next_item=new Intent(getContext(), EntityDetailActivity.class);
-                intent_next_item.putExtra("name",cr.getDetail());
-                intent_next_item.putExtra("course",cr.getCourse());
-                view.getContext().startActivity(intent_next_item);
-            }
-        });
+        if (ifConnected) {
+            viewHolder.child_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                Log.d("click",cr.getDetail());
+                    Intent intent_next_item=new Intent(getContext(), NewEntityActivity.class);
+                    intent_next_item.putExtra("name",cr.getDetail());
+                    intent_next_item.putExtra("course",cr.getCourse());
+                    view.getContext().startActivity(intent_next_item);
+                }
+            });
+        } else {
+            viewHolder.child_search.setClickable(false);
+        }
         return view;
     }
 

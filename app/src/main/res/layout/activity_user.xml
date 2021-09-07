@@ -14,11 +14,12 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp"></Space>
+
         <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/account_login"
-            android:layout_gravity="center"></ImageView>
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:background="@drawable/account_login"></ImageView>
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp"></Space>

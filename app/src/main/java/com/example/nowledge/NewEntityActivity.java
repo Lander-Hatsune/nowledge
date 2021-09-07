@@ -11,6 +11,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
+import com.example.nowledge.sqlite.UtilData;
+import com.example.nowledge.sqlite.UtilHistory;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -95,6 +97,7 @@ public class NewEntityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         id = User.getID();
         super.onCreate(savedInstanceState);
+        Log.d ("entity detail", "onCreate!");
 
         binding = ActivityNewEntityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -158,8 +161,9 @@ public class NewEntityActivity extends AppCompatActivity {
                                                     item.setIcon(R.drawable.star_outline);
                                                 }
                                             }
+                                            String text = starred ? "收藏成功" : "取消收藏成功";
                                             Toast.makeText(NewEntityActivity.this,
-                                                    response.getString("msg"),
+                                                    text,
                                                     Toast.LENGTH_SHORT).show();
                                         } catch (JSONException e) {
                                             Log.e("Error parsing star resp obj", e.toString());
@@ -180,12 +184,7 @@ public class NewEntityActivity extends AppCompatActivity {
             }
         });
 
-
-
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
-
-
-
 
         // star
         String url = Uris.getStarlist() + "?username=" + User.getUsername();
@@ -221,11 +220,47 @@ public class NewEntityActivity extends AppCompatActivity {
         });
         reqQue.add(req);
 
+        // add to history
+        if (User.isLoggedin()) {
+            UtilHistory util = new UtilHistory(this);
+            util.addHistory(name, course);
+            String addHisUrl = Uris.getAddHistory();
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("username", User.getUsername());
+                obj.put("course", course);
+                obj.put("name", name);
+            } catch (JSONException e) {
+                Log.e("add history error", e.toString());
+            }
+            Log.d("add history obj", obj.toString());
+            JsonObjectRequest addHisReq = new JsonObjectRequest(Request.Method.POST, addHisUrl, obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("add history", response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("add history", error.toString());
+                }
+            });
+            reqQue.add(addHisReq);
+        }
+
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), course, name);
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateId();
+            }
+        }).start();
     }
 }

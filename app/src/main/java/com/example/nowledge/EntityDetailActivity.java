@@ -100,7 +100,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                                     super_relation_list.add(new super_relation(type,detail,course));
                                 }
                             }
-                            super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list);
+                            super_relation_adapter adapterSC = new super_relation_adapter(EntityDetailActivity.this,R.layout.super_relation_item,super_relation_list, true);
                             listViewSuperCont.setAdapter(adapterSC);
 
                             for (int i = 0,j = 0; i < contents.length(); i++) {
@@ -115,7 +115,7 @@ public class EntityDetailActivity extends AppCompatActivity {
                                     child_relation_list.add(new child_relation(type,detail,course));
                                 }
                             }
-                            child_relation_adapter adapterCC = new child_relation_adapter(EntityDetailActivity.this,R.layout.child_relation_item,child_relation_list);
+                            child_relation_adapter adapterCC = new child_relation_adapter(EntityDetailActivity.this,R.layout.child_relation_item,child_relation_list, true);
                             listViewChildCont.setAdapter(adapterCC);
 
                         } catch (JSONException e) {

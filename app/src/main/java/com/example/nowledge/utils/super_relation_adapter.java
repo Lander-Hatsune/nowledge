@@ -18,10 +18,12 @@ import java.util.List;
 
 public class super_relation_adapter extends ArrayAdapter<super_relation> {
     private int resourceId;
+    private boolean ifConnected;
 
-    public super_relation_adapter(Context context,int textViewResourceId,List<super_relation> objects){
+    public super_relation_adapter(Context context,int textViewResourceId,List<super_relation> objects, boolean _ifC){
         super(context,textViewResourceId,objects);
         resourceId=textViewResourceId;
+        ifConnected = _ifC;
     }
 
     @Override
@@ -46,16 +48,20 @@ public class super_relation_adapter extends ArrayAdapter<super_relation> {
         viewHolder.super_type.setText(sr.getType());
         viewHolder.super_detail.setText(sr.getDetail());
         viewHolder.super_search.setTag(position);
-        viewHolder.super_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("click",sr.getDetail());
-                Intent intent_next_item=new Intent(getContext(), NewEntityActivity.class);
-                intent_next_item.putExtra("name",sr.getDetail());
-                intent_next_item.putExtra("course",sr.getCourse());
-                view.getContext().startActivity(intent_next_item);
-            }
-        });
+        if (ifConnected) {
+            viewHolder.super_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("click",sr.getDetail());
+                    Intent intent_next_item=new Intent(getContext(), NewEntityActivity.class);
+                    intent_next_item.putExtra("name",sr.getDetail());
+                    intent_next_item.putExtra("course",sr.getCourse());
+                    view.getContext().startActivity(intent_next_item);
+                }
+            });
+        } else {
+            viewHolder.super_search.setClickable(false);
+        }
         return view;
     }
 

@@ -71,9 +71,11 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
                                 if (!(code.equals("-1") || code.equals("-2"))) {
                                     Log.i("Login success", code);
-                                    User.setUsername(username.getText().toString());
+                                    String usrname = username.getText().toString();
+                                    User.setUsername(usrname);
                                     User.setID(code);
                                     User.setLoggedin(true);
+                                    User.setSpecialState("1");
                                     Intent intentMain = new Intent(LoginActivity.this, MainActivity.class);
                                     intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intentMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -1,6 +1,8 @@
 package com.example.nowledge;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("!@", "oncreate");
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,4 +69,45 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e("!@", "onstart!");
+
+        String specialState = User.getSpecialState();
+        Log.d("specialState", specialState);
+        SharedPreferences sp = getSharedPreferences("data", Context.MODE_PRIVATE);
+        String username = sp.getString("username", "0");
+        if (specialState.equals("")) {
+            if (!username.equals("0")) {
+                Boolean state = sp.getBoolean(username, false);
+                User.setUsername(username);
+                User.setLoggedin(state);
+                Log.d("Home set User " + username, state.toString());
+            }
+        } else {
+
+            SharedPreferences.Editor editor = sp.edit();
+            Boolean putState = specialState.equals("1") ? true : false;
+            if (!putState){
+                editor.putBoolean(specialState, false);
+                Log.d("Homefragment LOGOUT" , specialState);
+            }
+
+            else {
+                username = User.getUsername();
+                editor.putString("username", username);
+                editor.putBoolean(username, true);
+                Log.d("Homefragment LOGin" , username);
+            }
+
+            User.setSpecialState("");
+            editor.apply();
+
+        }
+    }
+
+
+
 }

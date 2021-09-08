@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.security.AppUriAuthenticationPolicy;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,18 +37,11 @@ public class EntityQuestion extends Fragment {
 
     private String mname,mcourse;
     private String id = User.getID();
+    private View view;
 
     public EntityQuestion() {
     }
 
-    public static EntityQuestion newInstance(String name,String course) {
-        EntityQuestion fragment = new EntityQuestion();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, name);
-        args.putString(ARG_PARAM1, course);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,55 +50,62 @@ public class EntityQuestion extends Fragment {
             mname = getArguments().getString(ARG_PARAM1);
             mcourse = getArguments().getString(ARG_PARAM2);
         }
+        Log.e("Question", getArguments().toString());
     }
 
     protected void updateId() {
-        RequestQueue reqQue = Singleton.getInstance
-                (getContext()).getRequestQueue();
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject();
-            obj.put("username", "0");
-            obj.put("password", "0");
-        } catch (JSONException e) {
-            Log.e("UpdateId error:", e.toString());
-        }
-        Log.d("UpdateId obj", obj.toString());
-        JsonObjectRequest req = new JsonObjectRequest
-                (Request.Method.POST, Uris.getLogin(),
-                        obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Login request success.", "");
-                        String msg = "Unknown Error";
-                        String code = "";
-                        try {
-                            msg = response.getString("msg");
-                            code = response.getString("id");
-                        } catch (JSONException e) {
-                            Log.e("Login request msg/id error", e.toString());
-                        }
-                        if (!(code.equals("-1") || code.equals("-2"))) {
-                            Log.d("logged in, id", code);
-                            id = code;
-                            User.setID(id);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Login error:", error.toString());
-                    }
-                });
-        Log.d("Request:", req.toString());
-        reqQue.add(req);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestQueue reqQue = Singleton.getInstance
+                        (getContext()).getRequestQueue();
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject();
+                    obj.put("username", "0");
+                    obj.put("password", "0");
+                } catch (JSONException e) {
+                    Log.e("UpdateId error:", e.toString());
+                }
+                Log.d("UpdateId obj", obj.toString());
+                JsonObjectRequest req = new JsonObjectRequest
+                        (Request.Method.POST, Uris.getLogin(),
+                                obj, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("Login request success.", "");
+                                String msg = "Unknown Error";
+                                String code = "";
+                                try {
+                                    msg = response.getString("msg");
+                                    code = response.getString("id");
+                                } catch (JSONException e) {
+                                    Log.e("Login request msg/id error", e.toString());
+                                }
+                                if (!(code.equals("-1") || code.equals("-2"))) {
+                                    Log.d("logged in, id", code);
+                                    id = code;
+                                    User.setID(id);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Login error:", error.toString());
+                            }
+                        });
+                Log.d("Request:", req.toString());
+                reqQue.add(req);
+            }
+        }).start();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_entity_question,container,false);
-
+        Log.e("Question Fragment", "on create view");
+        view=inflater.inflate(R.layout.fragment_entity_question,container,false);
         id = User.getID();
 
         ListView listViewQuestion = view.findViewById(R.id.QuestionList);
@@ -121,33 +122,43 @@ public class EntityQuestion extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d ("response for Question", response.toString());
                         List<question> question_list = new ArrayList<>();
+                        JSONArray questions = new JSONArray();
                         try {
-                            JSONArray questions = (JSONArray) response.get("data");
-                            for (int i = 0, j = 0; i < questions.length(); i++) {
-                                if (j > 10) {
-                                    break;
-                                }
+                            questions = response.getJSONArray("data");
+                        } catch (JSONException e) {
+                            Log.e("Question: Error getting data", e.toString());
+                        }
+
+                        for (int i = 0, j = 0; i < questions.length(); i++) {
+                            if (j > 10) {
+                                break;
+                            }
+                            try {
                                 JSONObject obj = questions.getJSONObject(i);
                                 String qAnswer = obj.getString("qAnswer");
                                 int id= obj.getInt("id");
-                                String object = obj.getString("object");
-                                if(object.contains("A.")&&object.contains("B.")&&object.contains("C.")&&object.contains("D.")){
-                                    String[] getdetail = object.split("A.|B.|C.|D.");
+                                String object = obj.getString("qBody");
+                                Log.e("qBody", String.valueOf(object.contains("A")) + String.valueOf(object.contains("B.")) + String.valueOf(object.contains("C.")) + String.valueOf(object.contains("D.")));
+                                if(sMatch(object)){
+                                    String[] getdetail = object.split("A[\\.．、]|B[\\.．、]|C[\\.．、]|D[\\.．、]");
                                     question_list.add(new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
                                     j++;
                                 }
+                            } catch (JSONException e) {
+                                Log.e("Error parsing detail obj", e.toString());
                             }
-                            question_adapter adapter = new question_adapter(getActivity(),R.layout.question_item,question_list);
-                            listViewQuestion.setAdapter(adapter);
 
-                        } catch (JSONException e) {
-                            Log.e("Error parsing detail obj", e.toString());
                         }
+                        Log.d("Question number", String.valueOf(question_list.size()));
+                        question_adapter adapter = new question_adapter(getActivity(),R.layout.question_item,question_list);
+                        listViewQuestion.setAdapter(adapter);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("Question error", error.toString());
 
             }
         });
@@ -155,4 +166,21 @@ public class EntityQuestion extends Fragment {
 
         return view;
     }
+
+    private boolean sMatch(String src) {
+        String[] a = {".", "、", "．"};
+        String[] c = {"A", "B", "C", "D"};
+        for (int i = 0; i < 4; ++i) {
+            boolean test = false;
+            for (int j = 0; j < 3; ++j) {
+                String match = c[i] + a[j];
+                if (src.contains(match)) {
+                    test = true; break;
+                }
+            }
+            if (!test) return false;
+        }
+        return true;
+    }
+
 }

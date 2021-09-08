@@ -52,45 +52,50 @@ public class NewEntityActivity extends AppCompatActivity {
     JSONArray questions = new JSONArray();
 
     protected void updateId() {
-        RequestQueue reqQue = Singleton.getInstance
-                (getApplicationContext()).getRequestQueue();
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject();
-            obj.put("username", "0");
-            obj.put("password", "0");
-        } catch (JSONException e) {
-            Log.e("UpdateId error:", e.toString());
-        }
-        Log.d("UpdateId obj", obj.toString());
-        JsonObjectRequest req = new JsonObjectRequest
-                (Request.Method.POST, Uris.getLogin(),
-                        obj, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Login request success.", "");
-                        String msg = "Unknown Error";
-                        String code = "";
-                        try {
-                            msg = response.getString("msg");
-                            code = response.getString("id");
-                        } catch (JSONException e) {
-                            Log.e("Login request msg/id error", e.toString());
-                        }
-                        if (!(code.equals("-1") || code.equals("-2"))) {
-                            Log.d("logged in, id", code);
-                            id = code;
-                            User.setID(id);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Login error:", error.toString());
-                    }
-                });
-        Log.d("Request:", req.toString());
-        reqQue.add(req);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RequestQueue reqQue = Singleton.getInstance
+                        (getApplicationContext()).getRequestQueue();
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject();
+                    obj.put("username", "0");
+                    obj.put("password", "0");
+                } catch (JSONException e) {
+                    Log.e("UpdateId error:", e.toString());
+                }
+                Log.d("UpdateId obj", obj.toString());
+                JsonObjectRequest req = new JsonObjectRequest
+                        (Request.Method.POST, Uris.getLogin(),
+                                obj, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("Login request success.", "");
+                                String msg = "Unknown Error";
+                                String code = "";
+                                try {
+                                    msg = response.getString("msg");
+                                    code = response.getString("id");
+                                } catch (JSONException e) {
+                                    Log.e("Login request msg/id error", e.toString());
+                                }
+                                if (!(code.equals("-1") || code.equals("-2"))) {
+                                    Log.d("logged in, id", code);
+                                    id = code;
+                                    User.setID(id);
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Login error:", error.toString());
+                            }
+                        });
+                Log.d("Request:", req.toString());
+                reqQue.add(req);
+            }
+        }).start();
     }
 
     @Override
@@ -256,11 +261,6 @@ public class NewEntityActivity extends AppCompatActivity {
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateId();
-            }
-        }).start();
+        updateId();
     }
 }

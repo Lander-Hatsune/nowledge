@@ -1,6 +1,8 @@
 package com.example.nowledge.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,49 +12,41 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.nowledge.R;
 
 import java.util.List;
 
-public class question_adapter extends ArrayAdapter<question> {
+public class question_adapter extends RecyclerView.Adapter<question_adapter.ViewHolder> {
     private int resourceId;
     public String Choose;
+    private List<question> questionList;
 
-    public question_adapter(Context context,int textViewResourceId,List<question> objects){
-        super(context,textViewResourceId,objects);
-        resourceId=textViewResourceId;
+    public question_adapter(List<question> objects){
+        this.questionList = objects;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        question q=getItem(position);
-
-        View view;
-        ViewHolder viewHolder;
-        if(convertView==null){
-            view=LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-            viewHolder=new ViewHolder();
-            viewHolder.QuestionText=view.findViewById(R.id.QuestionText);
-            viewHolder.AnswerList=view.findViewById(R.id.AnswerList);
-            viewHolder.A=view.findViewById(R.id.A);
-            viewHolder.B=view.findViewById(R.id.B);
-            viewHolder.C=view.findViewById(R.id.C);
-            viewHolder.D=view.findViewById(R.id.D);
-            viewHolder.CheckAnswer=view.findViewById(R.id.CheckAnswer);
-            viewHolder.Judge=view.findViewById(R.id.Judge);
-        }
-        else{
-            view=convertView;
-            viewHolder=(ViewHolder) view.getTag();
-        }
-
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        question q = questionList.get(position);
         viewHolder.QuestionText.setText(q.getQuestionText());
         viewHolder.A.setText(q.getA());
         viewHolder.B.setText(q.getB());
         viewHolder.C.setText(q.getC());
         viewHolder.D.setText(q.getD());
+
         viewHolder.CheckAnswer.setTag(position);
         viewHolder.CheckAnswer.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 if(viewHolder.A.isChecked()||viewHolder.B.isChecked()||viewHolder.C.isChecked()||viewHolder.D.isChecked()){
@@ -69,10 +63,14 @@ public class question_adapter extends ArrayAdapter<question> {
                         Choose="D";
                     }
                     if(Choose.equals(q.getAnswer())){
+                        viewHolder.Judge.setTextColor(R.color.grassgreen);
                         viewHolder.Judge.setText("回答正确");
+
                     }
                     else {
+                        viewHolder.Judge.setTextColor(R.color.red);
                         viewHolder.Judge.setText("回答错误，正确答案是："+q.getAnswer());
+
                     }
                 }
                 else {
@@ -80,10 +78,15 @@ public class question_adapter extends ArrayAdapter<question> {
                 }
             }
         });
-        return view;
+
     }
 
-    class ViewHolder{
+    @Override
+    public int getItemCount() {
+        return questionList.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView QuestionText;
         public RadioGroup AnswerList;
         public RadioButton A;
@@ -92,5 +95,17 @@ public class question_adapter extends ArrayAdapter<question> {
         public RadioButton D;
         public Button CheckAnswer;
         public TextView Judge;
+
+        public ViewHolder(View view) {
+            super(view);
+            QuestionText = view.findViewById(R.id.QuestionText);
+            AnswerList=view.findViewById(R.id.AnswerList);
+            A=view.findViewById(R.id.A);
+            B=view.findViewById(R.id.B);
+            C=view.findViewById(R.id.C);
+            D=view.findViewById(R.id.D);
+            CheckAnswer=view.findViewById(R.id.CheckAnswer);
+            Judge=view.findViewById(R.id.Judge);
+        }
     }
 }

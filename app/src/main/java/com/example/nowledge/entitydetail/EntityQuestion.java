@@ -3,6 +3,8 @@ package com.example.nowledge.entitydetail;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.security.AppUriAuthenticationPolicy;
 import android.util.Log;
@@ -108,7 +110,7 @@ public class EntityQuestion extends Fragment {
         view=inflater.inflate(R.layout.fragment_entity_question,container,false);
         id = User.getID();
 
-        ListView listViewQuestion = view.findViewById(R.id.QuestionList);
+        RecyclerView listViewQuestion = view.findViewById(R.id.QuestionList);
 
         String url = Uris.getQuestion() + "?";
         url += "uriName=" + mname;
@@ -152,7 +154,9 @@ public class EntityQuestion extends Fragment {
 
                         }
                         Log.d("Question number", String.valueOf(question_list.size()));
-                        question_adapter adapter = new question_adapter(getActivity(),R.layout.question_item,question_list);
+                        question_adapter adapter = new question_adapter(question_list);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                        listViewQuestion.setLayoutManager(layoutManager);
                         listViewQuestion.setAdapter(adapter);
                     }
                 }, new Response.ErrorListener() {

@@ -1,11 +1,15 @@
 package com.example.nowledge.entitydetail;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -16,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.sqlite.UtilData;
 import com.example.nowledge.utils.character;
@@ -43,6 +48,7 @@ public class EntityCharacter extends Fragment {
     private String id = User.getID();
     private Boolean starred = false;
     private ListView listViewProp, listViewSuperCont, listViewChildCont;
+    private ActionMenuView actionMenuView;
 
 
     @Override
@@ -76,7 +82,6 @@ public class EntityCharacter extends Fragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setHasOptionsMenu(true);
     }
 
     private void LoadFromCache(String[] data) {

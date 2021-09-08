@@ -58,7 +58,7 @@ public class UserActivity extends AppCompatActivity {
                  Log.d("click!", "clear cache");
                  UtilData uData = new UtilData(getApplicationContext());
                  uData.clearData();
-
+                 uData.getClose();
              }
          });
         historyButton.setOnClickListener(new View.OnClickListener() {

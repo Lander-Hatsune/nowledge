@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,6 +41,8 @@ public class EntityQuestion extends Fragment {
     private String mname,mcourse;
     private String id = User.getID();
     private View view;
+    private RecyclerView listViewQuestion;
+    private final int QUESTION_SOCKET_TIMEOUT_MS = 10000;
 
     public EntityQuestion() {
     }
@@ -110,16 +113,45 @@ public class EntityQuestion extends Fragment {
         view=inflater.inflate(R.layout.fragment_entity_question,container,false);
         id = User.getID();
 
-        RecyclerView listViewQuestion = view.findViewById(R.id.QuestionList);
+        listViewQuestion = view.findViewById(R.id.QuestionList);
+        List<question> question_list = new ArrayList<>();
+        question_adapter adapter = new question_adapter(question_list);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        listViewQuestion.setLayoutManager(layoutManager);
+        listViewQuestion.setAdapter(adapter);
 
+
+
+        return view;
+    }
+
+    private boolean sMatch(String src) {
+        String[] a = {".", "、", "．"};
+        String[] c = {"A", "B", "C", "D"};
+        for (int i = 0; i < 4; ++i) {
+            boolean test = false;
+            for (int j = 0; j < 3; ++j) {
+                String match = c[i] + a[j];
+                if (src.contains(match)) {
+                    test = true; break;
+                }
+            }
+            if (!test) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        listViewQuestion = view.findViewById(R.id.QuestionList);
         String url = Uris.getQuestion() + "?";
         url += "uriName=" + mname;
         url += "&id=" + id;
-
         Log.d("questionurl:", url);
 
         RequestQueue reqQue = Singleton.getInstance(getContext()).getRequestQueue();
-
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -142,7 +174,6 @@ public class EntityQuestion extends Fragment {
                                 String qAnswer = obj.getString("qAnswer");
                                 int id= obj.getInt("id");
                                 String object = obj.getString("qBody");
-                                Log.e("qBody", String.valueOf(object.contains("A")) + String.valueOf(object.contains("B.")) + String.valueOf(object.contains("C.")) + String.valueOf(object.contains("D.")));
                                 if(sMatch(object)){
                                     String[] getdetail = object.split("A[\\.．、]|B[\\.．、]|C[\\.．、]|D[\\.．、]");
                                     question_list.add(new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
@@ -166,25 +197,12 @@ public class EntityQuestion extends Fragment {
 
             }
         });
+        req.setRetryPolicy(new DefaultRetryPolicy(
+                QUESTION_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         reqQue.add(req);
 
-        return view;
-    }
-
-    private boolean sMatch(String src) {
-        String[] a = {".", "、", "．"};
-        String[] c = {"A", "B", "C", "D"};
-        for (int i = 0; i < 4; ++i) {
-            boolean test = false;
-            for (int j = 0; j < 3; ++j) {
-                String match = c[i] + a[j];
-                if (src.contains(match)) {
-                    test = true; break;
-                }
-            }
-            if (!test) return false;
-        }
-        return true;
     }
 
 }

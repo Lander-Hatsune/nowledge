@@ -78,6 +78,7 @@ public class HistoryActivity extends AppCompatActivity {
                             ArrayAdapter<String> adapter = new ArrayAdapter<>
                                     (getApplicationContext(), R.layout.entity_short_item, historyStr);
                             lv.setAdapter(adapter);
+                            udata.getClose();
 
                         } catch (JSONException e) {
                             Log.e("Hislist error", e.toString());
@@ -106,6 +107,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         UtilHistory uData = new UtilHistory(getApplicationContext());
         List<Pair<String, String>> hisList = uData.getHisList();
+        uData.getClose();
+
         Iterator<Pair<String, String>> iter = hisList.iterator();
         while(iter.hasNext()) {
             Pair<String, String> tmp = iter.next();
@@ -151,6 +154,8 @@ public class HistoryActivity extends AppCompatActivity {
                                     }
                                     UtilHistory utilHistory = new UtilHistory(getApplicationContext());
                                     utilHistory.clearHistory();
+                                    utilHistory.getClose();
+
                                     Toast.makeText(getApplicationContext(), "清空历史记录成功", Toast.LENGTH_SHORT).show();
                                     historyCourseStr.clear(); historyStr.clear();
                                     ArrayAdapter<String> adapter = new ArrayAdapter<>

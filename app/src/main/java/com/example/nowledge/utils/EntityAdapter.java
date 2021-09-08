@@ -81,12 +81,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         if (res[3].equals("get")) {
             holder.entity_name.setTextColor(R.color.dark_gray);
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();
+        utilData.getClose();
     }
 
     public int getItemCount() { return list.size(); }

@@ -1,6 +1,10 @@
 package com.example.nowledge;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -11,20 +15,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
-import com.example.nowledge.sqlite.UtilData;
+import com.example.nowledge.screen.ScreenShot;
+
 import com.example.nowledge.sqlite.UtilHistory;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.ActionMenuView;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +51,7 @@ public class NewEntityActivity extends AppCompatActivity {
     JSONArray properties = new JSONArray();
     JSONArray contents = new JSONArray();
     JSONArray questions = new JSONArray();
+    private AppCompatActivity activity = this;
 
     protected void updateId() {
         new Thread(new Runnable() {
@@ -183,6 +185,12 @@ public class NewEntityActivity extends AppCompatActivity {
                         reqQue.add(req);
 
                         return true;
+
+                    case R.id.actionShare:
+                        Log.d("detail menu", "click action bar");
+                        shareContent();
+                        return true;
+
                     default:
                         return false;
                 }
@@ -229,6 +237,7 @@ public class NewEntityActivity extends AppCompatActivity {
         if (User.isLoggedin()) {
             UtilHistory util = new UtilHistory(this);
             util.addHistory(name, course);
+            util.getClose();
             String addHisUrl = Uris.getAddHistory();
             JSONObject obj = new JSONObject();
             try {
@@ -262,5 +271,29 @@ public class NewEntityActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         updateId();
+    }
+
+    private void shareContent() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Bitmap screen_shot = ScreenShot.shotActivity(activity);
+                Uri imgUri = Uri.parse(MediaStore.Images.Media.insertImage(
+                        getContentResolver(), screen_shot, "分享实体", "这是一个实体"));
+                Intent sendIntent = new Intent();
+
+//                sendIntent.putExtra(Intent.EXTRA_TITLE, "实体: " + name);
+//                sendIntent.putExtra(Intent.EXTRA_TEXT, "所属学科: " +course)
+//                sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
+                sendIntent.setType("image/*");
+
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+            }
+        }).start();
     }
 }

@@ -48,7 +48,8 @@ public class EntityCharacter extends Fragment {
     private String id = User.getID();
     private Boolean starred = false;
     private ListView listViewProp, listViewSuperCont, listViewChildCont;
-    private ActionMenuView actionMenuView;
+
+    private final int numC = 20, numP = 50;
 
 
     @Override
@@ -65,6 +66,7 @@ public class EntityCharacter extends Fragment {
 
         UtilData uData = new UtilData(getContext());
         String[] dataSql = uData.inquireData(name, course);
+        uData.getClose();
 
         listViewProp = view.findViewById(R.id.FlistAtDetail);
         listViewSuperCont = view.findViewById(R.id.FlistSuperContentAtDetail);
@@ -95,7 +97,7 @@ public class EntityCharacter extends Fragment {
             com.alibaba.fastjson.JSONArray object_content = com.alibaba.fastjson.JSONArray.parseArray(data[1]);
 
             for (int i = 0; i < properties.size(); i++) {
-                if (i > 10) {
+                if (i > numP) {
                     break;
                 }
                 com.alibaba.fastjson.JSONObject obj = properties.getJSONObject(i);
@@ -108,7 +110,7 @@ public class EntityCharacter extends Fragment {
 
 
             for (int i = 0,j = 0; i < subject_content.size(); i++) {
-                if (j > 10) {
+                if (j > numC) {
                     break;
                 }
                 com.alibaba.fastjson.JSONObject obj = subject_content.getJSONObject(i);
@@ -121,7 +123,7 @@ public class EntityCharacter extends Fragment {
             listViewSuperCont.setAdapter(adapterSC);
 
             for (int i = 0,j = 0; i < object_content.size(); i++) {
-                if (j > 10) {
+                if (j > numC) {
                     break;
                 }
                 com.alibaba.fastjson.JSONObject obj = object_content.getJSONObject(i);
@@ -178,12 +180,13 @@ public class EntityCharacter extends Fragment {
                                     db_object_content = new JSONArray();
 
                             for (int i = 0; i < properties.length(); i++) {
-                                if (i > 10) {
+                                if (i > numP) {
                                     break;
                                 }
                                 org.json.JSONObject obj = properties.getJSONObject(i);
                                 String predicate = obj.getString("predicateLabel");
                                 String object = obj.getString("object");
+                                if (object.contains("http")) continue;
                                 character_list.add(new character(predicate+":","  "+object));
 
                                 JSONObject tmp_obj = new JSONObject();
@@ -196,7 +199,7 @@ public class EntityCharacter extends Fragment {
 
 
                             for (int i = 0,j = 0; i < contents.length(); i++) {
-                                if (j > 10) {
+                                if (j > numC) {
                                     break;
                                 }
                                 org.json.JSONObject obj = contents.getJSONObject(i);
@@ -216,7 +219,7 @@ public class EntityCharacter extends Fragment {
                             listViewSuperCont.setAdapter(adapterSC);
 
                             for (int i = 0,j = 0; i < contents.length(); i++) {
-                                if (j > 10) {
+                                if (j > numC) {
                                     break;
                                 }
                                 org.json.JSONObject obj = contents.getJSONObject(i);
@@ -247,6 +250,7 @@ public class EntityCharacter extends Fragment {
                                     Log.d("entity subject", propertyStr);
                                     Log.d("entity object", propertyStr);
                                     uData.addData(name, course, propertyStr, subStr, objStr);
+                                    uData.getClose();
                                 }
                             }).start();
 

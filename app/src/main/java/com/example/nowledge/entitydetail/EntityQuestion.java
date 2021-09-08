@@ -31,18 +31,20 @@ import java.util.List;
 
 public class EntityQuestion extends Fragment {
 
-    private static final String ARG_PARAM = "name";
+    private static final String ARG_PARAM1 = "name";
+    private static final String ARG_PARAM2 = "course";
 
-    private String mname;
+    private String mname,mcourse;
     private String id = User.getID();
 
     public EntityQuestion() {
     }
 
-    public static EntityQuestion newInstance(String name) {
+    public static EntityQuestion newInstance(String name,String course) {
         EntityQuestion fragment = new EntityQuestion();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM, name);
+        args.putString(ARG_PARAM1, name);
+        args.putString(ARG_PARAM1, course);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,7 +53,8 @@ public class EntityQuestion extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mname = getArguments().getString(ARG_PARAM);
+            mname = getArguments().getString(ARG_PARAM1);
+            mcourse = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -131,7 +134,7 @@ public class EntityQuestion extends Fragment {
                                 String object = obj.getString("object");
                                 if(object.contains("A.")&&object.contains("B.")&&object.contains("C.")&&object.contains("D.")){
                                     String[] getdetail = object.split("A.|B.|C.|D.");
-                                    question_list.add(new question(getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
+                                    question_list.add(new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
                                     j++;
                                 }
                             }

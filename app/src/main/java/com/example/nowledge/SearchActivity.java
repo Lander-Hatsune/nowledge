@@ -42,7 +42,7 @@ public class SearchActivity extends AppCompatActivity {
     private List<String> courseNames;
     private List<EntityShort> ett_list;
     private EntityAdapter adapter;
-    private Chip chip_category, chip_reverse;
+    private Chip chip_category, chip_reverse, chip_prime;
     protected void updateId() {
         RequestQueue reqQue = Singleton.getInstance
                 (getApplicationContext()).getRequestQueue();
@@ -87,6 +87,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("搜索列表");
         id = User.getID();
         updateId();
         courses = Course.getCourses();
@@ -95,6 +96,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         chip_category = findViewById(R.id.chip_category);
         chip_reverse = findViewById(R.id.chip_reverse);
+        chip_prime = findViewById(R.id.chip_prime);
 
         Bundle bundle = this.getIntent().getExtras();
         String key = bundle.getString("key");
@@ -212,15 +214,19 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+
+        chip_prime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (chip_prime.isChecked()) {
+                    adapter = new EntityAdapter(ett_list, "prime");
+                } else {
+                    adapter = new EntityAdapter(ett_list, "list");
+                }
+                recyclerView.setAdapter(adapter);
+            }
+        });
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.d("click", "key back");
-//        Intent intentHome = new Intent(SearchActivity.this, MainActivity.class);
-//        intentHome.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intentHome.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(intentHome);
-//
-//    }
+
 }

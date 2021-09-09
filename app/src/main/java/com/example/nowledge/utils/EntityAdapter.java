@@ -32,9 +32,9 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
 
         public ViewHolder(View view, String mode) {
             super(view);
-            if (mode.equals("link")){
+            if (mode.equals("prime")){
                 entity_name = view.findViewById(R.id.entity_item_label);
-                entity_category = view.findViewById(R.id.entity_item_category);
+                entity_category = entity_name;
             } else {
                 entity_name = view.findViewById(R.id.entity_iteml_label);
                 entity_category = view.findViewById(R.id.entity_iteml_category);
@@ -47,7 +47,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (mode.equals("link"))
+        if (mode.equals("prime"))
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item, parent, false);
         else
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item_list, parent, false);
@@ -60,6 +60,8 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         EntityShort entityShort = list.get(position);
         String name = entityShort.getLabel();
         holder.entity_name.setText(name);
+        holder.entity_name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        holder.entity_name.getPaint().setFakeBoldText(true);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,19 +71,19 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
         });
 
 
-        holder.entity_name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        holder.entity_name.getPaint().setFakeBoldText(true);
-        holder.entity_category.setText(entityShort.getCategory());
-        holder.entity_category.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        if (!mode.equals("prime")) {
+            holder.entity_category.setText(entityShort.getCategory());
+            holder.entity_category.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
-        // solve cache
-
-        UtilData utilData = new UtilData(holder.entity_name.getContext());
-        String[] res = utilData.inquireData(entityShort.getLabel(), entityShort.getCourse());
-        if (res[3].equals("get")) {
-            holder.entity_name.setTextColor(R.color.dark_gray);
+            // solve cache
+            UtilData utilData = new UtilData(holder.entity_name.getContext());
+            String[] res = utilData.inquireData(entityShort.getLabel(), entityShort.getCourse());
+            if (res[3].equals("get")) {
+                holder.entity_name.setTextColor(R.color.dark_gray);
+            }
+            utilData.getClose();
         }
-        utilData.getClose();
+
     }
 
     public int getItemCount() { return list.size(); }

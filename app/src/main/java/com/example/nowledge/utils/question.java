@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 public class question {
 
+    private String username;
+    private String course;
     private String QuestionText;
     private String Answer;
     private int id;
@@ -13,7 +15,7 @@ public class question {
     private String C;
     private String D;
 
-    public question(String QuestionText,String Answer,int id,String A,String B,String C,String D) throws JSONException {
+    public question(String username,String course,String QuestionText,String Answer,int id,String A,String B,String C,String D) throws JSONException {
         this.QuestionText=QuestionText;
         this.Answer=Answer;
         this.id=id;
@@ -38,15 +40,29 @@ public class question {
 
     public int getId(){return id;}
 
+    public String getUsername(){ return username; }
+
+    public String getCourse(){return course;}
+
     public void sendMessage(){
         JSONObject ques=new JSONObject();
         try {
-            ques.put("QuestionText",QuestionText);
-        } catch (JSONException e) {
+            ques.put("username",username);
+        }catch (JSONException e){
             e.printStackTrace();
         }
         try {
-            ques.put("Answer",Answer);
+            ques.put("course",course);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        try {
+            ques.put("id",id);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        try {
+            ques.put("question",QuestionText);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -67,6 +83,11 @@ public class question {
         }
         try {
             ques.put("D",D);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            ques.put("answer",Answer);
         } catch (JSONException e) {
             e.printStackTrace();
         }

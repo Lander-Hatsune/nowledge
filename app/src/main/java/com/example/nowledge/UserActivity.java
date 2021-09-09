@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nowledge.data.User;
+import com.example.nowledge.sqlite.UtilData;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -27,6 +28,9 @@ public class UserActivity extends AppCompatActivity {
         Button historyButton = findViewById(R.id.historyButton);
         Button logoutButton = findViewById(R.id.logoutButton);
         Button clearButton = findViewById(R.id.clearCache);
+        Button KnowledgeCombingButton =findViewById(R.id.KnowledgeCombingButton);
+        Button QuestionRecommendationButton =findViewById(R.id.QuestionRecommendationButton);
+        Button UserAnalysisButton =findViewById(R.id.UserAnalysisButton);
 
         starlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,16 +45,23 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 User.setLoggedin(false);
+                String old_userName = User.getUsername();
                 User.setUsername("0");
-                onBackPressed();
+                User.setSpecialState(old_userName);
+                Intent intentMain = new Intent(UserActivity.this, MainActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intentMain.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intentMain);
             }
         });
 
          clearButton.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
-                 Toast.makeText(UserActivity.this, "清空缓存成功", Toast.LENGTH_LONG).show();
                  Log.d("click!", "clear cache");
+                 UtilData uData = new UtilData(getApplicationContext());
+                 uData.clearData();
+                 uData.getClose();
              }
          });
         historyButton.setOnClickListener(new View.OnClickListener() {
@@ -61,5 +72,28 @@ public class UserActivity extends AppCompatActivity {
                 startActivity(intentHistory);
             }
         });
+
+        KnowledgeCombingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        QuestionRecommendationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentQR =new Intent(UserActivity.this,QuestionTestActivity.class);
+                startActivity(intentQR);
+            }
+        });
+
+        UserAnalysisButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 }

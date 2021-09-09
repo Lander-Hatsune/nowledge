@@ -10,6 +10,7 @@ public class User {
     private static String username = "0";
     private static List<Pair<String, String>> searchHistory = new ArrayList<>();
     private static String ID = "";
+    private static String specialState = "";
     private static boolean loggedin = false;
 
     public static String getID() { return ID;  }
@@ -47,4 +48,10 @@ public class User {
     public static void setLoggedin(boolean loggedin) {
         User.loggedin = loggedin;
     }
+
+    public static void setSpecialState(String specialState1) {
+        specialState = specialState1;
+    }
+
+    public static String getSpecialState() { return specialState; }
 }

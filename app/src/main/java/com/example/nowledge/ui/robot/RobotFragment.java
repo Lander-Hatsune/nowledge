@@ -52,30 +52,35 @@ public class RobotFragment extends Fragment {
     private List<String> courseNames;
 
     private void updateID() {
-        String LOGIN_URL = Uris.getLogin();
-        JSONObject params = new JSONObject();
-        try {
-            params.put("username", "0");
-            params.put("password", "0");
-        }catch (JSONException e) {}
-        JsonObjectRequest id_request = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            id = response.getString("id");
-                            User.setID(id);
-                        } catch (JSONException e) { e.printStackTrace();}                        }
-                }, new Response.ErrorListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                msg_list.add(new Message("[Error] " + "后端登录错误" , false));
-                adapter.notifyItemInserted((msg_list.size()-1));
-                msgRecyclerView.scrollToPosition(msg_list.size()-1);
-            }
-        });
+            public void run() {
+                String LOGIN_URL = Uris.getLogin();
+                JSONObject params = new JSONObject();
+                try {
+                    params.put("username", "0");
+                    params.put("password", "0");
+                }catch (JSONException e) {}
+                JsonObjectRequest id_request = new JsonObjectRequest(Request.Method.POST, LOGIN_URL, params,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    id = response.getString("id");
+                                    User.setID(id);
+                                } catch (JSONException e) { e.printStackTrace();}                        }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        msg_list.add(new Message("[Error] " + "后端登录错误" , false));
+                        adapter.notifyItemInserted((msg_list.size()-1));
+                        msgRecyclerView.scrollToPosition(msg_list.size()-1);
+                    }
+                });
 
-        queue.add(id_request);
+                queue.add(id_request);
+            }
+        }).start();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

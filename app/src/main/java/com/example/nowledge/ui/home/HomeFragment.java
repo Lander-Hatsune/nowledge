@@ -14,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -35,8 +36,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.FloatTagActivity;
 import com.example.nowledge.MainActivity;
 import com.example.nowledge.NewEntityActivity;
+import com.example.nowledge.QuestionTestActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
@@ -46,6 +49,7 @@ import com.example.nowledge.databinding.FragmentHomeBinding;
 import com.example.nowledge.utils.EntityAdapter;
 import com.example.nowledge.utils.EntityShort;
 import com.example.nowledge.volley.MyJsonObjectRequest;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -77,7 +81,6 @@ public class HomeFragment extends Fragment {
             "学", "反", "物"};
     private List<String> courseNames = Course.getCourseNames();
 
-
     protected void updateId(int courseID) {
         requestQueue = Singleton.getInstance
                 (getActivity().getApplicationContext()).getRequestQueue();
@@ -100,9 +103,11 @@ public class HomeFragment extends Fragment {
                             id = response.getString("id");
                             User.setID(id);
                             Log.d("ID", id);
-                            sendCourseRequest(courseID, binding.tabLayout.getTabAt(0), false);
+                            if (courseID >= 0)
+                                sendCourseRequest(courseID, binding.tabLayout.getTabAt(courseID), false);
                         } catch (JSONException e) {
                             Log.e("Login request msg error", e.toString());
+                            sendCourseRequest(courseID, binding.tabLayout.getTabAt(0), false);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -114,6 +119,7 @@ public class HomeFragment extends Fragment {
         Log.d("Request:", req.toString());
         requestQueue.add(req);
     }
+
 
     private void sendCourseRequest(int courseID, TabLayout.Tab tab, boolean first) {
         String course = courses[courseID], searchkey = searchKeys[courseID];
@@ -177,28 +183,43 @@ public class HomeFragment extends Fragment {
 
 
                     }
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-                    recyclerView.setLayoutManager(layoutManager);
-                    EntityAdapter adapter = new EntityAdapter(ett_list, "list");
-                    adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemCLick(String course, String name) {
-                            Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
-                            intentDetail.putExtra("course", course);
-                            intentDetail.putExtra("name", name);
-                            startActivity(intentDetail);
-                        }
-                    });
-                    recyclerView.setAdapter(adapter);
+
 
                 } catch (JSONException e) {
                     Log.e("JsonError", e.toString());
                 }
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+                EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+                adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemCLick(String course, String name) {
+                        Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
+                        intentDetail.putExtra("course", course);
+                        intentDetail.putExtra("name", name);
+                        startActivity(intentDetail);
+                    }
+                });
+                recyclerView.setAdapter(adapter);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error", error.toString());
+                ett_list.clear();
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+                EntityAdapter adapter = new EntityAdapter(ett_list, "list");
+                adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemCLick(String course, String name) {
+                        Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
+                        intentDetail.putExtra("course", course);
+                        intentDetail.putExtra("name", name);
+                        startActivity(intentDetail);
+                    }
+                });
+                recyclerView.setAdapter(adapter);
             }
         });
         reqQue.add(req);
@@ -214,16 +235,35 @@ public class HomeFragment extends Fragment {
         requestQueue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
         recyclerView = root.findViewById(R.id.recycleViewHome);
 
-        updateId(0);
-        TabLayout tabLayout = binding.tabLayout;
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
+        Log.e("shared preferences", sharedPreferences.toString());
+        String init_course = "chinese";
+        Set<String> cache_content = sharedPreferences.getStringSet(init_course, new HashSet<String>());
 
+        if (cache_content.size() > 0) {
+            getContentFromCache(cache_content, init_course);
+            updateId(-1);
+        } else {
+            updateId(0);
+        }
+
+
+        Button floatTagButton = binding.homeEditTagButton;
+        floatTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FloatTagActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        TabLayout tabLayout = binding.tabLayout;
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
                 Log.d("Tab selected", tab.getText().toString());
-
 
                 Integer pos = courseNames.indexOf(tab.getText().toString());
                 Log.d("pos", pos.toString());
@@ -244,10 +284,28 @@ public class HomeFragment extends Fragment {
         });
 
 
-//        Log.i("TabLayout", "select Tab 0");
-//        tabLayout.selectTab(tabLayout.getTabAt(0));
-
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        TabLayout tabLayout = binding.tabLayout;
+
+        tabLayout.removeAllTabs();
+
+        Log.d("onStart, generate tags", Course.getSelectedCourseNames().toString());
+        for (String courseName: Course.getSelectedCourseNames()) {
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setText(courseName);
+            tab.setTag(Course.getCourseIDByName(courseName));
+            tabLayout.addTab(tab);
+        }
+
+        Integer pos = tabLayout.getSelectedTabPosition();
+        Integer id = courseNames.indexOf(tabLayout.getTabAt(pos).getText().toString());
+        sendCourseRequest(id, tabLayout.getTabAt(pos), true);
+
     }
 
     @Override
@@ -276,8 +334,8 @@ public class HomeFragment extends Fragment {
             }
             list.put(tmp_obj);
         }
+        ett_list.clear();
         try{
-            ett_list.clear();
             for (int i = 0; i < list.length(); i++) {
                 JSONObject obj = list.getJSONObject(i);
                 String label = obj.get("label").toString();
@@ -295,16 +353,14 @@ public class HomeFragment extends Fragment {
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
             @Override
             public void onItemCLick(String course, String name) {
-                Intent intentDetail = new Intent(getActivity(), EntityDetailActivity.class);
+                Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
+                //Intent intentDetail = new Intent(getActivity(), QuestionTestActivity.class);
                 intentDetail.putExtra("course", course);
                 intentDetail.putExtra("name", name);
                 startActivity(intentDetail);
             }
         });
         recyclerView.setAdapter(adapter);
-
-
-
 
     }
 }

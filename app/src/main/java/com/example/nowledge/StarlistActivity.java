@@ -1,14 +1,20 @@
 package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,19 +30,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class StarlistActivity extends AppCompatActivity {
+
+    private ListView lv;
+    private List<String> starlistStr, starCourseStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_history);
+        setTitle("我的历史");
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setContentView(R.layout.activity_starlist);
         setTitle("我的收藏");
 
-        ListView lv = findViewById(R.id.starListView);
-        List<String> starlistStr = new ArrayList<>();
-        List<String> starCourseStr = new ArrayList<>();
+        lv = findViewById(R.id.starListView);
+        starlistStr = new ArrayList<>();
+        starCourseStr = new ArrayList<>();
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
         String url = Uris.getStarlist() + "?username=" + User.getUsername();
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -44,6 +65,8 @@ public class StarlistActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            starlistStr = new ArrayList<>();
+                            starCourseStr = new ArrayList<>();
                             String code = response.getString("id");
                             if (!code.equals("0")) {
                                 return;
@@ -51,8 +74,9 @@ public class StarlistActivity extends AppCompatActivity {
                             JSONArray starlist = response.getJSONArray("payload");
                             for (int i = 0; i < starlist.length(); i++) {
                                 JSONObject star = starlist.getJSONObject(i);
-                                starlistStr.add(star.getString("name"));
-                                starCourseStr.add(star.getString("course"));
+                                String name = star.getString("name"), course = star.getString("course");
+                                starlistStr.add(name);
+                                starCourseStr.add(course);
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>
                                     (getApplicationContext(), R.layout.entity_short_item, starlistStr);
@@ -65,6 +89,8 @@ public class StarlistActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.e("starList error", error.toString());
+
 
             }
         });

@@ -168,9 +168,9 @@ public class EntityQuestion extends Fragment {
                         }
                         int Count=0;
                         for (int i = 0; i < questions.length(); i++) {
-                            if (Count > 10) {
-                                break;
-                            }
+//                            if (Count > 10) {
+//                                break;
+//                            }
                             try {
                                 JSONObject obj = questions.getJSONObject(i);
                                 String qAnswer = obj.getString("qAnswer");

@@ -1,7 +1,9 @@
 package com.example.nowledge.entitydetail;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,10 +24,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.sqlite.UtilData;
+import com.example.nowledge.utils.ImageAdater;
 import com.example.nowledge.utils.character;
 import com.example.nowledge.utils.character_adapter;
 import com.example.nowledge.utils.child_relation;
@@ -49,7 +54,9 @@ public class EntityCharacter extends Fragment {
     private String course, name;
     private String id = User.getID();
     private Boolean starred = false;
-    private ListView listViewProp, listViewSuperCont, listViewChildCont;
+    private ListView listViewProp, listViewSuperCont, listViewChildCont, listViewImage;
+    private List<Bitmap> bitmapList;
+
 
     private final int numC = 20, numP = 50;
 
@@ -60,6 +67,7 @@ public class EntityCharacter extends Fragment {
 
         View view= inflater.inflate(R.layout.fragment_entity_character, container, false);
         id = User.getID();
+        bitmapList = new ArrayList<>();
 
 
         Bundle bundle = getActivity().getIntent().getExtras();
@@ -73,6 +81,7 @@ public class EntityCharacter extends Fragment {
         listViewProp = view.findViewById(R.id.FlistAtDetail);
         listViewSuperCont = view.findViewById(R.id.FlistSuperContentAtDetail);
         listViewChildCont = view.findViewById(R.id.FlistChildContentAtDetail);
+        listViewImage = view.findViewById(R.id.list_image);
 
         if (dataSql[3].equals("get")) {
             LoadFromCache(dataSql);
@@ -96,7 +105,7 @@ public class EntityCharacter extends Fragment {
 
             com.alibaba.fastjson.JSONArray properties = com.alibaba.fastjson.JSONArray.parseArray(data[0]);
             com.alibaba.fastjson.JSONArray subject_content = com.alibaba.fastjson.JSONArray.parseArray(data[1]);
-            com.alibaba.fastjson.JSONArray object_content = com.alibaba.fastjson.JSONArray.parseArray(data[1]);
+            com.alibaba.fastjson.JSONArray object_content = com.alibaba.fastjson.JSONArray.parseArray(data[2]);
 
             for (int i = 0; i < properties.size(); i++) {
                 if (i > numP) {
@@ -117,7 +126,7 @@ public class EntityCharacter extends Fragment {
                 }
                 com.alibaba.fastjson.JSONObject obj = subject_content.getJSONObject(i);
                 String type = obj.getString("type");
-                String detail = obj.getString("subject_label");
+                String detail = obj.getString("detail");
                 j++;
                 super_relation_list.add(new super_relation(type,detail,course));
             }
@@ -130,7 +139,7 @@ public class EntityCharacter extends Fragment {
                 }
                 com.alibaba.fastjson.JSONObject obj = object_content.getJSONObject(i);
                 String type = obj.getString("type");
-                String detail = obj.getString("subject_label");
+                String detail = obj.getString("detail");
                 j++;
                 child_relation_list.add(new child_relation(type,detail,course));
             }
@@ -148,11 +157,9 @@ public class EntityCharacter extends Fragment {
         url += "name=" + name;
         url += "&course=" + course;
         url += "&id=" + id;
-
         Log.d("detailurl:", url);
 
         RequestQueue reqQue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
-
 
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<org.json.JSONObject>() {
@@ -186,9 +193,14 @@ public class EntityCharacter extends Fragment {
                                     break;
                                 }
                                 org.json.JSONObject obj = properties.getJSONObject(i);
+                                String pred = obj.getString("predicate");
                                 String predicate = obj.getString("predicateLabel");
                                 String object = obj.getString("object");
-                                if (object.contains("http")) continue;
+                                if (pred.endsWith("common#image")) {
+                                    LoadImg(object);
+                                    continue;
+                                }
+                                else if (object.contains("http")) continue;
                                 character_list.add(new character(predicate+":","  "+object));
 
                                 JSONObject tmp_obj = new JSONObject();
@@ -199,7 +211,7 @@ public class EntityCharacter extends Fragment {
                             character_adapter adapter = new character_adapter(getActivity(),R.layout.character_item,character_list);
                             listViewProp.setAdapter(adapter);
 
-
+                            boolean getImg = false;
                             for (int i = 0,j = 0; i < contents.length(); i++) {
                                 if (j > numC) {
                                     break;
@@ -249,8 +261,8 @@ public class EntityCharacter extends Fragment {
                                             objStr = db_object_content.toString();
                                     UtilData uData = new UtilData(getContext());
                                     Log.d("entity properties", propertyStr);
-                                    Log.d("entity subject", propertyStr);
-                                    Log.d("entity object", propertyStr);
+                                    Log.d("entity subject", subStr);
+                                    Log.d("entity object", objStr);
                                     uData.addData(name, course, propertyStr, subStr, objStr);
                                     uData.getClose();
                                 }
@@ -270,8 +282,6 @@ public class EntityCharacter extends Fragment {
         reqQue.add(req);
 
     }
-
-
 
     protected void updateId() {
         new Thread(new Runnable() {
@@ -320,6 +330,34 @@ public class EntityCharacter extends Fragment {
             }
         }).start();
     }
+
+    private void LoadImg(String url) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                RequestQueue req = Singleton.getInstance(getContext()).getRequestQueue();
+                ImageRequest imgRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        bitmapList.add(response);
+                        ImageAdater adapter = new ImageAdater(getContext(), bitmapList, R.layout.image_item);
+                        listViewImage.setAdapter(adapter);
+                        getView().findViewById(R.id.imageLayout).setVisibility(View.VISIBLE);
+
+                    }
+                }, 1000, 1000, ImageView.ScaleType.CENTER_INSIDE, Bitmap.Config.ARGB_8888,
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Image response error", error.toString());
+                            }
+                        });
+                req.add(imgRequest);
+            }
+        }).start();
+    }
+
 
     
 

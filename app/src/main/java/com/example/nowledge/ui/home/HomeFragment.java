@@ -14,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.EntityDetailActivity;
+import com.example.nowledge.FloatTagActivity;
 import com.example.nowledge.MainActivity;
 import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
@@ -46,6 +48,7 @@ import com.example.nowledge.databinding.FragmentHomeBinding;
 import com.example.nowledge.utils.EntityAdapter;
 import com.example.nowledge.utils.EntityShort;
 import com.example.nowledge.volley.MyJsonObjectRequest;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -76,9 +79,6 @@ public class HomeFragment extends Fragment {
             "流", "代", "发",
             "学", "反", "物"};
     private List<String> courseNames = Course.getCourseNames();
-
-
-
 
     protected void updateId(int courseID) {
         requestQueue = Singleton.getInstance
@@ -246,15 +246,23 @@ public class HomeFragment extends Fragment {
             updateId(0);
         }
 
-        TabLayout tabLayout = binding.tabLayout;
 
+        Button floatTagButton = binding.homeEditTagButton;
+        floatTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FloatTagActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        TabLayout tabLayout = binding.tabLayout;
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
                 Log.d("Tab selected", tab.getText().toString());
-
 
                 Integer pos = courseNames.indexOf(tab.getText().toString());
                 Log.d("pos", pos.toString());
@@ -281,8 +289,22 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        int id = binding.tabLayout.getSelectedTabPosition();
-        sendCourseRequest(id, binding.tabLayout.getTabAt(id), true);
+        TabLayout tabLayout = binding.tabLayout;
+
+        tabLayout.removeAllTabs();
+
+        Log.d("onStart, generate tags", Course.getSelectedCourseNames().toString());
+        for (String courseName: Course.getSelectedCourseNames()) {
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setText(courseName);
+            tab.setTag(Course.getCourseIDByName(courseName));
+            tabLayout.addTab(tab);
+        }
+
+        Integer pos = tabLayout.getSelectedTabPosition();
+        Integer id = courseNames.indexOf(tabLayout.getTabAt(pos).getText().toString());
+        sendCourseRequest(id, tabLayout.getTabAt(pos), true);
+
     }
 
     @Override
@@ -337,9 +359,6 @@ public class HomeFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
-
-
-
 
     }
 }

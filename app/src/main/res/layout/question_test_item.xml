@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/QuestionText"
+        android:id="@+id/TestQuestionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -15,7 +15,7 @@
         android:textSize="15sp"/>
 
     <RadioGroup
-        android:id="@+id/AnswerList"
+        android:id="@+id/TestAnswerList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -24,63 +24,33 @@
         android:layout_marginRight="10sp">
 
         <RadioButton
-            android:id="@+id/A"
+            android:id="@+id/TestA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"/>
 
         <RadioButton
-            android:id="@+id/B"
+            android:id="@+id/TestB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"/>
 
         <RadioButton
-            android:id="@+id/C"
+            android:id="@+id/TestC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"/>
 
         <RadioButton
-            android:id="@+id/D"
+            android:id="@+id/TestD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textSize="15sp"/>
     </RadioGroup>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5sp"
-        android:layout_marginLeft="10sp"
-        android:layout_marginRight="10sp">
-
-        <Button
-            android:id="@+id/CheckAnswer"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:textSize="15sp"
-            android:text="提交"
-            android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp"/>
-
-        <TextView
-            android:id="@+id/Judge"
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:maxLines="1"
-            android:layout_weight="1"
-            android:textSize="15sp"
-            android:layout_marginLeft="10sp"
-            android:layout_marginRight="10sp"/>
-
-    </LinearLayout>
 
 </LinearLayout>

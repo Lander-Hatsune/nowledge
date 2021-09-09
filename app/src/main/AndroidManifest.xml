@@ -16,6 +16,10 @@
             android:name=".QuestionTestActivity"
             android:exported="true" />
         <activity
+            android:name=".FloatTagActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Nowledge.NoActionBar"/>
+        <activity
             android:name=".HistoryActivity"
             android:exported="true" />
         <activity

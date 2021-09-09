@@ -223,6 +223,15 @@ public class SearchActivity extends AppCompatActivity {
                 } else {
                     adapter = new EntityAdapter(ett_list, "list");
                 }
+                adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemCLick(String course, String name) {
+                        Intent intentDetail = new Intent(SearchActivity.this, NewEntityActivity.class);
+                        intentDetail.putExtra("course", course);
+                        intentDetail.putExtra("name", name);
+                        startActivity(intentDetail);
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
         });

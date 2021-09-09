@@ -88,7 +88,7 @@ public class LinkFragment extends Fragment {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("ERROR", error.getMessage());
+                        Log.i("ERROR", error.toString());
                         searchText.setHint("请求出错，请重新输入");
                         searchText.setText("");
                     }

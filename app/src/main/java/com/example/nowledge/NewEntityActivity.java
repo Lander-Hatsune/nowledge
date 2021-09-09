@@ -296,4 +296,5 @@ public class NewEntityActivity extends AppCompatActivity {
             }
         }).start();
     }
+
 }

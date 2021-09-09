@@ -1,6 +1,7 @@
 package com.example.nowledge.entitydetail;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -269,6 +271,8 @@ public class EntityCharacter extends Fragment {
 
     }
 
+
+
     protected void updateId() {
         new Thread(new Runnable() {
             @Override
@@ -316,5 +320,7 @@ public class EntityCharacter extends Fragment {
             }
         }).start();
     }
+
+    
 
 }

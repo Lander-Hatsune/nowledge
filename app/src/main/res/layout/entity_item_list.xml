@@ -52,6 +52,8 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="4dp"
                 android:text="标题"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textColor="@color/purple_700"/>
@@ -64,6 +66,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:text="属性"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/dark_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

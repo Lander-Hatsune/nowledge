@@ -59,7 +59,7 @@ public class EntityAdapter extends RecyclerView.Adapter<EntityAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         EntityShort entityShort = list.get(position);
         String name = entityShort.getLabel();
-        holder.entity_name.setText(normalize(name, 14));
+        holder.entity_name.setText(name);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

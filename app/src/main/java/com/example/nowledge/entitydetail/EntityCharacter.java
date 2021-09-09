@@ -105,7 +105,7 @@ public class EntityCharacter extends Fragment {
 
             com.alibaba.fastjson.JSONArray properties = com.alibaba.fastjson.JSONArray.parseArray(data[0]);
             com.alibaba.fastjson.JSONArray subject_content = com.alibaba.fastjson.JSONArray.parseArray(data[1]);
-            com.alibaba.fastjson.JSONArray object_content = com.alibaba.fastjson.JSONArray.parseArray(data[1]);
+            com.alibaba.fastjson.JSONArray object_content = com.alibaba.fastjson.JSONArray.parseArray(data[2]);
 
             for (int i = 0; i < properties.size(); i++) {
                 if (i > numP) {
@@ -126,7 +126,7 @@ public class EntityCharacter extends Fragment {
                 }
                 com.alibaba.fastjson.JSONObject obj = subject_content.getJSONObject(i);
                 String type = obj.getString("type");
-                String detail = obj.getString("subject_label");
+                String detail = obj.getString("detail");
                 j++;
                 super_relation_list.add(new super_relation(type,detail,course));
             }
@@ -139,7 +139,7 @@ public class EntityCharacter extends Fragment {
                 }
                 com.alibaba.fastjson.JSONObject obj = object_content.getJSONObject(i);
                 String type = obj.getString("type");
-                String detail = obj.getString("subject_label");
+                String detail = obj.getString("detail");
                 j++;
                 child_relation_list.add(new child_relation(type,detail,course));
             }
@@ -261,8 +261,8 @@ public class EntityCharacter extends Fragment {
                                             objStr = db_object_content.toString();
                                     UtilData uData = new UtilData(getContext());
                                     Log.d("entity properties", propertyStr);
-                                    Log.d("entity subject", propertyStr);
-                                    Log.d("entity object", propertyStr);
+                                    Log.d("entity subject", subStr);
+                                    Log.d("entity object", objStr);
                                     uData.addData(name, course, propertyStr, subStr, objStr);
                                     uData.getClose();
                                 }

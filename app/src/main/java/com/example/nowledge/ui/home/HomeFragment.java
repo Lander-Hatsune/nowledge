@@ -37,6 +37,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.example.nowledge.EntityDetailActivity;
 import com.example.nowledge.MainActivity;
 import com.example.nowledge.NewEntityActivity;
+import com.example.nowledge.QuestionTestActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.data.Course;
 import com.example.nowledge.data.Singleton;
@@ -331,6 +332,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemCLick(String course, String name) {
                 Intent intentDetail = new Intent(getActivity(), NewEntityActivity.class);
+                //Intent intentDetail = new Intent(getActivity(), QuestionTestActivity.class);
                 intentDetail.putExtra("course", course);
                 intentDetail.putExtra("name", name);
                 startActivity(intentDetail);

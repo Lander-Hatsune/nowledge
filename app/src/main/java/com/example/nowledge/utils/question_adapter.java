@@ -2,6 +2,7 @@ package com.example.nowledge.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,12 +64,12 @@ public class question_adapter extends RecyclerView.Adapter<question_adapter.View
                         Choose="D";
                     }
                     if(Choose.equals(q.getAnswer())){
-                        viewHolder.Judge.setTextColor(R.color.grassgreen);
+                        viewHolder.Judge.setTextColor(Color.parseColor("#99CC33"));
                         viewHolder.Judge.setText("回答正确");
 
                     }
                     else {
-                        viewHolder.Judge.setTextColor(R.color.red);
+                        viewHolder.Judge.setTextColor(Color.parseColor("#CC0000"));
                         viewHolder.Judge.setText("回答错误，正确答案是："+q.getAnswer());
 
                     }

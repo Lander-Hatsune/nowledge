@@ -66,12 +66,12 @@ public class question_adapter extends RecyclerView.Adapter<question_adapter.View
                     if(Choose.equals(q.getAnswer())){
                         viewHolder.Judge.setTextColor(Color.parseColor("#99CC33"));
                         viewHolder.Judge.setText("回答正确");
-
+                        viewHolder.CheckAnswer.setEnabled(false);
                     }
                     else {
                         viewHolder.Judge.setTextColor(Color.parseColor("#CC0000"));
                         viewHolder.Judge.setText("回答错误，正确答案是："+q.getAnswer());
-
+                        viewHolder.CheckAnswer.setEnabled(false);
                     }
                 }
                 else {

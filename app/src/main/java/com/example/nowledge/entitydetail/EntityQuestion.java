@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -42,6 +43,7 @@ public class EntityQuestion extends Fragment {
     private String id = User.getID();
     private View view;
     private RecyclerView listViewQuestion;
+    private TextView Uptitle;
     private final int QUESTION_SOCKET_TIMEOUT_MS = 10000;
 
     public EntityQuestion() {
@@ -119,7 +121,7 @@ public class EntityQuestion extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         listViewQuestion.setLayoutManager(layoutManager);
         listViewQuestion.setAdapter(adapter);
-
+        Uptitle=view.findViewById(R.id.UpTitle);
 
 
         return view;
@@ -164,9 +166,9 @@ public class EntityQuestion extends Fragment {
                         } catch (JSONException e) {
                             Log.e("Question: Error getting data", e.toString());
                         }
-
-                        for (int i = 0, j = 0; i < questions.length(); i++) {
-                            if (j > 10) {
+                        int Count=0;
+                        for (int i = 0; i < questions.length(); i++) {
+                            if (Count > 10) {
                                 break;
                             }
                             try {
@@ -177,12 +179,17 @@ public class EntityQuestion extends Fragment {
                                 if(sMatch(object)){
                                     String[] getdetail = object.split("A[\\.．、]|B[\\.．、]|C[\\.．、]|D[\\.．、]");
                                     question_list.add(new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
-                                    j++;
+                                    Count++;
                                 }
                             } catch (JSONException e) {
                                 Log.e("Error parsing detail obj", e.toString());
                             }
-
+                        }
+                        if(Count==0){
+                            Uptitle.setText("未搜索到相关习题！");
+                        }
+                        else {
+                            Uptitle.setText("共搜索到"+Count+"题！");
                         }
                         Log.d("Question number", String.valueOf(question_list.size()));
                         question_adapter adapter = new question_adapter(question_list);

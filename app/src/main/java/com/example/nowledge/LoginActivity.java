@@ -2,6 +2,7 @@ package com.example.nowledge;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.TimeAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private String Name,Pass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Name= String.valueOf(username.getText());
+                Pass= String.valueOf(password.getText());
+                Log.e("Name and Password message","Name("+Name+")#Password("+Pass+")");
+                if(Name.equals("")||Pass.equals("")){
+                    Toast.makeText(LoginActivity.this,"用户名或密码不能为空！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 RequestQueue reqQue = Singleton.getInstance
                         (getApplicationContext()).getRequestQueue();
                 JSONObject obj = null;
@@ -98,6 +108,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 RequestQueue reqQue = Singleton.getInstance
                         (getApplicationContext()).getRequestQueue();
+                Name= String.valueOf(username.getText());
+                Pass= String.valueOf(password.getText());
+                if(Name.equals("")||Pass.equals("")){
+                    Toast.makeText(LoginActivity.this,"用户名或密码不能为空！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 JSONObject obj = null;
                 try {
                     obj = new JSONObject();

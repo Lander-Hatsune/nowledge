@@ -28,6 +28,9 @@ public class UserActivity extends AppCompatActivity {
         Button historyButton = findViewById(R.id.historyButton);
         Button logoutButton = findViewById(R.id.logoutButton);
         Button clearButton = findViewById(R.id.clearCache);
+        Button KnowledgeCombingButton =findViewById(R.id.KnowledgeCombingButton);
+        Button QuestionRecommendationButton =findViewById(R.id.QuestionRecommendationButton);
+        Button UserAnalysisButton =findViewById(R.id.UserAnalysisButton);
 
         starlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,5 +72,28 @@ public class UserActivity extends AppCompatActivity {
                 startActivity(intentHistory);
             }
         });
+
+        KnowledgeCombingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        QuestionRecommendationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentQR =new Intent(UserActivity.this,QuestionTestActivity.class);
+                startActivity(intentQR);
+            }
+        });
+
+        UserAnalysisButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 }

@@ -12,5 +12,5 @@
         android:layout_height="match_parent"
         app:fixedPos="0"
         app:channelItemTxSize="20dp"
-        />
+        tools:ignore="MissingClass" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -211,63 +211,66 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                         // 如果targetView不在屏幕内,则为-1  此时不需要添加动画,因为此时notifyItemMoved自带一个向目标移动的动画
                         // 如果在屏幕内,则添加一个位移动画
-                        if (recyclerView.indexOfChild(preTargetView) >= 0) {
-                            int targetX = preTargetView.getLeft();
-                            int targetY = preTargetView.getTop();
+                        if (isEditMode) {
+                            if (recyclerView.indexOfChild(preTargetView) >= 0) {
+                                int targetX = preTargetView.getLeft();
+                                int targetY = preTargetView.getTop();
 
-                            int targetPosition = mMyChannelItems.size() - 1 + COUNT_PRE_OTHER_HEADER;
+                                int targetPosition = mMyChannelItems.size() - 1 + COUNT_PRE_OTHER_HEADER;
 
-                            GridLayoutManager gridLayoutManager = ((GridLayoutManager) manager);
-                            int spanCount = gridLayoutManager.getSpanCount();
-                            // target 在最后一行第一个
-                            if ((targetPosition - COUNT_PRE_MY_HEADER) % spanCount == 0) {
-                                View targetView = manager.findViewByPosition(targetPosition);
-                                targetX = targetView.getLeft();
-                                targetY = targetView.getTop();
-                            } else {
-                                targetX += preTargetView.getWidth();
-
-                                // 最后一个item可见
-                                if (gridLayoutManager.findLastVisibleItemPosition() == getItemCount() - 1) {
-                                    // 最后的item在最后一行第一个位置
-                                    if ((getItemCount() - 1 - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount == 0) {
-                                        // RecyclerView实际高度 > 屏幕高度 && RecyclerView实际高度 < 屏幕高度 + item.height
-                                        int firstVisiblePostion = gridLayoutManager.findFirstVisibleItemPosition();
-                                        if (firstVisiblePostion == 0) {
-                                            // FirstCompletelyVisibleItemPosition == 0 即 内容不满一屏幕 , targetY值不需要变化
-                                            // // FirstCompletelyVisibleItemPosition != 0 即 内容满一屏幕 并且 可滑动 , targetY值 + firstItem.getTop
-                                            if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
-                                                int offset = (-recyclerView.getChildAt(0).getTop()) - recyclerView.getPaddingTop();
-                                                targetY += offset;
-                                            }
-                                        } else { // 在这种情况下 并且 RecyclerView高度变化时(即可见第一个item的 position != 0),
-                                            // 移动后, targetY值  + 一个item的高度
-                                            targetY += preTargetView.getHeight();
-                                        }
-                                    }
+                                GridLayoutManager gridLayoutManager = ((GridLayoutManager) manager);
+                                int spanCount = gridLayoutManager.getSpanCount();
+                                // target 在最后一行第一个
+                                if ((targetPosition - COUNT_PRE_MY_HEADER) % spanCount == 0) {
+                                    View targetView = manager.findViewByPosition(targetPosition);
+                                    targetX = targetView.getLeft();
+                                    targetY = targetView.getTop();
                                 } else {
-                                    System.out.println("current--No");
+                                    targetX += preTargetView.getWidth();
+
+                                    // 最后一个item可见
+                                    if (gridLayoutManager.findLastVisibleItemPosition() == getItemCount() - 1) {
+                                        // 最后的item在最后一行第一个位置
+                                        if ((getItemCount() - 1 - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount == 0) {
+                                            // RecyclerView实际高度 > 屏幕高度 && RecyclerView实际高度 < 屏幕高度 + item.height
+                                            int firstVisiblePostion = gridLayoutManager.findFirstVisibleItemPosition();
+                                            if (firstVisiblePostion == 0) {
+                                                // FirstCompletelyVisibleItemPosition == 0 即 内容不满一屏幕 , targetY值不需要变化
+                                                // // FirstCompletelyVisibleItemPosition != 0 即 内容满一屏幕 并且 可滑动 , targetY值 + firstItem.getTop
+                                                if (gridLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) {
+                                                    int offset = (-recyclerView.getChildAt(0).getTop()) - recyclerView.getPaddingTop();
+                                                    targetY += offset;
+                                                }
+                                            } else { // 在这种情况下 并且 RecyclerView高度变化时(即可见第一个item的 position != 0),
+                                                // 移动后, targetY值  + 一个item的高度
+                                                targetY += preTargetView.getHeight();
+                                            }
+                                        }
+                                    } else {
+                                        System.out.println("current--No");
+                                    }
                                 }
-                            }
 
-                            // 如果当前位置是otherChannel可见的最后一个
-                            // 并且 当前位置不在grid的第一个位置
-                            // 并且 目标位置不在grid的第一个位置
+                                // 如果当前位置是otherChannel可见的最后一个
+                                // 并且 当前位置不在grid的第一个位置
+                                // 并且 目标位置不在grid的第一个位置
 
-                            // 则 需要延迟250秒 notifyItemMove , 这是因为这种情况 , 并不触发ItemAnimator , 会直接刷新界面
-                            // 导致我们的位移动画刚开始,就已经notify完毕,引起不同步问题
-                            if (currentPiosition == gridLayoutManager.findLastVisibleItemPosition()
-                                    && (currentPiosition - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount != 0
-                                    && (targetPosition - COUNT_PRE_MY_HEADER) % spanCount != 0) {
-                                moveOtherToMyWithDelay(otherHolder);
+                                // 则 需要延迟250秒 notifyItemMove , 这是因为这种情况 , 并不触发ItemAnimator , 会直接刷新界面
+                                // 导致我们的位移动画刚开始,就已经notify完毕,引起不同步问题
+                                if (currentPiosition == gridLayoutManager.findLastVisibleItemPosition()
+                                        && (currentPiosition - mMyChannelItems.size() - COUNT_PRE_OTHER_HEADER) % spanCount != 0
+                                        && (targetPosition - COUNT_PRE_MY_HEADER) % spanCount != 0) {
+                                    moveOtherToMyWithDelay(otherHolder);
+                                } else {
+                                    moveOtherToMy(otherHolder);
+                                }
+                                startAnimation(recyclerView, currentView, targetX, targetY);
+
                             } else {
                                 moveOtherToMy(otherHolder);
                             }
-                            startAnimation(recyclerView, currentView, targetX, targetY);
-
-                        } else {
-                            moveOtherToMy(otherHolder);
                         }
+
                     }
                 });
                 return otherHolder;

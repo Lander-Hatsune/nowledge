@@ -13,12 +13,11 @@
         android:theme="@style/Theme.Nowledge"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".QuestionTestActivity"
+            android:name=".UserAnalyzeActivity"
             android:exported="true" />
         <activity
-            android:name=".FloatTagActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Nowledge.NoActionBar" />
+            android:name=".QuestionTestActivity"
+            android:exported="true" />
         <activity
             android:name=".drag.DragActivity"
             android:exported="true"

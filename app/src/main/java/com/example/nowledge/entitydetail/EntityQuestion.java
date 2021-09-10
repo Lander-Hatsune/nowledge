@@ -57,7 +57,7 @@ public class EntityQuestion extends Fragment {
             mname = getArguments().getString(ARG_PARAM1);
             mcourse = getArguments().getString(ARG_PARAM2);
         }
-        Log.e("Question", getArguments().toString());
+        Log.w("Question", getArguments().toString());
     }
 
     protected void updateId() {
@@ -111,7 +111,7 @@ public class EntityQuestion extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("Question Fragment", "on create view");
+        Log.w("Question Fragment", "on create view");
         view=inflater.inflate(R.layout.fragment_entity_question,container,false);
         id = User.getID();
 

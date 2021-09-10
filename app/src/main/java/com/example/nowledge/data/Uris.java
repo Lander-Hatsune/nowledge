@@ -10,6 +10,12 @@ public class Uris {
     private static final String addHistory = host + "/addhistory";
     private static final String clearHistory = host + "/clearhistory";
     private static final String historylist = host + "/historylist";
+    private static final String stat = "/stat";
+    private static final String inc = host + stat + "/inc";
+    private static final String info = host + stat + "/get";
+
+
+
     private static final String robotSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion";
     private static final String linkSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance";
     private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
@@ -33,6 +39,10 @@ public class Uris {
     public static String getUnstar() {
         return unstar;
     }
+
+    public static String getInc() { return inc; }
+
+    public static String getInfo() {return info;}
 
     public static String getStarlist() {
         return starlist;

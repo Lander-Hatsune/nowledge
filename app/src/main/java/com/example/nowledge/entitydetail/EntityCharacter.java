@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.nowledge.NewEntityActivity;
 import com.example.nowledge.R;
 import com.example.nowledge.sqlite.UtilData;
@@ -267,6 +268,35 @@ public class EntityCharacter extends Fragment {
                                     uData.getClose();
                                 }
                             }).start();
+
+                            // add to user count
+                            if (!User.getUsername().equals("0") && User.isLoggedin()) {
+
+                                String url = Uris.getInc();
+                                JSONObject body = new JSONObject();
+                                try {
+                                    body.put("username", User.getUsername());
+                                    body.put("course", course);
+                                } catch (JSONException e) {
+                                    Log.e("In add UserCount", e.toString());
+                                }
+
+                                JsonObjectRequest addEntity = new JsonObjectRequest(
+                                        Request.Method.POST, url, body, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("add UserCount", response.toString());
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.e("add UserCount", error.toString());
+                                    }
+                                });
+                                RequestQueue requestQueue = Singleton.getInstance(getContext()).getRequestQueue();
+                                requestQueue.add(addEntity);
+                            }
+
 
 
                         } catch (JSONException e) {

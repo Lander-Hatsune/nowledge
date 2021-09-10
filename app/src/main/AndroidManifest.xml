@@ -16,6 +16,9 @@
             android:name=".UserAnalyzeActivity"
             android:exported="true" />
         <activity
+            android:name=".KnowledgeCombingActivity"
+            android:exported="true" />
+        <activity
             android:name=".QuestionTestActivity"
             android:exported="true" />
         <activity
@@ -68,5 +71,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

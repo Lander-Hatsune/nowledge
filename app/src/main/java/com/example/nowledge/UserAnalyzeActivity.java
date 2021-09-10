@@ -47,11 +47,14 @@ import java.util.List;
 public class UserAnalyzeActivity extends AppCompatActivity {
 
     private float quesCorrect = 0, quesFault = 0;
-    private TextView questionText, courseText, corrRate, questionComment, learnComment;
+    private TextView questionText, courseText, corrRate, questionComment, learnComment, totalCount;
     private final String[] level = {"不及格", "及格", "良好", "优秀"};
+    private final String[] nums = {"很少", "一般", "较多", "很多"};
     private int[] courseTimes;
-    private int totalCourses;
-    Chip gradeChip;
+    private int totalCourses = 0;
+    private List<Integer> chipColors;
+
+    Chip gradeChip, courseChip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,14 +74,17 @@ public class UserAnalyzeActivity extends AppCompatActivity {
         questionText.getPaint().setFakeBoldText(true);
         courseText.getPaint().setFakeBoldText(true);
         gradeChip = findViewById(R.id.gradeChip);
+        courseChip = findViewById(R.id.courseChip);
         corrRate = findViewById(R.id.corrRate);
         questionComment = findViewById(R.id.gradeComment);
         learnComment = findViewById(R.id.learnComment);
+        totalCount = findViewById(R.id.totalCourse);
 
-        manageRadar();
-
-        managePie();
-        manageGrade();
+        chipColors= new ArrayList<>();
+        chipColors.add(ContextCompat.getColor(this, R.color.brown));
+        chipColors.add(ContextCompat.getColor(this, R.color.orangered));
+        chipColors.add(ContextCompat.getColor(this, R.color.orange));
+        chipColors.add(ContextCompat.getColor(this, R.color.green));
 
         RequestQueue req = Singleton.getInstance(this).getRequestQueue();
         String url = Uris.getInfo() + "?username=" + User.getUsername();
@@ -88,13 +94,20 @@ public class UserAnalyzeActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 Log.d("get user info", response.toString());
                 try{
-                    quesCorrect = response.getInt("correctQuestion");
-                    int total = response.getInt("totalQuestion");
-                    quesFault = total - quesCorrect;
+
                     String[] courses = Course.getCourses();
+                    JSONObject obj = response.getJSONObject("payload");
+                    totalCourses = 0;
                     for (int i = 0; i < 9; ++i) {
-                        courseTimes[i] = response.getInt(courses[i]);
+                        courseTimes[i] = obj.getInt(courses[i]);
+                        totalCourses += courseTimes[i];
                     }
+                    quesCorrect = obj.getInt("correctQuestion");
+                    int total = obj.getInt("totalQuestion");
+                    quesFault = total - quesCorrect;
+
+                    manageRadar();
+                    managePie();
 
 
                 } catch (JSONException e) {
@@ -112,18 +125,24 @@ public class UserAnalyzeActivity extends AppCompatActivity {
     }
 
     private void manageRadar() {
+//        Log.d("course times", courseTimes.toString());
         RadarChart radarChart = findViewById(R.id.radarCourse);
         List<RadarEntry> radarEntries = new ArrayList<>();
         List<String> courses = Course.getCourseNames();
-        for (String i: courses) {
-            radarEntries.add(new RadarEntry(courses.indexOf(i) / 10));
+        for (int i = 0; i < 9; ++i) {
+            Log.d("Radar " + courses.get(i), courseTimes[i] + "");
+            radarEntries.add(new RadarEntry((float)courseTimes[i]));
         }
-        RadarDataSet radarDataset = new RadarDataSet(radarEntries , "学科相对访问次数");
+        RadarDataSet radarDataset = new RadarDataSet(radarEntries , "学科访问次数");
         radarDataset.setDrawFilled(true);
         radarDataset.setFillColor(ContextCompat.getColor(this, R.color.lightpink));
         radarDataset.setFillAlpha(51);
         radarDataset.setColor(ContextCompat.getColor(this, R.color.hotpink));
+        radarDataset.setLineWidth(3);
         radarDataset.setDrawValues(false);
+        radarDataset.setDrawHighlightCircleEnabled(true);
+//        radarDataset.setValueTextColor(ContextCompat.getColor(this, R.color.chocolate));
+//        radarDataset.setValueTextSize(13f);
         RadarData radarData = new RadarData(radarDataset);
 
         radarChart.getDescription().setText("");
@@ -137,22 +156,57 @@ public class UserAnalyzeActivity extends AppCompatActivity {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return courses.get((int)value % courses.size());
+                return courses.get((int)value % courses.size()).substring(0,1) +
+                        "\n(" + courseTimes[(int)value % courses.size()] + ")";
             }
         });
         xAxis.setTextSize(13f);
-        yAxis.setAxisMaximum(1f);
+        int num = 1;
+        for (int j : courseTimes)
+            num = num < j ? j : num;
+        yAxis.setAxisMaximum((float)num);
         radarChart.setData(radarData);
+        radarChart.invalidate();
+
+        manageCourse();
+    }
+
+    private void manageCourse() {
+        totalCount.setText(totalCourses + "");
+        int level = getCountGrade();
+        courseChip.setTextColor(chipColors.get(level));
+        courseChip.setText(nums[level]);
+        courseChip.getPaint().setFakeBoldText(true);
+        List<String> courseNames = Course.getCourseNames();
+        float average = 0.001f + totalCourses / 9.0f;
+        float mmax = courseTimes[0], mmin = courseTimes[0], sigma = 0;
+        int maxR = 0, minR = 8;
+        for (int i = 1; i < 9; ++i) {
+            if (mmax < courseTimes[i]) {
+                mmax = courseTimes[i]; maxR = i;
+            }
+            if (mmin > courseTimes[8-i]) {
+                mmin = courseTimes[8-i]; minR = 8-i;
+            }
+            sigma += (courseTimes[i] - average) * (courseTimes[i] - average) / 9;
+        }
+        sigma /= average * average;
+
+        Log.d("sigma", sigma + "");
+
+        String show = "到目前为止，你一共阅读了" + totalCourses + "个实体(包含重复）。你阅读次数的学科是"
+                + courseNames.get(maxR) + "，" + "次数最少的学科是" + courseNames.get(minR)+ "。";
+        if (totalCourses < 50)
+            show += "广泛的阅读是好成绩的基础。不要偷懒！";
+        else if (sigma > 0.13)
+            show += "看起来你有些偏科，要注意全面发展!";
+        else
+            show += "目前你的学习状态不错，再接再厉！";
+
+        learnComment.setText(show);
     }
 
     private void manageGrade() {
-        List<Integer> chipColors= new ArrayList<>();
-        chipColors.add(ContextCompat.getColor(this, R.color.brown));
-        chipColors.add(ContextCompat.getColor(this, R.color.orangered));
-        chipColors.add(ContextCompat.getColor(this, R.color.orange));
-        chipColors.add(ContextCompat.getColor(this, R.color.green));
-
-
         int total = (int)(quesCorrect + quesFault);
 
         int corrLevel = getCorrGrade(quesCorrect / total);
@@ -174,11 +228,21 @@ public class UserAnalyzeActivity extends AppCompatActivity {
     }
 
     private int getCorrGrade(float correct_rate) {
-        if (correct_rate < 0.5)
+        if (correct_rate < 0.6)
             return 0;
-        else if (correct_rate < 0.65)
+        else if (correct_rate < 0.75)
             return 1;
-        else if (correct_rate < 0.8)
+        else if (correct_rate < 0.85)
+            return 2;
+        else return 3;
+    }
+
+    private int getCountGrade() {
+        if (totalCourses < 30)
+            return 0;
+        else if (totalCourses < 80)
+            return 1;
+        else if (totalCourses < 200)
             return 2;
         else return 3;
     }
@@ -204,14 +268,15 @@ public class UserAnalyzeActivity extends AppCompatActivity {
 
         pieChart.setData(pieData);
         pieChart.setDrawCenterText(false);
-        pieChart.getDescription().setText("");
+        pieChart.getDescription().setText("题目数量");
+        pieChart.getDescription().setTextSize(17f);
         pieChart.setEntryLabelTextSize(14f);
 
         Legend legend = pieChart.getLegend();
-        legend.setTextSize(14f);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setEnabled(false);
+
+
         pieChart.invalidate();
-
-
+        manageGrade();
     }
 }

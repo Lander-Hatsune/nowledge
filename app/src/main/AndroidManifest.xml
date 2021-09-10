@@ -13,12 +13,18 @@
         android:theme="@style/Theme.Nowledge"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".UserAnalyzeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".KnowledgeCombingActivity"
+            android:exported="true" />
+        <activity
             android:name=".QuestionTestActivity"
             android:exported="true" />
         <activity
-            android:name=".FloatTagActivity"
+            android:name=".drag.DragActivity"
             android:exported="true"
-            android:theme="@style/Theme.Nowledge.NoActionBar"/>
+            android:theme="@style/Theme.Nowledge.NoActionBar" />
         <activity
             android:name=".HistoryActivity"
             android:exported="true" />
@@ -65,5 +71,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

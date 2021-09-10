@@ -91,7 +91,8 @@ public class UserActivity extends AppCompatActivity {
         UserAnalysisButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intentUserAna = new Intent(UserActivity.this, UserAnalyzeActivity.class);
+                startActivity(intentUserAna);
             }
         });
 

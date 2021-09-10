@@ -10,4 +10,10 @@
     <string name="title_activity_new_entity">NewEntityActivity</string>
     <string name="tab_text_1">详情</string>
     <string name="tab_text_2">相关习题</string>
+
+    <string name="tip_drag">长按编辑,拖拽排序</string>
+    <string name="my_cahnnel">我的学科</string>
+    <string name="other_channel">其他学科</string>
+    <string name="edit">编辑</string>
+    <string name="finish">完成</string>
 </resources>

@@ -98,6 +98,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             btn.setEnabled(true);
                             holder.tvBtnEdit.setText(R.string.edit);
                         }
+                        updateCourse();
                     }
                 });
                 return holder;
@@ -356,7 +357,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mOtherChannelItems.add(0, item);
 
         notifyItemMoved(position, mMyChannelItems.size() + COUNT_PRE_OTHER_HEADER);
-        updateCourse();
+
     }
 
     /**
@@ -371,7 +372,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         notifyItemMoved(position, mMyChannelItems.size() - 1 + COUNT_PRE_MY_HEADER);
 
-        updateCourse();
     }
 
     /**
@@ -390,7 +390,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 notifyItemMoved(position, mMyChannelItems.size() - 1 + COUNT_PRE_MY_HEADER);
             }
         }, ANIM_TIME);
-        updateCourse();
+
     }
 
     private Handler delayHandler = new Handler();
@@ -442,7 +442,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mMyChannelItems.remove(fromPosition - COUNT_PRE_MY_HEADER);
         mMyChannelItems.add(toPosition - COUNT_PRE_MY_HEADER, item);
         notifyItemMoved(fromPosition, toPosition);
-        updateCourse();
     }
 
     /**

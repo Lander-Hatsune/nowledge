@@ -10,6 +10,9 @@ public class Uris {
     private static final String addHistory = host + "/addhistory";
     private static final String clearHistory = host + "/clearhistory";
     private static final String historylist = host + "/historylist";
+    private static final String loadquestionstate = host + "/stat/question";
+    private static final String addquestion = host + "/question/add";
+    private static final String pickquestion = host + "/question/pick";
     private static final String robotSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/inputQuestion";
     private static final String linkSearch = "http://open.edukg.cn/opedukg/api/typeOpen/open/linkInstance";
     private static final String edukg = "http://open.edukg.cn/opedukg/api/typeOpen/open";
@@ -43,6 +46,12 @@ public class Uris {
     public static String getClearHistory() { return clearHistory; }
 
     public static String getHistorylist() { return historylist; }
+
+    public static String getLoadquestionstate() {return loadquestionstate;}
+
+    public static String getAddquestion() {return addquestion;}
+
+    public static String getPickquestion() {return pickquestion;}
 
     public static String getRobotSearch() { return robotSearch; }
 

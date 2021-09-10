@@ -178,7 +178,29 @@ public class EntityQuestion extends Fragment {
                                 String object = obj.getString("qBody");
                                 if(sMatch(object)){
                                     String[] getdetail = object.split("A[\\.．、]|B[\\.．、]|C[\\.．、]|D[\\.．、]");
-                                    question_list.add(new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]));
+                                    question newQuestion = new question(User.getUsername(),mcourse,getdetail[0],qAnswer,id,getdetail[1],getdetail[2],getdetail[3],getdetail[4]);
+
+                                    // add question to backend
+                                    if(User.isLoggedin()){
+                                        String addquestionUrl = Uris.getAddquestion();
+                                        JSONObject newobj = newQuestion.package_question();
+                                        Log.e("question detail", newobj.toString());
+                                        JsonObjectRequest addQuesReq = new JsonObjectRequest(Request.Method.POST, addquestionUrl, newobj,
+                                                new Response.Listener<JSONObject>() {
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        Log.d("add question",response.toString());
+                                                    }
+                                                },new Response.ErrorListener(){
+                                            @Override
+                                            public void onErrorResponse(VolleyError error){
+                                                Log.e("add question error" ,error.toString());
+                                            }
+                                        });
+                                        reqQue.add(addQuesReq);
+                                    }
+
+                                    question_list.add(newQuestion);
                                     Count++;
                                 }
                             } catch (JSONException e) {

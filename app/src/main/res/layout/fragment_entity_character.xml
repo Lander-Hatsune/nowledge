@@ -76,7 +76,8 @@
                     android:layout_marginTop="10sp"
                     android:layout_weight="1"
                     android:background="@color/bisque"
-                    tools:ignore="MissingClass"></com.example.nowledge.screen.MyListView>
+                    tools:ignore="MissingClass">
+                </com.example.nowledge.screen.MyListView>
 
 
 

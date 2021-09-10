@@ -47,6 +47,8 @@ public class QuestionTestActivity extends AppCompatActivity {
     private List<String> right_answer;
     private List<Boolean> answer_state;
     private int RightCount;
+    private JSONArray questions = new JSONArray();
+    private final int Num = 10;
 
     public QuestionTestActivity() {
     }
@@ -119,39 +121,73 @@ public class QuestionTestActivity extends AppCompatActivity {
 
         RecyclerView listViewQuestion = binding.getRoot().findViewById(R.id.QuestionTestList);
 
-        try {
-            JSONArray questions=get_tmp_json();
-            List<question_test> question_list = new ArrayList<>();
-            right_answer = new ArrayList<>();
-            String Question,A,B,C,D,Answer;
-            Count=questions.length();
-            for (int i = 0; i < questions.length(); i++) {
-                try {
-                    JSONObject obj = questions.getJSONObject(i);
-                    Answer=obj.getString("Answer");
-                    right_answer.add(Answer);
-                    Question=obj.getString("Question");
-                    A=obj.getString("A");
-                    B=obj.getString("B");
-                    C=obj.getString("C");
-                    D=obj.getString("D");
-                    question_list.add(new question_test(Question,Answer,A,B,C,D));
-                    Log.e("Question detail", obj.toString());
-                } catch (JSONException e) {
-                    Log.e("Error parsing detail obj", e.toString());
-                }
-            }
-            adapter = new question_test_adapter(question_list);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-            listViewQuestion.setLayoutManager(layoutManager);
-            listViewQuestion.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        for(int i=0;i<Count;++i){
-            answer_state.add(false);
-        }
+        RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
+        String url = Uris.getPickquestion()+ "?username="+User.getUsername()+"&number="+Num;
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e("get question list",response.toString());
+                        try {
+                            String code = null;
+                            try {
+                                code = response.getString("id");
+                            } catch (JSONException e) {
+                                Log.e("get question list id error", e.toString());
+                            }
+                            if (!code.equals("0")) {
+                                return;
+                            }
+                            try {
+                                questions = response.getJSONArray("payload");
+                            } catch (JSONException e) {
+                                Log.e("get question list error", e.toString());
+                            }
+
+                            List<question_test> question_list = new ArrayList<>();
+                            right_answer = new ArrayList<>();
+                            String Question,A,B,C,D,Answer;
+                            Count=questions.length();
+                            for (int i = 0; i < questions.length(); i++) {
+                                try {
+                                    JSONObject obj = questions.getJSONObject(i);
+                                    Answer=obj.getString("ans");
+                                    right_answer.add(Answer);
+                                    Question=obj.getString("text");
+                                    A=obj.getString("optionA");
+                                    B=obj.getString("optionB");
+                                    C=obj.getString("optionC");
+                                    D=obj.getString("optionD");
+                                    question_list.add(new question_test(Question,Answer,A,B,C,D));
+                                    Log.e("Question detail", obj.toString());
+                                } catch (JSONException e) {
+                                    Log.e("Error parsing detail obj", e.toString());
+                                }
+                            }
+                            adapter = new question_test_adapter(question_list);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                            listViewQuestion.setLayoutManager(layoutManager);
+                            listViewQuestion.setAdapter(adapter);
+
+                            for(int i=0;i<Count;++i){
+                                answer_state.add(false);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("question list error",error.toString());
+            }
+        });
+        reqQue.add(req);
+
+
+
 
         Upload.setOnClickListener(new View.OnClickListener() {
             @Override

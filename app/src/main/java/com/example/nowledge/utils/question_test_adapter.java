@@ -44,29 +44,57 @@ public class question_test_adapter extends RecyclerView.Adapter<question_test_ad
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        question_test q = questionList.get(position);
-        viewHolder.QuestionText.setText((position+1)+"."+q.getQuestionText());
+        question_test q = questionList.get(viewHolder.getAdapterPosition());
+        viewHolder.QuestionText.setText((viewHolder.getAdapterPosition()+1)+"."+q.getQuestionText());
         viewHolder.A.setText(q.getA());
         viewHolder.B.setText(q.getB());
         viewHolder.C.setText(q.getC());
         viewHolder.D.setText(q.getD());
 
-        viewHolder.AnswerList.setTag(position);
+        viewHolder.AnswerList.setTag(viewHolder.getAdapterPosition());
+
+        viewHolder.AnswerList.setOnCheckedChangeListener(null);
+
+        viewHolder.AnswerList.clearCheck();
+
+        switch (q.getState()){
+            case 1:
+                viewHolder.A.setChecked(true);
+                Log.e("set","A");
+                break;
+            case 2:
+                viewHolder.B.setChecked(true);
+                Log.e("set","B");
+                break;
+            case 3:
+                viewHolder.C.setChecked(true);
+                Log.e("set","C");
+                break;
+            case 4:
+                viewHolder.D.setChecked(true);
+                Log.e("set","D");
+                break;
+        }
+
         viewHolder.AnswerList.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 Log.e("check button",i+"#"+viewHolder.getAdapterPosition());
                 if(i==viewHolder.A.getId()){
                     choosedAnswer.put(viewHolder.getAdapterPosition(),"A");
+                    q.setState(1);
                 }
                 else if(i==viewHolder.B.getId()){
                     choosedAnswer.put(viewHolder.getAdapterPosition(),"B");
+                    q.setState(2);
                 }
                 else if(i==viewHolder.C.getId()){
                     choosedAnswer.put(viewHolder.getAdapterPosition(),"C");
+                    q.setState(3);
                 }
                 else if(i==viewHolder.D.getId()){
                     choosedAnswer.put(viewHolder.getAdapterPosition(),"D");
+                    q.setState(4);
                 }
             }
         });

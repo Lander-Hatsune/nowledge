@@ -18,7 +18,11 @@
         <activity
             android:name=".FloatTagActivity"
             android:exported="true"
-            android:theme="@style/Theme.Nowledge.NoActionBar"/>
+            android:theme="@style/Theme.Nowledge.NoActionBar" />
+        <activity
+            android:name=".drag.DragActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Nowledge.NoActionBar" />
         <activity
             android:name=".HistoryActivity"
             android:exported="true" />

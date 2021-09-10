@@ -12,6 +12,10 @@
         <entry key="..\:/Java_project/nowledge/app/src/main/res/layout/super_relation_item.xml" value="0.4" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/account_login.xml" value="0.1" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/bg_btn.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/bg_channel.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/bg_channel_n.xml" value="0.10925925925925926" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/bg_channel_p.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/chevron_right.xml" value="0.2074074074074074" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/cube_outline.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/cube_unfolded.xml" value="0.1" />
@@ -25,6 +29,7 @@
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/school_outline.xml" value="0.25462962962962965" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/share.xml" value="0.16510416666666666" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/drawable/share_variant.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_drag.xml" value="0.2" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_entity_detail.xml" value="0.176" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_float_tag.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/activity_history.xml" value="0.1" />
@@ -50,6 +55,10 @@
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/fragment_new_entity.xml" value="0.14114583333333333" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/fragment_robot.xml" value="0.152" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/image_item.xml" value="0.14479166666666668" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/item_my.xml" value="0.13958333333333334" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/item_my_channel_header.xml" value="0.4" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/item_other.xml" value="0.13958333333333334" />
+        <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/item_other_channel_header.xml" value="0.4" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/question_item.xml" value="0.1" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/robot_message_item.xml" value="0.1" />
         <entry key="..\:/Users/x-eri/Desktop/programming/java/nowledge/app/src/main/res/layout/super_relation_item.xml" value="0.14114583333333333" />

@@ -46,6 +46,7 @@ import com.example.nowledge.data.Singleton;
 import com.example.nowledge.data.Uris;
 import com.example.nowledge.data.User;
 import com.example.nowledge.databinding.FragmentHomeBinding;
+import com.example.nowledge.drag.DragActivity;
 import com.example.nowledge.utils.EntityAdapter;
 import com.example.nowledge.utils.EntityShort;
 import com.example.nowledge.volley.MyJsonObjectRequest;
@@ -252,7 +253,8 @@ public class HomeFragment extends Fragment {
         floatTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), FloatTagActivity.class);
+                Intent intent = new Intent(getActivity(), DragActivity.class);
+//                Intent intent = new Intent(getActivity(), FloatTagActivity.class);
                 startActivity(intent);
             }
         });

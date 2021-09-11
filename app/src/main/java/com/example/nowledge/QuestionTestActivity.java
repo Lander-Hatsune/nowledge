@@ -162,8 +162,6 @@ public class QuestionTestActivity extends AppCompatActivity {
                                     D=obj.getString("optionD");
                                     question_list.add(new question_test(Question,Answer,A,B,C,D));
                                     ++Count;
-                                    if (i > 1)
-                                        break;
                                     Log.e("Question detail", obj.toString());
                                 } catch (JSONException e) {
                                     Log.e("Error parsing detail obj", e.toString());

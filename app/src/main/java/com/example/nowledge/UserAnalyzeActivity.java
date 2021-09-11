@@ -198,7 +198,7 @@ public class UserAnalyzeActivity extends AppCompatActivity {
                 + courseNames.get(maxR) + "，" + "次数最少的学科是" + courseNames.get(minR)+ "。";
         if (totalCourses < 50)
             show += "广泛的阅读是好成绩的基础。不要偷懒！";
-        else if (sigma > 0.1 | (mmax - mmin) / average > 1)
+        else if (sigma > 0.1 | (mmax - mmin) / average > 0.4)
             show += "看起来你有些偏科，要注意全面发展!";
         else
             show += "目前你的学习状态不错，再接再厉！";

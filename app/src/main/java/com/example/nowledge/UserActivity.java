@@ -76,7 +76,8 @@ public class UserActivity extends AppCompatActivity {
         KnowledgeCombingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intentCB = new Intent(UserActivity.this,KnowledgeCombingActivity.class);
+                startActivity(intentCB);
             }
         });
 

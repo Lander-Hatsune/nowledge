@@ -1,133 +1,1 @@
-package com.example.nowledge;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.DownloadManager;
-import android.hardware.lights.LightState;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.nowledge.data.Course;
-import com.example.nowledge.data.Singleton;
-import com.example.nowledge.data.Uris;
-import com.example.nowledge.data.User;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class KnowledgeCombingActivity extends AppCompatActivity {
-
-    private String id = User.getID();
-    private Boolean starred = false;
-    private String name;
-    private String course;
-    private EditText searchKey;
-    private Spinner spinner;
-    private Button searchButton;
-    private ListView comListview;
-    private String[] courses;
-    private String info;
-    private String fathername;
-    private String childname;
-    private List<String> info_list;
-    private final int SIZE=5;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_knowledge_combing);
-
-        id=User.getID();
-        searchButton = findViewById(R.id.CombingSearch);
-        searchKey = findViewById(R.id.CombingText);
-
-        spinner = findViewById(R.id.CombingSpinner);
-
-        List<String> courseNames = Course.getCourseNames();
-        courses = Course.getCourses();
-
-        ArrayAdapter<String> adapter =new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,courseNames);
-        spinner.setAdapter(adapter);
-
-        comListview = findViewById(R.id.CombingList);
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                name = searchKey.getText().toString();
-                Log.d("Combing page get entity name",name);
-                if(!name.equals("")){
-                    String courseName = spinner.getSelectedItem().toString();
-                    int pos = courseNames.indexOf(courseName);
-                    course = courses[pos];
-                    Log.d("Combing page select course",course);
-                }
-                String url = Uris.getDetail() + "?";
-                url += "name=" + name;
-                url += "&course=" + course;
-                url += "&id=" + id;
-
-                Log.d("Combing detailurl",url);
-
-                RequestQueue reqQue = Singleton.getInstance((getApplicationContext())).getRequestQueue();
-
-                JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                info_list=new ArrayList<>();
-                                try {
-                                    JSONObject dataobj = response.getJSONObject("data");
-                                    Log.d("Combing dataobj", dataobj.toString());
-                                    info="name\n";
-                                    JSONArray properties = (JSONArray) dataobj.get("property");
-                                    for(int i=0;i<properties.length();i++){
-                                        if(i>SIZE){
-                                            break;
-                                        }
-                                        JSONObject obj =properties.getJSONObject(i);
-                                        String predicate = obj.getString("predicateLabel");
-                                        String object = obj.getString("object");
-                                        info+=predicate+":"+object+"\n";
-                                        info_list.add(info);
-                                    }
-
-//                                    JSONArray contents = (JSONArray) dataobj.get("content");
-//                                    for(int i=0,j=0;i<contents.length();i++){
-//                                        if(j>SIZE){
-//                                            break;
-//                                        }
-//                                        JSONObject
-//                                    }
-
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
-            }
-        });
-
-    }
-}
+package com.example.nowledge;import androidx.appcompat.app.AppCompatActivity;import android.app.DownloadManager;import android.hardware.lights.LightState;import android.os.Bundle;import android.util.Log;import android.view.View;import android.widget.Adapter;import android.widget.ArrayAdapter;import android.widget.Button;import android.widget.EditText;import android.widget.ListView;import android.widget.Spinner;import com.android.volley.Request;import com.android.volley.RequestQueue;import com.android.volley.Response;import com.android.volley.VolleyError;import com.android.volley.toolbox.JsonObjectRequest;import com.example.nowledge.data.Course;import com.example.nowledge.data.Singleton;import com.example.nowledge.data.Uris;import com.example.nowledge.data.User;import org.json.JSONArray;import org.json.JSONException;import org.json.JSONObject;import java.util.ArrayList;import java.util.List;public class KnowledgeCombingActivity extends AppCompatActivity {    private String id = User.getID();    private Boolean starred = false;    private String name;    private String course;    private EditText searchKey;    private Spinner spinner;    private Button searchButton;    private ListView comListview;    private String[] courses;    private String info;    private List<String> info_list;    private List<String> super_name_list;    private List<String> child_name_list;    private final int SIZE=5;    @Override    protected void onCreate(Bundle savedInstanceState) {        super.onCreate(savedInstanceState);        setContentView(R.layout.activity_knowledge_combing);        id=User.getID();        searchButton = findViewById(R.id.CombingSearch);        searchKey = findViewById(R.id.CombingText);        spinner = findViewById(R.id.CombingSpinner);        List<String> courseNames = Course.getCourseNames();        courses = Course.getCourses();        ArrayAdapter<String> adapter =new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,courseNames);        spinner.setAdapter(adapter);        comListview = findViewById(R.id.CombingList);        searchButton.setOnClickListener(new View.OnClickListener() {            @Override            public void onClick(View view) {                name = searchKey.getText().toString();                Log.d("Combing page get entity name",name);                if(!name.equals("")){                    String courseName = spinner.getSelectedItem().toString();                    int pos = courseNames.indexOf(courseName);                    course = courses[pos];                    Log.d("Combing page select course",course);                }                String url = Uris.getDetail() + "?";                url += "name=" + name;                url += "&course=" + course;                url += "&id=" + id;                Log.d("Combing detailurl",url);                RequestQueue reqQue = Singleton.getInstance((getApplicationContext())).getRequestQueue();                JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,                        new Response.Listener<JSONObject>() {                            @Override                            public void onResponse(JSONObject response) {                                info_list=new ArrayList<>();                                super_name_list=new ArrayList<>();                                child_name_list=new ArrayList<>();                                try {                                    JSONObject dataobj = response.getJSONObject("data");                                    Log.d("Combing dataobj", dataobj.toString());                                    info = "name:"+name+"\n";                                    JSONArray properties = (JSONArray) dataobj.get("property");                                    for(int i=0;i<properties.length();i++){                                        if(i>10){                                            break;                                        }                                        JSONObject obj =properties.getJSONObject(i);                                        String pred = obj.getString("predicate");                                        String predicate = obj.getString("predicateLabel");                                        String object = obj.getString("object");                                        if (pred.endsWith("common#image")) {                                            continue;                                        }                                        else if (object.contains("http")) continue;                                        info+=predicate+":"+object+"\n";                                    }                                    info_list.add(info);                                    JSONArray contents = (JSONArray) dataobj.get("content");                                    boolean Jump=false;                                    for(int i=0;i<contents.length();i++){                                        JSONObject obj = contents.getJSONObject(i);                                        if(obj.has("subject_label")){                                            Jump=false;                                            String super_name = obj.getString("subject_label");                                            if(super_name.equals(name)) continue;                                            for(int j =0 ;j<super_name_list.size();++j){                                                if(super_name.equals(super_name_list.get(j)))                                                    Jump=true;                                            }                                            for(int j=0;j<child_name_list.size();++j){                                                if(super_name.equals(child_name_list.get(j)))                                                    Jump=true;                                            }                                            if(Jump) continue;                                            super_name_list.add(super_name);                                            get_super_info(0,super_name,reqQue);                                            break;                                        }                                        else {                                            Log.e("don't have super relation","");                                        }                                    }                                    for(int i=0;i<contents.length();i++){                                        JSONObject obj = contents.getJSONObject(i);                                        if(obj.has("object_label")){                                            Jump=false;                                            String child_name = obj.getString("object_label");                                            if(child_name.equals(name)) continue;                                            for(int j =0 ;j<super_name_list.size();++j){                                                if(child_name.equals(super_name_list.get(j)))                                                    Jump=true;                                            }                                            for(int j=0;j<child_name_list.size();++j){                                                if(child_name.equals(child_name_list.get(j)))                                                    Jump=true;                                            }                                            if(Jump) continue;                                            child_name_list.add(child_name);                                            get_child_info(0,child_name,reqQue);                                            break;                                        }                                        else {                                            Log.e("don't have child relation","");                                        }                                    }                                    ArrayAdapter<String> combadapter = new ArrayAdapter<>(KnowledgeCombingActivity.this,R.layout.combing_item,info_list);                                    comListview.setAdapter(combadapter);                                } catch (JSONException e) {                                    e.printStackTrace();                                }                            }                        }, new Response.ErrorListener() {                    @Override                    public void onErrorResponse(VolleyError error) {                    }                });                reqQue.add(req);            }        });    }    public void get_super_info( int count,String super_name,RequestQueue reqQue){        if(count==SIZE)            return;        String url = Uris.getDetail()+"?";        url += "name=" + super_name;        url += "&course=" + course;        url += "&id=" + id;        Log.d("super "+count+" detailurl:", url);        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,                new Response.Listener<JSONObject>() {                    @Override                    public void onResponse(JSONObject response) {                        try {                            JSONObject dataobj = response.getJSONObject("data");                            Log.d("super " + count + " dataobj", dataobj.toString());                            info = "super " + count + " name:"+super_name+"\n";                            JSONArray properties = (JSONArray) dataobj.get("property");                            for (int i = 0; i < properties.length(); i++) {                                if (i > 10) {                                    break;                                }                                JSONObject obj = properties.getJSONObject(i);                                String pred = obj.getString("predicate");                                String predicate = obj.getString("predicateLabel");                                String object = obj.getString("object");                                if (pred.endsWith("common#image")) {                                    continue;                                }                                else if (object.contains("http")) continue;                                info += predicate + ":" + object + "\n";                            }                            info_list.add(info);                            JSONArray contents = (JSONArray) dataobj.get("content");                            boolean Jump = false;                            for (int i = 0; i < contents.length(); i++) {                                JSONObject obj = contents.getJSONObject(i);                                if (obj.has("subject_label")) {                                    Jump=false;                                    String super_name = obj.getString("subject_label");                                    if(super_name.equals(name)) continue;                                    for(int j =0 ;j<super_name_list.size();++j){                                        if(super_name.equals(super_name_list.get(j)))                                            Jump=true;                                    }                                    for(int j=0;j<child_name_list.size();++j){                                        if(super_name.equals(child_name_list.get(j)))                                            Jump=true;                                    }                                    if(Jump) continue;                                    get_super_info(count + 1, super_name, reqQue);                                    break;                                } else {                                    Log.e("don't have super" + (count + 1)+" relation", "");                                }                            }                        } catch (JSONException e) {                            e.printStackTrace();                        }                    }                }, new Response.ErrorListener() {            @Override            public void onErrorResponse(VolleyError error) {            }        });        reqQue.add(req);    }    public void get_child_info( int count,String child_name,RequestQueue reqQue){        if(count==SIZE)            return;        String url = Uris.getDetail()+"?";        url += "name=" + child_name;        url += "&course=" + course;        url += "&id=" + id;        Log.d("child "+count+" detailurl:", url);        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,                new Response.Listener<JSONObject>() {                    @Override                    public void onResponse(JSONObject response) {                        try {                            JSONObject dataobj = response.getJSONObject("data");                            Log.d("child " + count + " dataobj", dataobj.toString());                            info = "child "+count+" name:"+child_name+"\n";                            JSONArray properties = (JSONArray) dataobj.get("property");                            for (int i = 0; i < properties.length(); i++) {                                if (i > 10) {                                    break;                                }                                JSONObject obj = properties.getJSONObject(i);                                String pred = obj.getString("predicate");                                String predicate = obj.getString("predicateLabel");                                String object = obj.getString("object");                                if (pred.endsWith("common#image")) {                                    continue;                                }                                else if (object.contains("http")) continue;                                info += predicate + ":" + object + "\n";                            }                            info_list.add(info);                            JSONArray contents = (JSONArray) dataobj.get("content");                            boolean Jump=false;                            for (int i = 0; i < contents.length(); i++) {                                JSONObject obj = contents.getJSONObject(i);                                if (obj.has("object_label")) {                                    Jump=false;                                    String object_name = obj.getString("object_label");                                    if(object_name.equals(name)) continue;                                    for(int j =0 ;j<super_name_list.size();++j){                                        if(object_name.equals(super_name_list.get(j)))                                            Jump=true;                                    }                                    for(int j=0;j<child_name_list.size();++j){                                        if(object_name.equals(child_name_list.get(j)))                                            Jump=true;                                    }                                    if(Jump) continue;                                    get_child_info(count + 1, child_name, reqQue);                                    break;                                } else {                                    Log.e("don't have child" + (count + 1)+" relation", "");                                }                            }                        } catch (JSONException e) {                            e.printStackTrace();                        }                    }                }, new Response.ErrorListener() {            @Override            public void onErrorResponse(VolleyError error) {            }        });        reqQue.add(req);    }    protected void updateId() {        new Thread(new Runnable() {            @Override            public void run() {                RequestQueue reqQue = Singleton.getInstance                        (getApplicationContext()).getRequestQueue();                JSONObject obj = null;                try {                    obj = new JSONObject();                    obj.put("username", "0");                    obj.put("password", "0");                } catch (JSONException e) {                    Log.e("UpdateId error:", e.toString());                }                Log.d("UpdateId obj", obj.toString());                JsonObjectRequest req = new JsonObjectRequest                        (Request.Method.POST, Uris.getLogin(),                                obj, new Response.Listener<JSONObject>() {                            @Override                            public void onResponse(JSONObject response) {                                Log.i("Login request success.", "");                                String msg = "Unknown Error";                                String code = "";                                try {                                    msg = response.getString("msg");                                    code = response.getString("id");                                } catch (JSONException e) {                                    Log.e("Login request msg/id error", e.toString());                                }                                if (!(code.equals("-1") || code.equals("-2"))) {                                    Log.d("logged in, id", code);                                    id = code;                                    User.setID(id);                                }                            }                        }, new Response.ErrorListener() {                            @Override                            public void onErrorResponse(VolleyError error) {                                Log.e("Login error:", error.toString());                            }                        });                Log.d("Request:", req.toString());                reqQue.add(req);            }        }).start();    }}

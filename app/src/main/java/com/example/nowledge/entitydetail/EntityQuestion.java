@@ -173,7 +173,7 @@ public class EntityQuestion extends Fragment {
 //                            }
                             try {
                                 JSONObject obj = questions.getJSONObject(i);
-                                String qAnswer = obj.getString("qAnswer");
+                                String qAnswer = normalizeAns(obj.getString("qAnswer"));
                                 int id= obj.getInt("id");
                                 String object = obj.getString("qBody");
                                 if(sMatch(object)){
@@ -232,6 +232,15 @@ public class EntityQuestion extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         reqQue.add(req);
 
+    }
+
+    private String normalizeAns(String src) {
+        String [] ans = {"A", "B", "C", "D"};
+        for (int i = 0; i < 3; ++i) {
+            if (src.contains(ans[i]));
+                return ans[i];
+        }
+        return ans[2];
     }
 
 }

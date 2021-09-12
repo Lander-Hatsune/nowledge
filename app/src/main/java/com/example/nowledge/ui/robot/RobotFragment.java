@@ -98,7 +98,7 @@ public class RobotFragment extends Fragment {
         inputText = root.findViewById(R.id.search_robot);
         spinner = root.findViewById(R.id.robot_spinner);
         send = root.findViewById(R.id.button_robotSend);
-        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        layoutManager = new LinearLayoutManager(getContext());
         adapter = new RobotMessage((msg_list = getData()));
 
         msgRecyclerView.setLayoutManager(layoutManager);
@@ -106,7 +106,7 @@ public class RobotFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, courseNames);
         spinner.setAdapter(spinnerAdapter);
 
-        queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+        queue = Singleton.getInstance(getContext()).getRequestQueue();
 
         updateID();
 

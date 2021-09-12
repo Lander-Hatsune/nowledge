@@ -118,7 +118,7 @@ public class EntityQuestion extends Fragment {
         listViewQuestion = view.findViewById(R.id.QuestionList);
         List<question> question_list = new ArrayList<>();
         question_adapter adapter = new question_adapter(question_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         listViewQuestion.setLayoutManager(layoutManager);
         listViewQuestion.setAdapter(adapter);
         Uptitle=view.findViewById(R.id.UpTitle);
@@ -215,7 +215,7 @@ public class EntityQuestion extends Fragment {
                         }
                         Log.d("Question number", String.valueOf(question_list.size()));
                         question_adapter adapter = new question_adapter(question_list);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                         listViewQuestion.setLayoutManager(layoutManager);
                         listViewQuestion.setAdapter(adapter);
                     }

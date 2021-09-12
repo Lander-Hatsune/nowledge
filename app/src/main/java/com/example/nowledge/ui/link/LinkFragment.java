@@ -111,7 +111,7 @@ public class LinkFragment extends Fragment {
         View root = binding.getRoot();
 
         ettRecyclerView = root.findViewById(R.id.link_entity_circle);
-        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        layoutManager = new LinearLayoutManager(getContext());
 //        adapter = new EntityAdapter(ett_list, "link");
         adapter = new EntityAdapter(ett_list, "list");
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
@@ -141,7 +141,7 @@ public class LinkFragment extends Fragment {
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, courseNames);
         spinner.setAdapter(spinnerAdapter);
-        queue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+        queue = Singleton.getInstance(getContext()).getRequestQueue();
 
 
         send = root.findViewById(R.id.link_button_send);

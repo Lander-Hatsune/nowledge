@@ -146,7 +146,7 @@ public class EntityCharacter extends Fragment {
             }
             child_relation_adapter adapterCC = new child_relation_adapter(getActivity(),R.layout.child_relation_item,child_relation_list, false);
             listViewChildCont.setAdapter(adapterCC);
-            Toast.makeText(getActivity().getApplicationContext(), "从缓存中读取数据", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "从缓存中读取数据", Toast.LENGTH_SHORT).show();
 
         } catch (com.alibaba.fastjson.JSONException e) {
             Log.e("Error parsing detail from cache", e.toString());
@@ -160,7 +160,7 @@ public class EntityCharacter extends Fragment {
         url += "&id=" + id;
         Log.d("detailurl:", url);
 
-        RequestQueue reqQue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+        RequestQueue reqQue = Singleton.getInstance(getContext()).getRequestQueue();
 
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<org.json.JSONObject>() {

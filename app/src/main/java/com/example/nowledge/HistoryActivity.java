@@ -68,7 +68,7 @@ public class HistoryActivity extends AppCompatActivity {
                             UtilHistory udata = new UtilHistory(getApplicationContext());
                             udata.clearHistory();
                             historyStr.clear(); historyCourseStr.clear();
-                            for (int i = 0; i < historylist.length(); i++) {
+                            for (int i = historylist.length() - 1; i >= 0; i--) {
                                 JSONObject star = historylist.getJSONObject(i);
                                 String name = star.getString("name"), course = star.getString("course");
                                 historyStr.add(name);

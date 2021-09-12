@@ -237,7 +237,7 @@ public class EntityQuestion extends Fragment {
     private String normalizeAns(String src) {
         String [] ans = {"A", "B", "C", "D"};
         for (int i = 0; i < 3; ++i) {
-            if (src.contains(ans[i]));
+            if (src.contains(ans[i]))
                 return ans[i];
         }
         return ans[2];

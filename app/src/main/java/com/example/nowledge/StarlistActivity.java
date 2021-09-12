@@ -72,7 +72,7 @@ public class StarlistActivity extends AppCompatActivity {
                                 return;
                             }
                             JSONArray starlist = response.getJSONArray("payload");
-                            for (int i = 0; i < starlist.length(); i++) {
+                            for (int i = starlist.length() - 1; i >= 0 ; i--) {
                                 JSONObject star = starlist.getJSONObject(i);
                                 String name = star.getString("name"), course = star.getString("course");
                                 starlistStr.add(name);

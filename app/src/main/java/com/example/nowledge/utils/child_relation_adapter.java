@@ -52,7 +52,7 @@ public class child_relation_adapter extends ArrayAdapter<child_relation> {
             viewHolder.child_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                Log.d("click",cr.getDetail());
+                    Log.d("click",cr.getDetail());
                     Intent intent_next_item=new Intent(getContext(), NewEntityActivity.class);
                     intent_next_item.putExtra("name",cr.getDetail());
                     intent_next_item.putExtra("course",cr.getCourse());

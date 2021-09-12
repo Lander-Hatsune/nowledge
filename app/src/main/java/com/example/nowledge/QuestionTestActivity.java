@@ -45,10 +45,11 @@ public class QuestionTestActivity extends AppCompatActivity {
     private int Count;
     private question_test_adapter adapter;
     private List<String> right_answer;
-    private List<Boolean> answer_state;
+//    private List<Boolean> answer_state;
     private int RightCount;
     private JSONArray questions = new JSONArray();
     private final int Num = 10;
+    private List<question_test> question_list;
 
     public QuestionTestActivity() {
     }
@@ -114,12 +115,12 @@ public class QuestionTestActivity extends AppCompatActivity {
         Grade=findViewById(R.id.Grade);
         Upload=findViewById(R.id.CheckTotalAnswer);
 
-        setTitle("测试");
+        setTitle("试题推荐");
 
-        answer_state=new ArrayList<>();
         right_answer=new ArrayList<>();
 
         RecyclerView listViewQuestion = binding.getRoot().findViewById(R.id.QuestionTestList);
+        listViewQuestion.setItemViewCacheSize(15);
 
 
         RequestQueue reqQue = Singleton.getInstance(getApplicationContext()).getRequestQueue();
@@ -145,10 +146,10 @@ public class QuestionTestActivity extends AppCompatActivity {
                                 Log.e("get question list error", e.toString());
                             }
 
-                            List<question_test> question_list = new ArrayList<>();
+                            question_list = new ArrayList<>();
                             right_answer = new ArrayList<>();
                             String Question,A,B,C,D,Answer;
-                            Count=questions.length();
+                            Count=0;
                             for (int i = 0; i < questions.length(); i++) {
                                 try {
                                     JSONObject obj = questions.getJSONObject(i);
@@ -160,19 +161,17 @@ public class QuestionTestActivity extends AppCompatActivity {
                                     C=obj.getString("optionC");
                                     D=obj.getString("optionD");
                                     question_list.add(new question_test(Question,Answer,A,B,C,D));
+                                    ++Count;
                                     Log.e("Question detail", obj.toString());
                                 } catch (JSONException e) {
                                     Log.e("Error parsing detail obj", e.toString());
                                 }
                             }
-                            adapter = new question_test_adapter(question_list);
+                            adapter = new question_test_adapter(getApplicationContext(), question_list, false,
+                                    new ArrayList<String>(), new ArrayList<String>());
                             LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                             listViewQuestion.setLayoutManager(layoutManager);
                             listViewQuestion.setAdapter(adapter);
-
-                            for(int i=0;i<Count;++i){
-                                answer_state.add(false);
-                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -192,49 +191,49 @@ public class QuestionTestActivity extends AppCompatActivity {
         Upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RightCount=0;
-                if(adapter.getChoosedAnswer().size()<Count){
+                RightCount = 0;
+                List<String> myAnswers = new ArrayList<>();
+                if (adapter.getChoosedAnswer().size() < Count) {
                     Grade.setText("你还未选择所有答案");
-                }
-                else if(adapter.getChoosedAnswer().size()==Count){
-                    for(int i=0;i<Count;++i){
-                        if(adapter.getChoosedAnswer().get(i).equals(right_answer.get(i))){
+                } else if (adapter.getChoosedAnswer().size() == Count) {
+                    for (int i = 0; i < Count; ++i) {
+                        String myAns = adapter.getChoosedAnswer().get(i);
+                        myAnswers.add(myAns);
+                        if (myAns.equals(right_answer.get(i))) {
                             RightCount++;
-                            answer_state.add(i,true);
                         }
                     }
-                    Grade.setText("你的总分是："+100*RightCount/Count);
-                    for(int i=0;i<Count;++i){
-                        View itemView = listViewQuestion .getLayoutManager().findViewByPosition(i);
-                        if(!answer_state.get(i)){
-                            if(adapter.getChoosedAnswer().get(i)=="A"){
-                                itemView.findViewById(R.id.TestA).setBackgroundColor(getResources().getColor(R.color.red));
+                    Grade.setText("你的总分是：" + 100 * RightCount / Count);
+                    adapter = new question_test_adapter(getApplicationContext(), question_list,
+                            true, myAnswers, right_answer);
+                    listViewQuestion.setAdapter(adapter);
+                    Upload.setEnabled(false);
+
+                    if (User.isLoggedin()) {
+                        String addstateurL = Uris.getLoadquestionstate();
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("username", User.getUsername());
+                            obj.put("param1", Count);
+                            obj.put("param2", RightCount);
+                        } catch (JSONException e) {
+                            Log.e("add answer state error", e.toString());
+                        }
+                        JsonObjectRequest addHisReq = new JsonObjectRequest(Request.Method.POST, addstateurL, obj,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("add answer state", response.toString());
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("add history", error.toString());
                             }
-                            else if(adapter.getChoosedAnswer().get(i)=="B"){
-                                itemView.findViewById(R.id.TestB).setBackgroundColor(getResources().getColor(R.color.red));
-                            }
-                            else if(adapter.getChoosedAnswer().get(i)=="C") {
-                                itemView.findViewById(R.id.TestC).setBackgroundColor(getResources().getColor(R.color.red));
-                            }
-                            else if(adapter.getChoosedAnswer().get(i)=="B") {
-                                itemView.findViewById(R.id.TestC).setBackgroundColor(getResources().getColor(R.color.red));
-                            }
-                        }
-                        if(right_answer.get(i)=="A"){
-                            itemView.findViewById(R.id.TestA).setBackgroundColor(getResources().getColor(R.color.grassgreen));
-                        }
-                        else if(right_answer.get(i)=="B"){
-                            itemView.findViewById(R.id.TestB).setBackgroundColor(getResources().getColor(R.color.grassgreen));
-                        }
-                        else if(right_answer.get(i)=="C"){
-                            itemView.findViewById(R.id.TestC).setBackgroundColor(getResources().getColor(R.color.grassgreen));
-                        }
-                        else if(right_answer.get(i)=="D"){
-                            itemView.findViewById(R.id.TestD).setBackgroundColor(getResources().getColor(R.color.grassgreen));
-                        }
+                        });
+                        reqQue.add(addHisReq);
                     }
                 }
-                Upload.setEnabled(false);
             }
         });
 

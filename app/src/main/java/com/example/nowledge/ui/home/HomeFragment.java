@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
 
     protected void updateId(int courseID) {
         requestQueue = Singleton.getInstance
-                (getActivity().getApplicationContext()).getRequestQueue();
+                (getContext()).getRequestQueue();
         JSONObject obj = null;
         try {
             obj = new JSONObject();
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
         }
 
         RequestQueue reqQue = Singleton.getInstance
-                (getActivity().getApplicationContext()).getRequestQueue();
+                (getContext()).getRequestQueue();
 
 
         String params = "?";
@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment {
                 } catch (JSONException e) {
                     Log.e("JsonError", e.toString());
                 }
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 EntityAdapter adapter = new EntityAdapter(ett_list, "list");
                 adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
@@ -186,7 +186,7 @@ public class HomeFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error", error.toString());
                 ett_list.clear();
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 EntityAdapter adapter = new EntityAdapter(ett_list, "list");
                 adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {
@@ -211,7 +211,7 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        requestQueue = Singleton.getInstance(getActivity().getApplicationContext()).getRequestQueue();
+        requestQueue = Singleton.getInstance(getContext()).getRequestQueue();
         recyclerView = root.findViewById(R.id.recycleViewHome);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
@@ -327,7 +327,7 @@ public class HomeFragment extends Fragment {
         } catch (JSONException e) {
 
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         EntityAdapter adapter = new EntityAdapter(ett_list, "list");
         adapter.setOnItemClickListener(new EntityAdapter.OnItemClickListener() {

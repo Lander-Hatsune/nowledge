@@ -118,7 +118,7 @@ public class EntityQuestion extends Fragment {
         listViewQuestion = view.findViewById(R.id.QuestionList);
         List<question> question_list = new ArrayList<>();
         question_adapter adapter = new question_adapter(question_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         listViewQuestion.setLayoutManager(layoutManager);
         listViewQuestion.setAdapter(adapter);
         Uptitle=view.findViewById(R.id.UpTitle);
@@ -173,7 +173,7 @@ public class EntityQuestion extends Fragment {
 //                            }
                             try {
                                 JSONObject obj = questions.getJSONObject(i);
-                                String qAnswer = obj.getString("qAnswer");
+                                String qAnswer = normalizeAns(obj.getString("qAnswer"));
                                 int id= obj.getInt("id");
                                 String object = obj.getString("qBody");
                                 if(sMatch(object)){
@@ -215,7 +215,7 @@ public class EntityQuestion extends Fragment {
                         }
                         Log.d("Question number", String.valueOf(question_list.size()));
                         question_adapter adapter = new question_adapter(question_list);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                         listViewQuestion.setLayoutManager(layoutManager);
                         listViewQuestion.setAdapter(adapter);
                     }
@@ -232,6 +232,15 @@ public class EntityQuestion extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         reqQue.add(req);
 
+    }
+
+    private String normalizeAns(String src) {
+        String [] ans = {"A", "B", "C", "D"};
+        for (int i = 0; i < 3; ++i) {
+            if (src.contains(ans[i]));
+                return ans[i];
+        }
+        return ans[2];
     }
 
 }
